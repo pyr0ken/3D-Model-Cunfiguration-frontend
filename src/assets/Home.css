@@ -1,0 +1,14 @@
+.Home {
+  position: relative;
+  height: 100vh;
+  text-align: center;
+  background-color: #000;
+}
+
+.Home canvas {
+  border-radius: 0.5rem;
+}
+
+.Text {
+  color: #fff;
+}

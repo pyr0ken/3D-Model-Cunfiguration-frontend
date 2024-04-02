@@ -1,0 +1,71 @@
+.Model {
+  position: relative;
+  height: 100vh;
+  text-align: center;
+}
+
+.Model canvas {
+  border-radius: 0.5rem;
+}
+
+.HelpText {
+  background: #000;
+  text-align: left;
+  color: wheat;
+  border-radius: 10px;
+  opacity: 0.8;
+  padding: 10px 10px;
+  width: 550px;
+  height: 400px;
+  z-index: inherit;
+  font-size: 20px;
+}
+
+.HelpText ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.NoteBox div {
+  background: #181c20;
+  color: #fff;
+  padding: 30px;
+  opacity: 0.9;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.NoteBox textarea {
+  padding: 10px;
+  background-color: #fffff5;
+  border: 0;
+  width: 269px;
+  height: 115px;
+}
+
+.NoteBox button {
+  padding: 10px 20px;
+  color: #fff;
+  background-color: #007bff;
+  border: 0;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.PointNoteBox>div {
+  font-family: Helvetica, Arial;
+  font-size: 15px;
+  position: absolute;
+  background: #00000088;
+  color: white;
+  padding: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  border-radius: 30px;
+  user-select: none;
+  max-width: 50px;
+  text-overflow: ellipsis;
+}
