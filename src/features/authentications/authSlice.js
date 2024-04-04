@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import cookies from "cookies-js";
-import jwt_decode from "jwt-decode";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { apiBase } from "../../services";
 
-
-const userCookie = cookies.get("user");
-const accessTokenCookie = cookies.get("accessToken");
-const accessRefreshCookie = cookies.get("refreshToken");
+const userCookie = Cookies.get("user");
+const accessTokenCookie = Cookies.get("accessToken");
+const accessRefreshCookie = Cookies.get("refreshToken");
 
 let user = null;
 let accessToken = null;
@@ -17,9 +16,7 @@ if (userCookie && accessTokenCookie && accessRefreshCookie) {
     user = JSON.parse(userCookie);
     accessToken = accessTokenCookie;
     refreshToken = accessRefreshCookie;
-  } catch (e) {
-   
-  }
+  } catch (e) {}
 }
 
 const initialState = {
@@ -29,9 +26,6 @@ const initialState = {
   isLoading: false,
   error: null,
 };
-
-const apiUrl = 'http://127.0.0.1:8000';
-
 
 export const authSlice = createSlice({
   name: "auth",
@@ -50,9 +44,9 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.isAuthenticated = true;
-      cookies.set("refreshToken", refreshToken, { expires: timers });
-      cookies.set("user", JSON.stringify(user), { expires: timers });
-      cookies.set("accessToken", accessToken, { expires: timers });
+      Cookies.set("refreshToken", refreshToken, { expires: timers });
+      Cookies.set("user", JSON.stringify(user), { expires: timers });
+      Cookies.set("accessToken", accessToken, { expires: timers });
     },
     loginFailure: (state, action) => {
       state.isLoading = false;
@@ -62,30 +56,24 @@ export const authSlice = createSlice({
       state.user = null;
       state.accessToken = null;
       state.isAuthenticated = false;
-      cookies.expire("user");
-      cookies.expire("accessToken");
-      cookies.expire("refreshToken");
+      Cookies.remove("user");
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
     },
   },
 });
-
-
 
 export const { loginStart, loginFailure, loginSuccess, logoutSuccess } =
   authSlice.actions;
 
 export const login = (credentials) => async (dispatch) => {
   try {
-    const response = await axios.post(
-      `${apiUrl}/token/`,
-      credentials
-      
-    );
+    const response = await apiBase.post("/users/token/", credentials);
 
     const accessToken = response.data.access;
     const refreshToken = response.data.refresh;
-    const decodedToken = jwt_decode(accessToken);
-    const user = decodedToken;
+    const decodedToken = jwtDecode(accessToken);
+    const user = { username: decodedToken.username };
     dispatch(loginSuccess({ user, accessToken, refreshToken }));
 
     const timer = 240;
@@ -94,11 +82,10 @@ export const login = (credentials) => async (dispatch) => {
     }, timer * 1000);
     dispatch({ type: "SET_INTERVAL_ID", payload: intervalId });
   } catch (error) {
-    
     const message =
       error.response?.data?.detail || "An unknown error occurred.";
     dispatch(loginFailure(message));
-    
+
     throw error;
   }
 };
@@ -110,15 +97,14 @@ export const logout = () => (dispatch) => {
 export const refreshAccessToken = () => async (dispatch, getState) => {
   try {
     // const { refreshToken } = accessRefreshCookie;
-    const newrefreshToken = cookies.get("refreshToken");
+    const newrefreshToken = Cookies.get("refreshToken");
 
-    const response = await axios.post(
-      `${apiUrl}/token/refresh/`,
-      { refresh: newrefreshToken }
-    );
+    const response = await apiBase.post("/users/token/refresh/", {
+      refresh: newrefreshToken,
+    });
     const accessToken = response.data.access;
     const refreshToken = response.data.refresh;
-    const decodedToken = jwt_decode(accessToken);
+    const decodedToken = jwtDecode(accessToken);
     const user = decodedToken;
 
     dispatch(loginSuccess({ user, accessToken, refreshToken }));
@@ -130,4 +116,3 @@ export const refreshAccessToken = () => async (dispatch, getState) => {
 export const selectIsAuthenticated = (state) => state.auth.accessToken !== null;
 
 export default authSlice.reducer;
-
