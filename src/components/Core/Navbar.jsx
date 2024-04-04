@@ -1,6 +1,12 @@
 import { NavLink, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../../features/authentications/authSlice";
+import LogoutModal from "../Authentication/Logout";
 
 export default function Navbar() {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector((state) => state.auth.user);
+
   return (
     <div className="absolute z-10 w-full">
       <nav className="px-4 py-4 flex justify-between">
@@ -16,7 +22,7 @@ export default function Navbar() {
           >
             <g>
               <polygon
-                style={{ fill: "#26B99A" }}
+                style={{ fill: "#007BFF" }}
                 points="29,58 3,45 3,13 29,26 	"
               />
               <polygon
@@ -30,14 +36,14 @@ export default function Navbar() {
             </g>
           </svg>
         </Link>
-        <ul className="flex ml-40 flex-wrap items-center space-x-6">
+        <ul className="flex ml-40 flex-wrap items-center space-x-6 text-lg">
           <li>
             <NavLink
               to="/"
               className={({ isActive }) =>
                 isActive
-                  ? "text-green-600 text-sm hover:text-white font-medium transition-all"
-                  : "text-gray-400 text-sm hover:text-white font-medium transition-all"
+                  ? "text-leva-3 hover:text-white font-medium transition-all"
+                  : "text-gray-400 hover:text-white font-medium transition-all"
               }
             >
               Home
@@ -46,8 +52,26 @@ export default function Navbar() {
           <li className="text-gray-300">|</li>
           <li>
             <NavLink
+              to="/dashboard"
+              className="text-gray-400 hover:text-white font-medium transition-all"
+            >
+              Dashboard
+            </NavLink>
+          </li>
+          <li className="text-gray-300">|</li>
+          <li>
+            <NavLink
+              to="/model"
+              className="text-gray-400 hover:text-white font-medium transition-all"
+            >
+              Model
+            </NavLink>
+          </li>
+          <li className="text-gray-300">|</li>
+          <li>
+            <NavLink
               to="#"
-              className="text-sm text-gray-400 hover:text-white font-medium transition-all"
+              className="text-gray-400 hover:text-white font-medium transition-all"
             >
               About Us
             </NavLink>
@@ -55,46 +79,40 @@ export default function Navbar() {
           <li className="text-gray-300">|</li>
           <li>
             <NavLink
-              to="/dashboard"
-              className="text-sm text-gray-400 hover:text-white font-medium transition-all"
-            >
-              Dashboard
-            </NavLink>
-          </li>
-          <li className="text-gray-300">|</li>
-
-          <li>
-            <NavLink
-              to="/model"
-              className="text-sm text-gray-400 hover:text-white font-medium transition-all"
-            >
-              Model
-            </NavLink>
-          </li>
-          <li className="text-gray-300">|</li>
-
-          <li>
-            <NavLink
               to="#"
-              className="text-sm text-gray-400 hover:text-white font-medium transition-all"
+              className="text-gray-400 hover:text-white font-medium transition-all"
             >
               Contact
             </NavLink>
           </li>
         </ul>
         <div className="flex gap-x-2">
-          <Link
-            className="py-2 px-6 bg-gray-50 hover:bg-gray-300 text-sm text-gray-900 font-bold  rounded-xl transition duration-200"
-            to="/login"
-          >
-            Login
-          </Link>
-          <Link
-            className="py-2 px-6 bg-green-500 hover:bg-green-600 text-sm text-white font-bold rounded-xl transition duration-200"
-            to="/register"
-          >
-            Register
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <LogoutModal />
+              <Link
+                className="py-2 px-6 bg-leva-3 hover:bg-leva-3/60 text-white font-bold rounded-xl transition duration-200"
+                to=""
+              >
+                Profile <span className="underline">@{user.username}</span>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                className="py-2 px-6 bg-gray-50 hover:bg-gray-300 text-gray-900 font-bold  rounded-xl transition duration-200"
+                to="/login"
+              >
+                Login
+              </Link>
+              <Link
+                className="py-2 px-6 bg-leva-3 hover:bg-leva-3/60 text-white font-bold rounded-xl transition duration-200"
+                to="/register"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </div>
