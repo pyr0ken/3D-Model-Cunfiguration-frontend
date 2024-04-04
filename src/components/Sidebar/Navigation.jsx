@@ -2,12 +2,15 @@ import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import NavigationLink from "./NavigationLink";
 import {
-  ChartBarIcon,
-  ChartPieIcon,
-  DocumentCheckIcon,
-  Square2StackIcon,
-  UsersIcon,
-} from "@heroicons/react/24/outline";
+  IoHomeOutline,
+  IoChatboxEllipsesOutline,
+  IoSettingsOutline,
+} from "react-icons/io5";
+import {
+  MdOutlineSpaceDashboard,
+  MdOutlineCastConnected,
+} from "react-icons/md";
+import { FaUsers } from "react-icons/fa6";
 import ProjectLink from "./ProjectLink";
 import ProjectNavigation from "./ProjectNavigation";
 import useOutsideClick from "./OutsideClick";
@@ -33,7 +36,7 @@ const containerVariants = {
 
 const svgVariants = {
   close: {
-    rotate: 360,
+    rotate: 0,
   },
   open: {
     rotate: 180,
@@ -82,7 +85,30 @@ const Navigation = () => {
         className="bg-leva-1 flex flex-col z-20 gap-20 py-5 px-5 absolute top-0 left-0 h-full shadow shadow-neutral-600"
       >
         <div className="flex flex-row w-full justify-between place-items-center">
-          <div className="w-10 h-10 bg-gradient-to-br bg-leva-3 rounded-full" />
+          <svg
+            className="h-10"
+            version="1.1"
+            id="Capa_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 58 58"
+            xml:space="preserve"
+          >
+            <g>
+              <polygon
+                style={{ fill: "#007BFF" }}
+                points="29,58 3,45 3,13 29,26 	"
+              />
+              <polygon
+                style={{ fill: "#556080" }}
+                points="29,58 55,45 55,13 29,26 	"
+              />
+              <polygon
+                style={{ fill: "#434C6D" }}
+                points="3,13 28,0 55,13 29,26 	"
+              />
+            </g>
+          </svg>
           <button
             className="p-1 rounded-full flex"
             onClick={() => handleOpenClose()}
@@ -109,21 +135,22 @@ const Navigation = () => {
             </svg>
           </button>
         </div>
-        <div className="flex flex-col gap-3">
-          <NavigationLink name="Dashboard">
-            <ChartBarIcon className="stroke-inherit stroke-[0.75] min-w-8 w-8" />
+        <div className="flex flex-col gap-5">
+          <NavigationLink name="Home" link={"/"}>
+            <IoHomeOutline className="min-w-8 w-8 h-8" />
           </NavigationLink>
-          <NavigationLink name="Projects">
-            <Square2StackIcon className="stroke-inherit stroke-[0.75] min-w-8 w-8" />
+          <NavigationLink name="Dashboard" link={"/dashboard"}>
+            <MdOutlineSpaceDashboard className="min-w-8 w-8 h-8" />
           </NavigationLink>
-          <NavigationLink name="Tasks">
-            <DocumentCheckIcon className="stroke-inherit stroke-[0.75] min-w-8 w-8" />
+          <hr class="h-1 bg-leva-3/35 border-0 rounded" />
+          <NavigationLink name="Chat">
+            <IoChatboxEllipsesOutline className="min-w-8 w-8 h-8" />
           </NavigationLink>
-          <NavigationLink name="Reporting">
-            <ChartPieIcon className="stroke-inherit stroke-[0.75] min-w-8 w-8" />
+          <NavigationLink name="Room">
+            <MdOutlineCastConnected className="min-w-8 w-8 h-8" />
           </NavigationLink>
-          <NavigationLink name="Users">
-            <UsersIcon className="stroke-inherit stroke-[0.75] min-w-8 w-8" />
+          <NavigationLink name="Settings">
+            <IoSettingsOutline className="min-w-8 w-8 h-8" />
           </NavigationLink>
         </div>
         <div className="flex flex-col gap-3">
