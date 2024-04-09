@@ -2,12 +2,12 @@ import Navbar from "../Core/Navbar";
 import Background from "../Background";
 import { Suspense, useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { login } from "../../features/authentications/authSlice";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { useDispatch } from "react-redux";
 import React from "react";
 import { showAlert } from "../Core/utils.js";
 import { ToastContainer } from "react-toastify";
+import { useAuthStore } from "../../store/authStore.js";
+import useLogin from "../../hooks/auth/useLogin.jsx";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -17,7 +17,8 @@ export default function Login() {
   // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { state, pathname } = useLocation();
-  const dispatch = useDispatch();
+  const { mutate } = useLogin();
+  const { login } = useAuthStore();
 
   const handleInput = (event, type) => {
     switch (type) {
@@ -32,37 +33,40 @@ export default function Login() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     // setLoading(true);
 
-    try {
-      await dispatch(login({ username, password }));
-      setUsername("");
-      setPassword("");
-      // setLoading(false);
-      navigate("/", {
-        state: { successMessage: "Welocom to your 3d labratory." },
-      });
-    } catch (error) {
-      console.log(error.response);
-      // setLoading(false);
-      if (!error?.originalStatus) {
-        showAlert("error", error.response?.data?.detail);
-      } else if (error.originalStatus === 400) {
-        showAlert("error", error.response?.data?.detail);
-      } else if (error.originalStatus === 401) {
-        showAlert("error", error.response?.data?.detail);
-      } else {
-        showAlert("error", "Login Failed");
-      }
-      navigate("/login");
-    }
+    mutate(
+      { username, password },
+      {
+        onSuccess: (data) => {
+          setUsername("");
+          setPassword("");
+          navigate("/", {
+            state: { successMessage: "Welocom to your 3d labratory." },
+          });
+          // Save data in coockie and zustand
+          login(data.user, data.accessToken, data.rfreshToken);
+        },
+        onError: (error) => {
+          if (!error?.originalStatus) {
+            showAlert("error", error.response?.data?.detail);
+          } else if (error.originalStatus === 400) {
+            showAlert("error", error.response?.data?.detail);
+          } else if (error.originalStatus === 401) {
+            showAlert("error", error.response?.data?.detail);
+          } else {
+            showAlert("error", "Login Failed");
+          }
+        },
+      },
+    );
   };
 
   useEffect(() => {
     if (state && state.successMessage) {
-      showAlert("success", state.successMessage);
+      showAlert("info", state.successMessage);
       // Clear the successMessage from the location state
       navigate(pathname, { replace: true });
     }
@@ -71,16 +75,16 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <div className="relative text-white flex flex-col items-center">
+      <div className="relative flex flex-col items-center text-white">
         <ToastContainer />
         <Suspense>
           <Background />
         </Suspense>
         <div className="absolute top-[10rem] w-full max-w-lg sm:mt-10">
-          <div className="backdrop-blur-sm bg-white/5 py-5 px-9 mx-3 border border-b-white/20 sm:border-t-white/20 shadow-[20px_0_20px_20px] shadow-slate-500/10 rounded-lg border-white/20 border-l-white/20 border-r-white/20 sm:shadow-sm lg:rounded-xl lg:shadow-none">
-            <div class="absolute inset-0 -z-10 bg-black blur-xl"></div>
-            <div className="flex flex-col justify-center mb-5 ">
-              <h1 className="p-6 text-center font-semibold text-5xl">Login</h1>
+          <div className="mx-3 rounded-lg border border-white/20 border-b-white/20 border-l-white/20 border-r-white/20 bg-white/5 px-9 py-5 shadow-[20px_0_20px_20px] shadow-slate-500/10 backdrop-blur-sm sm:border-t-white/20 sm:shadow-sm lg:rounded-xl lg:shadow-none">
+            <div className="absolute inset-0 -z-10 bg-black blur-xl"></div>
+            <div className="mb-5 flex flex-col justify-center ">
+              <h1 className="p-6 text-center text-5xl font-semibold">Login</h1>
             </div>
             <div className="p-6 pt-0">
               <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
@@ -90,7 +94,7 @@ export default function Login() {
                   name="username"
                   placeholder="Enter your username..."
                   autoComplete="off"
-                  className="bg-neutral-950 w-full rounded-md border border-white/20 p-4 text-slate-100 transition-colors duration-500 placeholder:select-none  placeholder:text-neutral-500 focus:border-leva-3 focus:outline-none"
+                  className="w-full rounded-md border border-white/20 bg-neutral-950 p-4 text-slate-100 transition-colors duration-500 placeholder:select-none  placeholder:text-neutral-500 focus:border-leva-3 focus:outline-none"
                 />
                 <div className="relative">
                   <input
@@ -99,29 +103,26 @@ export default function Login() {
                     name="password"
                     placeholder="Enter your password..."
                     autoComplete="off"
-                    className="bg-neutral-950 w-full rounded-md border border-white/20 p-4 text-slate-100 transition-colors duration-500 placeholder:select-none  placeholder:text-neutral-500 focus:border-leva-3 focus:outline-none"
+                    className="w-full rounded-md border border-white/20 bg-neutral-950 p-4 text-slate-100 transition-colors duration-500 placeholder:select-none  placeholder:text-neutral-500 focus:border-leva-3 focus:outline-none"
                   />
                   {pwdVisibility ? (
                     <FaRegEye
                       onClick={() => setPwdVisibility(false)}
-                      className="absolute cursor-pointer text-gray-300 right-4 top-0 translate-y-5"
+                      className="absolute right-4 top-0 translate-y-5 cursor-pointer text-gray-300"
                     />
                   ) : (
                     <FaRegEyeSlash
                       onClick={() => setPwdVisibility(true)}
-                      className="absolute cursor-pointer text-gray-300 right-4 top-0 translate-y-5"
+                      className="absolute right-4 top-0 translate-y-5 cursor-pointer text-gray-300"
                     />
                   )}
                 </div>
-                <div className="mt-3 flex flex-col gap-y-6 items-center justify-between">
-                  <button
-                    disabled={!username || !password}
-                    className="w-full bg-leva-3 hover:bg-leva-3/80 disabled:bg-leva-3/40 disabled:text-gray-500 transition-colors duration-300 rounded py-3 text-lg text-white"
-                  >
+                <div className="mt-3 flex flex-col items-center justify-between gap-y-6">
+                  <button className="w-full rounded bg-leva-3 py-3 text-lg text-white transition-colors duration-300 hover:bg-leva-3/80 ">
                     login
                   </button>
                   <Link
-                    className="text-sm font-medium text-foreground underline"
+                    className="text-sm font-medium text-white underline"
                     to="/register"
                   >
                     You don't have an account? Register here.
