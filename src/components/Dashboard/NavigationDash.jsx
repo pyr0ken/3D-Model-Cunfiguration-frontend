@@ -32,20 +32,20 @@ const subMenusList = [
 export default function NavigationDash() {
   return (
     <>
-      <nav className="bg-leva-1 rounded-tr-[3rem] rounded-br-[3rem] flex flex-col w-[17rem] z-20 gap-20 py-5 px-5 absolute top-0 left-0 h-full overflow-auto shadow shadow-neutral-600">
-        <div className="flex flex-row w-full justify-center place-items-center">
+      <nav className="flex h-full min-w-[17rem] flex-col gap-20 overflow-auto rounded-br-[3rem] rounded-tr-[3rem] bg-gradient-to-b from-neutral-900 to-leva-2 px-5 py-5 shadow shadow-neutral-600">
+        <div className="flex w-full flex-row place-items-center justify-center">
           <svg
             className="h-[5rem]"
             version="1.1"
             id="Capa_1"
             xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 58 58"
-            xml:space="preserve"
+            xmlSpace="preserve"
           >
             <g>
               <polygon
-                style={{ fill: "#26B99A" }}
+                style={{ fill: "#007BFF" }}
                 points="29,58 3,45 3,13 29,26 	"
               />
               <polygon
@@ -61,17 +61,17 @@ export default function NavigationDash() {
         </div>
         <div className="flex flex-col gap-5">
           <NavigationLinkDash name="Home" link={"/"}>
-            <IoHomeOutline className="min-w-8 w-8 h-8" />
+            <IoHomeOutline className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
-          <hr class="h-1 bg-leva-3/35 border-0 rounded" />
-          <NavigationLinkDash name="Main Page">
-            <IoStatsChartOutline className="min-w-8 w-8 h-8" />
+          <hr className="h-1 rounded border-0 bg-leva-3/35" />
+          <NavigationLinkDash name="Main Page" link={"/dashboard"}>
+            <IoStatsChartOutline className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
-          <NavigationLinkDash name="Models">
-            <IoCubeOutline className="min-w-8 w-8 h-8" />
+          <NavigationLinkDash name="Models" link={"/dashboard/models"}>
+            <IoCubeOutline className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
           <NavigationLinkDash name="Settings">
-            <IoSettingsOutline className="min-w-8 w-8 h-8" />
+            <IoSettingsOutline className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
           {subMenusList?.map((menu) => (
             <div key={menu.name}>
