@@ -2,13 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { NextUIProvider } from "@nextui-org/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClinet = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+    <QueryClientProvider client={queryClinet}>
+      <NextUIProvider>
+        <App />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </NextUIProvider>
+    </QueryClientProvider>
+  </React.StrictMode>,
 );
