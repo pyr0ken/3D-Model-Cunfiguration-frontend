@@ -13,8 +13,8 @@ export default function Placeholder() {
       >
         <boxGeometry />
         <meshNormalMaterial wireframe />
-        <Html center style={{ fontSize: "2rem" }}>
-          {prograss} Loading ...
+        <Html center style={{ fontSize: "2rem", color: "white" }}>
+          {prograss} Loading
         </Html>
       </mesh>
     </>

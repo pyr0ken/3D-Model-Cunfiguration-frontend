@@ -82,17 +82,17 @@ const Navigation = () => {
         variants={containerVariants}
         animate={containerControls}
         initial="close"
-        className="bg-leva-1 flex flex-col z-20 gap-20 py-5 px-5 absolute top-0 left-0 h-full shadow shadow-neutral-600"
+        className="absolute left-0 top-0 z-20 flex h-full flex-col gap-20 rounded-br-[3rem] rounded-tr-[3rem] bg-gradient-to-b from-neutral-900 to-leva-2 px-5 py-5 shadow shadow-neutral-600"
       >
-        <div className="flex flex-row w-full justify-between place-items-center">
+        <div className="flex w-full flex-row place-items-center justify-between">
           <svg
             className="h-10"
             version="1.1"
             id="Capa_1"
             xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 58 58"
-            xml:space="preserve"
+            xmlSpace="preserve"
           >
             <g>
               <polygon
@@ -110,7 +110,7 @@ const Navigation = () => {
             </g>
           </svg>
           <button
-            className="p-1 rounded-full flex"
+            className="flex rounded-full p-1"
             onClick={() => handleOpenClose()}
           >
             <svg
@@ -119,7 +119,7 @@ const Navigation = () => {
               viewBox="0 0 24 24"
               strokeWidth={1}
               stroke="currentColor"
-              className="w-8 h-8 stroke-neutral-200"
+              className="h-8 w-8 stroke-neutral-200"
             >
               <motion.path
                 strokeLinecap="round"
@@ -137,20 +137,20 @@ const Navigation = () => {
         </div>
         <div className="flex flex-col gap-5">
           <NavigationLink name="Home" link={"/"}>
-            <IoHomeOutline className="min-w-8 w-8 h-8" />
+            <IoHomeOutline className="h-8 w-8 min-w-8" />
           </NavigationLink>
           <NavigationLink name="Dashboard" link={"/dashboard"}>
-            <MdOutlineSpaceDashboard className="min-w-8 w-8 h-8" />
+            <MdOutlineSpaceDashboard className="h-8 w-8 min-w-8" />
           </NavigationLink>
-          <hr class="h-1 bg-leva-3/35 border-0 rounded" />
+          <hr className="h-1 rounded border-0 bg-leva-3/35" />
           <NavigationLink name="Chat">
-            <IoChatboxEllipsesOutline className="min-w-8 w-8 h-8" />
+            <IoChatboxEllipsesOutline className="h-8 w-8 min-w-8" />
           </NavigationLink>
           <NavigationLink name="Room">
-            <MdOutlineCastConnected className="min-w-8 w-8 h-8" />
+            <MdOutlineCastConnected className="h-8 w-8 min-w-8" />
           </NavigationLink>
           <NavigationLink name="Settings">
-            <IoSettingsOutline className="min-w-8 w-8 h-8" />
+            <IoSettingsOutline className="h-8 w-8 min-w-8" />
           </NavigationLink>
         </div>
         <div className="flex flex-col gap-3">
@@ -158,22 +158,22 @@ const Navigation = () => {
             name="Virtual Reality"
             setSelectedProject={setSelectedProject}
           >
-            <div className="min-w-4 mx-2 border-pink-600 border rounded-full aspect-square bg-pink-700" />
+            <div className="mx-2 aspect-square min-w-4 rounded-full border border-pink-600 bg-pink-700" />
           </ProjectLink>
           <ProjectLink
             name="Apple Vision Pro"
             setSelectedProject={setSelectedProject}
           >
-            <div className="min-w-4 mx-2 border-indigo-600 border rounded-full aspect-square bg-indigo-700" />
+            <div className="mx-2 aspect-square min-w-4 rounded-full border border-indigo-600 bg-indigo-700" />
           </ProjectLink>
           <ProjectLink name="Porsche" setSelectedProject={setSelectedProject}>
-            <div className="min-w-4 mx-2 border-cyan-600 border rounded-full aspect-square bg-cyan-700" />
+            <div className="mx-2 aspect-square min-w-4 rounded-full border border-cyan-600 bg-cyan-700" />
           </ProjectLink>
           <ProjectLink
             name="Secret Project"
             setSelectedProject={setSelectedProject}
           >
-            <div className="min-w-4 mx-2 border-yellow-600 border rounded-full aspect-square bg-yellow-700" />
+            <div className="mx-2 aspect-square min-w-4 rounded-full border border-yellow-600 bg-yellow-700" />
           </ProjectLink>
         </div>
       </motion.nav>

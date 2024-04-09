@@ -10,10 +10,10 @@ import React, { useRef, useState } from "react";
 import * as THREE from "three";
 
 export default function LoadModel(props) {
-  const { nodes, materials } = useGLTF("/Heart-01.gltf");
+  const { nodes, materials } = useGLTF(`http://127.0.0.1:8000${props.file}`);
 
   const { camera } = useThree();
-  const model = useRef();
+  const modelRef = useRef();
 
   const { resetCamera } = useControls("model", {
     "Reset Camera": button(() => {
@@ -56,7 +56,7 @@ export default function LoadModel(props) {
       const mousePoint = new THREE.Vector3(
         event.point.x,
         event.point.y,
-        event.point.z
+        event.point.z,
       );
 
       const newPoint = {
@@ -93,7 +93,7 @@ export default function LoadModel(props) {
           return { ...point, note };
         }
         return point;
-      })
+      }),
     );
 
     setShowInput(false);
@@ -109,7 +109,7 @@ export default function LoadModel(props) {
         scale={200}
         fixed={true}
       > */}
-      <group {...props} ref={model} dispose={null}>
+      <group {...props} ref={modelRef} dispose={null}>
         <group rotation={[Math.PI / 2, 0, 0]} scale={2.363}>
           <mesh
             onClick={handleModelClick}
@@ -157,4 +157,4 @@ export default function LoadModel(props) {
   );
 }
 
-useGLTF.preload("/Heart-01.gltf");
+// useGLTF.preload("/Heart-01.gltf");

@@ -5,9 +5,8 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { useControls, button } from "leva";
 import { Perf } from "r3f-perf";
 import { Suspense, useEffect, useState } from "react";
-import LoadModel from "../LoadModel";
+import LoadModel from "./LoadModel";
 import Placeholder from "./Placeholder";
-import MouseTracker from "./MouseTracker";
 import HelperText from "./HelperText";
 import { Leva } from "leva";
 
@@ -51,15 +50,13 @@ export default function Model(props) {
 
   return (
     <div {...props}>
-      <MouseTracker />
-
       <Canvas onWheel={handleModelWheel}>
         {/* Basic Setup */}
         <OrbitControls
           autoRotate={AutoRotate}
           zoomToCursor={ZoomToCursor}
           enablePan={Pan}
-          onChange={(e) => console.log(e.target.object)}
+          // onChange={(e) => console.log(e.target.object)}
         />
         <ambientLight intensity={3} />
         <directionalLight intensity={6} />
@@ -82,7 +79,7 @@ export default function Model(props) {
 
         {/* Load GLTF Model */}
         <Suspense fallback={<Placeholder />}>
-          <LoadModel scale={0.8} />
+          <LoadModel file={props.file} scale={0.8} />
         </Suspense>
 
         {/* Show Perforamnce */}
