@@ -1,49 +1,66 @@
 import { NavLink, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectIsAuthenticated } from "../../features/authentications/authSlice";
-import LogoutModal from "../Authentication/Logout";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
+import { showAlert } from "./utils";
+import { useAuthStore } from "../../store/authStore";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const user = useSelector((state) => state.auth.user);
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const handleLogout = () => {
+    logout();
+    showAlert("info", "User logged out successfully.");
+  };
 
   return (
     <div className="absolute z-10 w-full">
-      <nav className="px-4 py-4 flex justify-between">
-        <Link className="text-3xl font-bold leading-none" to="/">
-          <svg
-            className="h-10"
-            version="1.1"
-            id="Capa_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 58 58"
-            xml:space="preserve"
-          >
-            <g>
-              <polygon
-                style={{ fill: "#007BFF" }}
-                points="29,58 3,45 3,13 29,26 	"
-              />
-              <polygon
-                style={{ fill: "#556080" }}
-                points="29,58 55,45 55,13 29,26 	"
-              />
-              <polygon
-                style={{ fill: "#434C6D" }}
-                points="3,13 28,0 55,13 29,26 	"
-              />
-            </g>
-          </svg>
-        </Link>
-        <ul className="flex ml-40 flex-wrap items-center space-x-6 text-lg">
+      <nav className="flex justify-between px-4 py-4">
+        <div className="flex gap-x-5">
+          <Link className="text-3xl font-bold leading-none" to="/">
+            <svg
+              className="h-10"
+              version="1.1"
+              id="Capa_1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              viewBox="0 0 58 58"
+              xmlSpace="preserve"
+            >
+              <g>
+                <polygon
+                  style={{ fill: "#007BFF" }}
+                  points="29,58 3,45 3,13 29,26 	"
+                />
+                <polygon
+                  style={{ fill: "#556080" }}
+                  points="29,58 55,45 55,13 29,26 	"
+                />
+                <polygon
+                  style={{ fill: "#434C6D" }}
+                  points="3,13 28,0 55,13 29,26 	"
+                />
+              </g>
+            </svg>
+          </Link>
+          <ThemeToggle />
+        </div>
+        <ul className="ml-40 flex flex-wrap items-center space-x-6 text-lg">
           <li>
             <NavLink
               to="/"
               className={({ isActive }) =>
                 isActive
-                  ? "text-leva-3 hover:text-white font-medium transition-all"
-                  : "text-gray-400 hover:text-white font-medium transition-all"
+                  ? "font-medium text-leva-3 transition-all hover:text-white"
+                  : "font-medium text-gray-400 transition-all hover:text-white"
               }
             >
               Home
@@ -53,7 +70,7 @@ export default function Navbar() {
           <li>
             <NavLink
               to="/dashboard"
-              className="text-gray-400 hover:text-white font-medium transition-all"
+              className="font-medium text-gray-400 transition-all hover:text-white"
             >
               Dashboard
             </NavLink>
@@ -62,7 +79,7 @@ export default function Navbar() {
           <li>
             <NavLink
               to="/model"
-              className="text-gray-400 hover:text-white font-medium transition-all"
+              className="font-medium text-gray-400 transition-all hover:text-white"
             >
               Model
             </NavLink>
@@ -71,7 +88,7 @@ export default function Navbar() {
           <li>
             <NavLink
               to="#"
-              className="text-gray-400 hover:text-white font-medium transition-all"
+              className="font-medium text-gray-400 transition-all hover:text-white"
             >
               About Us
             </NavLink>
@@ -80,7 +97,7 @@ export default function Navbar() {
           <li>
             <NavLink
               to="#"
-              className="text-gray-400 hover:text-white font-medium transition-all"
+              className="font-medium text-gray-400 transition-all hover:text-white"
             >
               Contact
             </NavLink>
@@ -89,9 +106,44 @@ export default function Navbar() {
         <div className="flex gap-x-2">
           {isAuthenticated ? (
             <>
-              <LogoutModal />
+              <Button
+                onPress={onOpen}
+                className="rounded-xl bg-gray-50 px-6 py-2 font-bold text-gray-900  transition duration-200 hover:bg-gray-300"
+              >
+                Logout
+              </Button>
+              <Modal
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                className="text-white dark"
+              >
+                <ModalContent>
+                  {(onClose) => (
+                    <>
+                      <ModalHeader className="flex flex-col gap-1">
+                        Confirm Logout
+                      </ModalHeader>
+                      <ModalBody>
+                        <p>Are you sure you want to logout?</p>
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button
+                          color="danger"
+                          variant="solid"
+                          onPress={onClose}
+                        >
+                          Close
+                        </Button>
+                        <Button color="primary" onPress={handleLogout}>
+                          Logout
+                        </Button>
+                      </ModalFooter>
+                    </>
+                  )}
+                </ModalContent>
+              </Modal>
               <Link
-                className="py-2 px-6 bg-leva-3 hover:bg-leva-3/60 text-white font-bold rounded-xl transition duration-200"
+                className="rounded-xl bg-leva-3 px-6 py-2 font-bold text-white transition duration-200 hover:bg-leva-3/60"
                 to=""
               >
                 Profile <span className="underline">@{user.username}</span>
@@ -100,13 +152,13 @@ export default function Navbar() {
           ) : (
             <>
               <Link
-                className="py-2 px-6 bg-gray-50 hover:bg-gray-300 text-gray-900 font-bold  rounded-xl transition duration-200"
+                className="rounded-xl bg-gray-50 px-6 py-2 font-bold text-gray-900  transition duration-200 hover:bg-gray-300"
                 to="/login"
               >
                 Login
               </Link>
               <Link
-                className="py-2 px-6 bg-leva-3 hover:bg-leva-3/60 text-white font-bold rounded-xl transition duration-200"
+                className="rounded-xl bg-leva-3 px-6 py-2 font-bold text-white transition duration-200 hover:bg-leva-3/60"
                 to="/register"
               >
                 Register
