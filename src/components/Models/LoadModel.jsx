@@ -1,21 +1,50 @@
-import {
-  Html,
-  useGLTF,
-  PivotControls,
-  TransformControls,
-} from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { Html, useGLTF } from "@react-three/drei";
+import { useThree, useFrame } from "@react-three/fiber";
 import { button, useControls } from "leva";
-import React, { useRef, useState } from "react";
-import * as THREE from "three";
+import { useRef, useState, useEffect } from "react";
+import { Vector3 } from "three";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Textarea,
+} from "@nextui-org/react";
+import usePointsStore from "../../store/pointStore";
+
+function getFirstWords(text, wordsNumber) {
+  const words = text.split(" ");
+  const firstWords = words.slice(0, wordsNumber).join(" ");
+  return words.length > wordsNumber ? `${firstWords}...` : firstWords;
+}
 
 export default function LoadModel(props) {
+  const { points, addPoint, removePoint, updatePoint } = usePointsStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modelRotation, setModelRotation] = useState([0, 0, 0]);
+
   const { nodes, materials } = useGLTF(`http://127.0.0.1:8000${props.file}`);
-
+  const meshes = Object.values(nodes).filter((value) => value.type === "Mesh");
   const { camera } = useThree();
-  const modelRef = useRef();
 
-  const { resetCamera } = useControls("model", {
+  const modelRef = useRef();
+  const noteRef = useRef();
+  const pointRef = useRef();
+
+  const { scale, positionY, resetCamera } = useControls("Model", {
+    scale: {
+      min: 0,
+      max: 10,
+      value: 2,
+    },
+    positionY: {
+      min: -10,
+      max: 10,
+      value: 0,
+      step: 0.01,
+    },
     "Reset Camera": button(() => {
       camera.position.set(0, 0, 5);
     }),
@@ -23,14 +52,9 @@ export default function LoadModel(props) {
       window.location.reload();
     }),
     // choice: { options: ["a", "b", "c"] },
-    // position: {
-    //   value: { x: -2, y: 0 },
-    //   step: 0.01,
-    //   joystick: "invertY",
-    // },
   });
 
-  const { pointColor, pointRadius } = useControls("point", {
+  const { pointColor, pointRadius } = useControls("Point", {
     pointColor: "#007BFF",
     pointRadius: {
       min: 0,
@@ -39,21 +63,28 @@ export default function LoadModel(props) {
     },
   });
 
-  const noteRef = useRef();
-  const pointRef = useRef();
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "z" && e.ctrlKey) {
+        console.log("Before", points);
+        const removePointIndex = points.length - 1;
+        removePoint(removePointIndex);
+        console.log("After", points);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
 
-  const [points, setPoints] = useState([]);
-  const [showInput, setShowInput] = useState(false);
-
-  document.addEventListener("keydown", (e) => {
-    if (e.keyCode == 90 && e.ctrlKey == true) {
-      setPoints(points.slice(0, -1));
-    }
-  });
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [points, removePoint]);
 
   const handleModelClick = (event) => {
+    event.stopPropagation();
+
     if (event.shiftKey) {
-      const mousePoint = new THREE.Vector3(
+      const mousePoint = new Vector3(
         event.point.x,
         event.point.y,
         event.point.z,
@@ -66,13 +97,13 @@ export default function LoadModel(props) {
         radius: pointRadius,
       };
 
-      setPoints([...points, newPoint]);
+      addPoint(newPoint);
     }
   };
 
   const handlePointContextMenu = (event, pointData) => {
     pointRef.current = pointData;
-    setShowInput(true);
+    setIsModalOpen(true);
   };
 
   const handlePointOver = (event) => {
@@ -83,42 +114,55 @@ export default function LoadModel(props) {
     event.object.material.color.set(color);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleSaveText = (event) => {
     const note = noteRef.current.value;
     const pointIndex = pointRef.current.index;
 
-    setPoints(
-      points.map((point, index) => {
-        if (index === pointIndex) {
-          return { ...point, note };
-        }
-        return point;
-      }),
-    );
+    updatePoint(pointIndex, { ...points[pointIndex], note });
+    handleCloseModal();
+  };
 
-    setShowInput(false);
+  const handleDeletePoint = () => {
+    const pointIndex = pointRef.current.index;
+    removePoint(pointIndex);
+    handleCloseModal();
+  };
+
+  const handleDeleteNote = () => {
+    const pointIndex = pointRef.current.index;
+    updatePoint(pointIndex, { ...points[pointIndex], note: "" });
+    handleCloseModal();
+  };
+
+  const getPointNote = () => {
+    if (pointRef.current.point.note !== undefined) {
+      return pointRef.current.point.note;
+    }
+    return "";
   };
 
   return (
     <>
-      {/* <PivotControls
-        anchor={[0, 0, 0]}
-        depthTest={false}
-        lineWidth={4}
-        axisColors={["#9381ff", "#ff4d6d", "#7ae582"]}
-        scale={200}
-        fixed={true}
-      > */}
       <group {...props} ref={modelRef} dispose={null}>
-        <group rotation={[Math.PI / 2, 0, 0]} scale={2.363}>
-          <mesh
-            onClick={handleModelClick}
-            geometry={nodes.hartZBrush_defualt_group.geometry}
-            material={materials["Heart Tex"]}
-          />
+        <group
+          rotation={[Math.PI / 2, 0, 0]}
+          position={[0, positionY, 0]}
+          scale={scale}
+        >
+          {meshes.map((mesh) => (
+            <mesh
+              key={mesh.name}
+              onClick={handleModelClick}
+              geometry={mesh.geometry}
+              material={materials[mesh.material.name]}
+            ></mesh>
+          ))}
         </group>
       </group>
-      {/* </PivotControls> */}
 
       {points.map((point, index) => (
         <mesh
@@ -132,27 +176,55 @@ export default function LoadModel(props) {
         >
           <sphereGeometry args={[point.radius]} />
           <meshBasicMaterial color={point.color} />
-          {point.note && !showInput && (
-            <Html wrapperClass="PointNoteBox" distanceFactor={5}>
-              <span>{point.note}</span>
+          {/* <Html className="flex" distanceFactor={5}>
+            <span className="select-none text-gray-300">1</span>
+          </Html> */}
+          {point.note && !isModalOpen && (
+            <Html className="flex h-7 w-40 overflow-auto" distanceFactor={5}>
+              <span className="select-none rounded-xl bg-neutral-950/60 p-1 text-tiny text-gray-300">
+                {getFirstWords(point.note, 3)}
+              </span>
             </Html>
           )}
         </mesh>
       ))}
-      {showInput && (
-        <Html center className="NoteBox">
-          <div>
-            <h1> Note </h1>
-            <textarea
-              ref={noteRef}
-              type="text"
-              defaultValue={pointRef.current.point.note}
-              placeholder="Enter some description..."
-            />
-            <button onClick={handleSaveText}>Save</button>
-          </div>
-        </Html>
-      )}
+      <Html>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          placement="top-center"
+          className="text-white dark"
+        >
+          <ModalContent>
+            <ModalHeader className="flex flex-col gap-1">
+              Add & Edit Note
+            </ModalHeader>
+            <ModalBody>
+              <Textarea
+                ref={noteRef}
+                autoFocus
+                label="Note"
+                defaultValue={getPointNote}
+                placeholder="Enter your note..."
+                variant="flat"
+              />
+            </ModalBody>
+            <ModalFooter className="flex justify-between">
+              <div className="space-x-2">
+                <Button color="danger" onClick={handleDeletePoint}>
+                  Delete Point
+                </Button>
+                <Button color="danger" onClick={handleDeleteNote}>
+                  Delete Note
+                </Button>
+              </div>
+              <Button color="primary" onClick={handleSaveText}>
+                Save Note
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Html>
     </>
   );
 }

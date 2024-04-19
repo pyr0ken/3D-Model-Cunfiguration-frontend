@@ -4,10 +4,9 @@ import { Environment, Html, OrbitControls } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useControls, button } from "leva";
 import { Perf } from "r3f-perf";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useRef } from "react";
 import LoadModel from "./LoadModel";
 import Placeholder from "./Placeholder";
-import HelperText from "./HelperText";
 import { Leva } from "leva";
 
 export default function Model(props) {
@@ -15,23 +14,43 @@ export default function Model(props) {
   const [showZoomOutIcon, setShowZoomOutIcon] = useState(false);
 
   const { Monitoring, ZoomIcons, ZoomToCursor, AutoRotate, Pan, HelpText } =
-    useControls("base", {
+    useControls("Base", {
       Monitoring: false,
       ZoomIcons: true,
       ZoomToCursor: false,
       AutoRotate: false,
       Pan: false,
-      HelpText: false,
     });
+
+  const { ambientLight, directionalLight, pointLight } = useControls("Light", {
+    ambientLight: {
+      min: 0,
+      max: 10,
+      value: 3,
+      step: 0.01,
+    },
+    directionalLight: {
+      min: 0,
+      max: 10,
+      value: 6,
+      step: 0.01,
+    },
+    pointLight: {
+      min: 0,
+      max: 10,
+      value: 5,
+      step: 0.01,
+    },
+  });
 
   useEffect(() => {
     const zoomInTimer = setTimeout(() => {
       setShowZoomInIcon(false);
-    }, 300);
+    }, 200);
 
     const zoomOutTimer = setTimeout(() => {
       setShowZoomOutIcon(false);
-    }, 300);
+    }, 200);
 
     return () => {
       clearTimeout(zoomInTimer);
@@ -56,15 +75,19 @@ export default function Model(props) {
           autoRotate={AutoRotate}
           zoomToCursor={ZoomToCursor}
           enablePan={Pan}
-          // onChange={(e) => console.log(e.target.object)}
+          onChange={(e) => {
+            const { object } = e.target;
+            const rotationInDegrees = {
+              x: object.rotation.x,
+              y: object.rotation.y,
+            };
+            console.log("camera", rotationInDegrees);
+          }}
         />
-        <ambientLight intensity={3} />
-        <directionalLight intensity={6} />
+        <ambientLight intensity={ambientLight} />
+        <directionalLight intensity={directionalLight} />
+        <pointLight intensity={pointLight} />
         {/* <Environment preset="sunset" /> */}
-
-        {/* Helper Text */}
-        {HelpText && <HelperText />}
-
         {/* Zoom in & Zoom out icons */}
         {ZoomIcons && (
           <Html center>
@@ -76,12 +99,10 @@ export default function Model(props) {
             )}
           </Html>
         )}
-
         {/* Load GLTF Model */}
         <Suspense fallback={<Placeholder />}>
-          <LoadModel file={props.file} scale={0.8} />
+          <LoadModel file={props.file} />
         </Suspense>
-
         {/* Show Perforamnce */}
         {Monitoring && <Perf position="bottom-right" />}
       </Canvas>

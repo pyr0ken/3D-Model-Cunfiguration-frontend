@@ -6,18 +6,26 @@ import {
   IoChatboxEllipsesOutline,
   IoSettingsOutline,
 } from "react-icons/io5";
+import { IoHelpSharp } from "react-icons/io5";
 import {
   MdOutlineSpaceDashboard,
   MdOutlineCastConnected,
 } from "react-icons/md";
 import { FaUsers } from "react-icons/fa6";
-import ProjectLink from "./ProjectLink";
-import ProjectNavigation from "./ProjectNavigation";
 import useOutsideClick from "./OutsideClick";
+import ToolBoxLink from "./ToolBoxLink";
+import { IoList } from "react-icons/io5";
+import Room from "./ToolBoxNavigation/Room";
+import Chat from "./ToolBoxNavigation/Chat";
+import Help from "./ToolBoxNavigation/Help";
+import Points from "./ToolBoxNavigation/Points";
+import Settings from "./ToolBoxNavigation/Settings";
+import { CiMicrophoneOff } from "react-icons/ci";
+import { LuScreenShareOff } from "react-icons/lu";
 
 const containerVariants = {
   close: {
-    width: "5rem",
+    width: "5.5rem",
     transition: {
       type: "spring",
       damping: 15,
@@ -34,21 +42,21 @@ const containerVariants = {
   },
 };
 
-const svgVariants = {
-  close: {
-    rotate: 0,
-  },
-  open: {
-    rotate: 180,
-  },
+const componentMapping = {
+  Points: Points,
+  Room: Room,
+  Chat: Chat,
+  Help: Help,
+  Settings: Settings,
 };
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
+  const SelectedComponent = componentMapping[selectedProject];
+
   const containerControls = useAnimationControls();
-  const svgControls = useAnimationControls();
 
   //! TODO FIX PROJECT LINKS BUG.
   //? BUT I THINK YOU DONT NEED IT :)
@@ -64,16 +72,14 @@ const Navigation = () => {
   useEffect(() => {
     if (isOpen) {
       containerControls.start("open");
-      svgControls.start("open");
     } else {
       containerControls.start("close");
-      svgControls.start("close");
     }
   }, [isOpen]);
 
   const handleOpenClose = () => {
     setIsOpen(!isOpen);
-    setSelectedProject(null);
+    // setSelectedProject(null);
   };
 
   return (
@@ -86,7 +92,9 @@ const Navigation = () => {
       >
         <div className="flex w-full flex-row place-items-center justify-between">
           <svg
-            className="h-10"
+            className={
+              isOpen ? "h-10 transition-height" : "h-0 transition-height"
+            }
             version="1.1"
             id="Capa_1"
             xmlns="http://www.w3.org/2000/svg"
@@ -119,67 +127,59 @@ const Navigation = () => {
               viewBox="0 0 24 24"
               strokeWidth={1}
               stroke="currentColor"
-              className="h-8 w-8 stroke-neutral-200"
+              style={{
+                transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+              }}
+              className="mr-1.5 h-8 w-8 stroke-neutral-200 duration-500"
             >
-              <motion.path
+              <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                variants={svgVariants}
-                animate={svgControls}
                 d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                transition={{
-                  duration: 0.5,
-                  ease: "easeInOut",
-                }}
               />
             </svg>
           </button>
         </div>
         <div className="flex flex-col gap-5">
-          <NavigationLink name="Home" link={"/"}>
+          <NavigationLink name="Home" link={"/"} chevron={false}>
             <IoHomeOutline className="h-8 w-8 min-w-8" />
           </NavigationLink>
-          <NavigationLink name="Dashboard" link={"/dashboard"}>
+          <NavigationLink name="Dashboard" link={"/dashboard"} chevron={false}>
             <MdOutlineSpaceDashboard className="h-8 w-8 min-w-8" />
           </NavigationLink>
+
           <hr className="h-1 rounded border-0 bg-leva-3/35" />
-          <NavigationLink name="Chat">
+
+          <ToolBoxLink name="Points" setSelectedProject={setSelectedProject}>
+            <IoList className="h-8 w-8 min-w-8" />
+          </ToolBoxLink>
+          <ToolBoxLink name="Chat" setSelectedProject={setSelectedProject}>
             <IoChatboxEllipsesOutline className="h-8 w-8 min-w-8" />
-          </NavigationLink>
-          <NavigationLink name="Room">
+          </ToolBoxLink>
+          <ToolBoxLink name="Room" setSelectedProject={setSelectedProject}>
             <MdOutlineCastConnected className="h-8 w-8 min-w-8" />
-          </NavigationLink>
-          <NavigationLink name="Settings">
+          </ToolBoxLink>
+          <ToolBoxLink name="Help" setSelectedProject={setSelectedProject}>
+            <IoHelpSharp className="h-8 w-8 min-w-8" />
+          </ToolBoxLink>
+          <ToolBoxLink name="Settings" setSelectedProject={setSelectedProject}>
             <IoSettingsOutline className="h-8 w-8 min-w-8" />
-          </NavigationLink>
+          </ToolBoxLink>
         </div>
-        <div className="flex flex-col gap-3">
-          <ProjectLink
-            name="Virtual Reality"
-            setSelectedProject={setSelectedProject}
-          >
-            <div className="mx-2 aspect-square min-w-4 rounded-full border border-pink-600 bg-pink-700" />
-          </ProjectLink>
-          <ProjectLink
-            name="Apple Vision Pro"
-            setSelectedProject={setSelectedProject}
-          >
-            <div className="mx-2 aspect-square min-w-4 rounded-full border border-indigo-600 bg-indigo-700" />
-          </ProjectLink>
-          <ProjectLink name="Porsche" setSelectedProject={setSelectedProject}>
-            <div className="mx-2 aspect-square min-w-4 rounded-full border border-cyan-600 bg-cyan-700" />
-          </ProjectLink>
-          <ProjectLink
-            name="Secret Project"
-            setSelectedProject={setSelectedProject}
-          >
-            <div className="mx-2 aspect-square min-w-4 rounded-full border border-yellow-600 bg-yellow-700" />
-          </ProjectLink>
+        <div
+          className={`flex ${isOpen ? "flex-row gap-x-5" : "flex-col gap-y-5"} rounded-lg p-2 text-white`}
+        >
+          <span className="cursor-pointer">
+            <CiMicrophoneOff className="h-8 w-8 min-w-8 cursor-pointer text-red-400" />
+          </span>
+          <span className="cursor-pointer">
+            <LuScreenShareOff className="h-8 w-8 min-w-8 cursor-pointer stroke-1 text-red-400" />
+          </span>
         </div>
       </motion.nav>
       <AnimatePresence>
-        {selectedProject && (
-          <ProjectNavigation
+        {SelectedComponent && (
+          <SelectedComponent
             selectedProject={selectedProject}
             setSelectedProject={setSelectedProject}
             isOpen={isOpen}
