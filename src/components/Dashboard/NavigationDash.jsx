@@ -10,6 +10,8 @@ import {
   MdOutlineSpaceDashboard,
   MdOutlineCastConnected,
 } from "react-icons/md";
+import { CgProfile } from "react-icons/cg";
+import { PiShareNetworkDuotone } from "react-icons/pi";
 import { IoCubeOutline } from "react-icons/io5";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { TbReportAnalytics } from "react-icons/tb";
@@ -18,12 +20,12 @@ import SubMenu from "./SubMenu";
 
 const subMenusList = [
   {
-    name: "build",
+    name: "test",
     icon: RiBuilding3Line,
     menus: ["auth", "app settings", "stroage", "hosting"],
   },
   {
-    name: "analytics",
+    name: "test",
     icon: TbReportAnalytics,
     menus: ["dashboard", "realtime", "events"],
   },
@@ -70,14 +72,20 @@ export default function NavigationDash() {
           <NavigationLinkDash name="Models" link={"/dashboard/models"}>
             <IoCubeOutline className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
+          <NavigationLinkDash name="Profile">
+            <CgProfile className="h-8 w-8 min-w-8" />
+          </NavigationLinkDash>
+          <NavigationLinkDash name="Rooms">
+            <PiShareNetworkDuotone className="h-8 w-8 min-w-8" />
+          </NavigationLinkDash>
           <NavigationLinkDash name="Settings">
             <IoSettingsOutline className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
-          {subMenusList?.map((menu) => (
+          {/* {subMenusList?.map((menu) => (
             <div key={menu.name}>
               <SubMenu data={menu} />
             </div>
-          ))}
+          ))} */}
         </div>
       </nav>
     </>
