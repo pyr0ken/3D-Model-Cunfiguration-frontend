@@ -3,9 +3,9 @@ import ErrorPage from "./ErrorPage";
 import Home from "./components/Home/Home";
 import Login from "./components/Authentication/Login";
 import Regiter from "./components/Authentication/Register";
-import Base from "./components/Sidebar/Base";
+import Editor from "./components/Editor/Editor";
 import Dashboard from "./components/Dashboard/Dashboard";
-import Models from "./components/Dashboard/Models";
+import Models from "./components/Dashboard/ModelsList";
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/authStore";
 
@@ -43,7 +43,7 @@ export default function App() {
         >
           <Route path="models/" element={<Models />} />
         </Route>
-        <Route path="/dashboard/models/:id" element={<Base />} />
+        <Route path="/dashboard/models/:id" element={<Editor />} />
         <Route
           path="*"
           element={
