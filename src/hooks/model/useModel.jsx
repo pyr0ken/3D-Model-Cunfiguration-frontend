@@ -3,7 +3,7 @@ import { getModel } from "../../services/modelsApi";
 
 export default function useModel(id) {
   return useQuery({
-    queryKey: ["model"],
+    queryKey: ["models", id],
     queryFn: () => getModel(id),
   });
 }

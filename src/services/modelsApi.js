@@ -1,7 +1,7 @@
 import { apiBase } from ".";
 
 export const getModels = async () => {
-  return await apiBase.get("/models").then(responce => responce.data)
+  return await apiBase.get("/models/").then(responce => responce.data)
 };
 
 export const getModel = async (id) => {
