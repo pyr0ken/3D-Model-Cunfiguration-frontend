@@ -9,9 +9,14 @@ import LoadModel from "./LoadModel";
 import Placeholder from "./Placeholder";
 import { Leva } from "leva";
 
-export default function Model(props) {
+export default function Model({ selectedModel }) {
   const [showZoomInIcon, setShowZoomInIcon] = useState(false);
   const [showZoomOutIcon, setShowZoomOutIcon] = useState(false);
+
+  // note state
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [selectedPoint, setSelectedPoint] = useState(null);
+  const [hoverPointId, setHoverPointId] = useState(null);
 
   const { Monitoring, ZoomIcons, ZoomToCursor, AutoRotate, Pan, HelpText } =
     useControls("Base", {
@@ -68,44 +73,56 @@ export default function Model(props) {
   };
 
   return (
-    <div {...props}>
-      <Canvas onWheel={handleModelWheel}>
-        {/* Basic Setup */}
+    <div className="h-screen w-screen">
+      <Canvas camera={{}} onWheel={handleModelWheel}>
+
+        {/* Movement controll */}
         <OrbitControls
+          maxDistance={20}
           autoRotate={AutoRotate}
           zoomToCursor={ZoomToCursor}
           enablePan={Pan}
-          onChange={(e) => {
-            const { object } = e.target;
-            const rotationInDegrees = {
-              x: object.rotation.x,
-              y: object.rotation.y,
-            };
-            console.log("camera", rotationInDegrees);
-          }}
         />
+
+        {/* Lighting */}
         <ambientLight intensity={ambientLight} />
         <directionalLight intensity={directionalLight} />
         <pointLight intensity={pointLight} />
+
         {/* <Environment preset="sunset" /> */}
+
         {/* Zoom in & Zoom out icons */}
         {ZoomIcons && (
           <Html center>
             {showZoomInIcon && (
-              <ZoomInIcon style={{ fontSize: "10rem", color: "#fff9" }} />
+              <ZoomInIcon className="text-[10rem] text-gray-200 opacity-70" />
             )}
             {showZoomOutIcon && (
-              <ZoomOutIcon style={{ fontSize: "10rem", color: "#fff9" }} />
+              <ZoomOutIcon className="text-[10rem] text-gray-200 opacity-70" />
             )}
           </Html>
         )}
+
         {/* Load GLTF Model */}
         <Suspense fallback={<Placeholder />}>
-          <LoadModel file={props.file} />
+          <LoadModel
+            selectedModel={selectedModel}
+            selectedPoint={selectedPoint}
+            isNoteModalOpen={isNoteModalOpen}
+            setIsNoteModalOpen={setIsNoteModalOpen}
+            hoverPointId={hoverPointId}
+            setHoverPointId={setHoverPointId}
+          />
         </Suspense>
-        {/* Show Perforamnce */}
+
+        {/* Show Performance */}
         {Monitoring && <Perf position="bottom-right" />}
       </Canvas>
+      <NoteModal
+        selectedPoint={selectedPoint}
+        isNoteModalOpen={isNoteModalOpen}
+        setIsNoteModalOpen={setIsNoteModalOpen}
+      />
     </div>
   );
 }

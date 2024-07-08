@@ -1,7 +1,7 @@
 import { Html, useProgress } from "@react-three/drei";
 
 export default function Placeholder() {
-  const { prograss } = useProgress();
+  const { progress } = useProgress();
 
   return (
     <>
@@ -14,7 +14,7 @@ export default function Placeholder() {
         <boxGeometry />
         <meshNormalMaterial wireframe />
         <Html center style={{ fontSize: "2rem", color: "white" }}>
-          {prograss} Loading
+          {progress} Loading
         </Html>
       </mesh>
     </>

@@ -69,7 +69,7 @@ export default function Navbar() {
           <li className="text-gray-300">|</li>
           <li>
             <NavLink
-              to="/dashboard"
+              to="/dashboard/"
               className="font-medium text-gray-400 transition-all hover:text-white"
             >
               Dashboard

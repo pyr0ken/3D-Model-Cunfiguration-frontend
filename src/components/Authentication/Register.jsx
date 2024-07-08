@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Background from "../Background";
@@ -9,29 +9,14 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Register() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [pwdVisibility, setPwdVisibility] = useState(false);
   const [confirmPwdVisibility, setConfirmPwdVisibility] = useState(false);
 
-  const navigate = useNavigate();
+  const usernameRef = useRef();
+  const passwordRef = useRef();
+  const confirmPasswordRef = useRef();
 
-  const handleInput = (event, type) => {
-    switch (type) {
-      case "username":
-        setUsername(event.target.value);
-        break;
-      case "pwd":
-        setPassword(event.target.value);
-        break;
-      case "confirmPwd":
-        setConfirmPassword(event.target.value);
-        break;
-      default:
-        break;
-    }
-  };
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = (type) => {
     switch (type) {
@@ -49,6 +34,10 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const username = usernameRef.current.value
+    const password = passwordRef.current.value
+    const confirmPassword = confirmPasswordRef.current.value
+
     if (password !== confirmPassword) {
       showError("Passwords do not match.");
       return;
@@ -60,9 +49,6 @@ export default function Register() {
         password: password,
       })
       .then((response) => {
-        setUsername("");
-        setPassword("");
-        setConfirmPassword("");
         navigate("/login", {
           state: { successMessage: "Registration successful. Please log in." },
         });
@@ -149,12 +135,12 @@ export default function Register() {
                   )}
                 </div>
                 <div className="mt-3 flex flex-col items-center justify-between gap-y-6">
-                  <button
+                  <input
                     // disabled={!username || !password || !confirmPassword}
+                    value="sign in"
+                    type="submit"
                     className="w-full rounded bg-leva-3 py-3 text-lg text-white transition-colors duration-300 hover:bg-leva-3/80"
-                  >
-                    submit
-                  </button>
+                  />
                   <Link
                     className="text-sm font-medium text-white underline"
                     to="/login"

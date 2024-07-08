@@ -1,6 +1,6 @@
 import Navbar from "../Core/Navbar";
 import Background from "../Background";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import React from "react";
@@ -10,9 +10,10 @@ import { useAuthStore } from "../../store/authStore.js";
 import useLogin from "../../hooks/auth/useLogin.jsx";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [pwdVisibility, setPwdVisibility] = useState(false);
+
+  const usernameRef = useRef();
+  const passwordRef = useRef();
 
   // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,34 +21,22 @@ export default function Login() {
   const { mutate } = useLogin();
   const { login } = useAuthStore();
 
-  const handleInput = (event, type) => {
-    switch (type) {
-      case "username":
-        setUsername(event.target.value);
-        break;
-      case "pwd":
-        setPassword(event.target.value);
-        break;
-      default:
-        break;
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const username = usernameRef.current.value;
+    const password = passwordRef.current.value;
     // setLoading(true);
 
     mutate(
       { username, password },
       {
         onSuccess: (data) => {
-          setUsername("");
-          setPassword("");
-          navigate("/", {
-            state: { successMessage: "Welocom to your 3d labratory." },
-          });
           // Save data in coockie and zustand
-          login(data.user, data.accessToken, data.rfreshToken);
+          login(data.user, data.accessToken, data.refreshToken);
+          navigate("/", {
+            state: { successMessage: "Welcome to your 3d laboratory." },
+          });
         },
         onError: (error) => {
           if (!error?.originalStatus) {
@@ -89,7 +78,7 @@ export default function Login() {
             <div className="p-6 pt-0">
               <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
                 <input
-                  onChange={(e) => handleInput(e, "username")}
+                  ref={usernameRef}
                   type="text"
                   name="username"
                   placeholder="Enter your username..."
@@ -98,7 +87,7 @@ export default function Login() {
                 />
                 <div className="relative">
                   <input
-                    onChange={(e) => handleInput(e, "pwd")}
+                    ref={passwordRef}
                     type={pwdVisibility ? "text" : "password"}
                     name="password"
                     placeholder="Enter your password..."
@@ -118,9 +107,11 @@ export default function Login() {
                   )}
                 </div>
                 <div className="mt-3 flex flex-col items-center justify-between gap-y-6">
-                  <button className="w-full rounded bg-leva-3 py-3 text-lg text-white transition-colors duration-300 hover:bg-leva-3/80 ">
-                    login
-                  </button>
+                  <input
+                    type="submit"
+                    value="continue"
+                    className="w-full cursor-pointer rounded bg-leva-3 py-3 text-lg text-white transition-colors duration-300 hover:bg-leva-3/80 "
+                  />
                   <Link
                     className="text-sm font-medium text-white underline"
                     to="/register"

@@ -6,22 +6,25 @@ import { NextUIProvider } from "@nextui-org/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-const queryClinet = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 10000,
       gcTime: 60000,
+      retry: 3,
+      refetchOnWindowFocus: true,
     },
   },
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClinet}>
-      <NextUIProvider>
-        <App />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </NextUIProvider>
-    </QueryClientProvider>
-  </React.StrictMode>,
+  // React.StrictMode have some bugs in google chrome
+  // <React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <NextUIProvider>
+      <App />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </NextUIProvider>
+  </QueryClientProvider>,
+  // </React.StrictMode>
 );

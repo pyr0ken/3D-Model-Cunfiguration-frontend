@@ -26,6 +26,7 @@ export default {
         "leva-1": "#181C20",
         "leva-2": "#292D39",
         "leva-3": "#007BFF",
+        "leva-4": "#111827"
       },
     },
   },

@@ -6,6 +6,6 @@ export const loginRequest = async (credentials) => {
   const accessToken = response.data.access;
   const refreshToken = response.data.refresh;
   const decodedToken = jwtDecode(accessToken);
-  const user = { username: decodedToken.username };
+  const user = { username: decodedToken.username, userId: decodedToken.user_id };
   return { user, accessToken, refreshToken };
 };

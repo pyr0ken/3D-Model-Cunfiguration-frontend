@@ -60,8 +60,8 @@ export default function Home() {
           </Canvas>
         </div>
 
-        <div className="absolute text-white/80 font-mono top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-full max-w-full text-[4rem] px-10">
-          <h1>Welcome To New World</h1>
+        <div className="absolute select-none left-1/2 top-1/2 flex w-full max-w-full -translate-x-1/2 -translate-y-1/2 transform items-center justify-center px-10 font-mono text-[4rem] text-white/95">
+          <h1>Welcome To 3D LAB</h1>
         </div>
       </div>
     </>

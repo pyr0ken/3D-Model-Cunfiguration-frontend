@@ -1,31 +1,50 @@
 // import MouseTracker from "../Models/MouseTracker";
-import Navigation from "./Navigation";
 import Model from "../Models/Model";
 import { useParams } from "react-router-dom";
-import useModel from "../../hooks/model/useModel";
+import CameraAi from "./CameraAi";
+import useCameraStore from "../../store/cameraStore";
+import useEditModelDetail from "../../hooks/model/useEditModelDetail";
+import EditorNavigation from "./EditorNavigation";
+import OpenModel from "./OpenEditorModel/OpenModel";
+import useEditorStore from "../../store/editorStore";
+import { useEffect } from "react";
 
 export default function Editor() {
-  const params = useParams();
-  const modelId = params.id;
+  // get edit model id from url path
+  const { editModelId } = useParams();
 
-  const { data: model, isLoading, isError } = useModel(modelId);
+  // ai camera store
+  const { cameraIsOn, changeCameraStatus } = useCameraStore();
 
-  let content;
-  if (isLoading) {
-    content = <p className="text-white">Loading</p>;
-  } else if (isError) {
-    content = <p className="text-white">Error</p>;
-  } else {
-    content = <Model file={model.file} className="h-screen w-screen" />;
-  }
+  // Editor Store
+  const { selectedModel, closeModel, setSelectedModel } = useEditorStore();
+
+  // Edit model
+  const {
+    data: editModel,
+    isLoading,
+    isError,
+  } = useEditModelDetail(editModelId);
+
+  useEffect(() => {
+    if (editModel && !closeModel) {
+      setSelectedModel(editModel);
+    }
+  }, [editModel]);
 
   return (
-    <main className="relative flex h-screen w-full flex-row">
-      {/* <MouseTracker /> */}
-      <Navigation />
-      <div className="flex-1 bg-leva-1/50 bg-[linear-gradient(to_right,#8c8c8c20_1px,transparent_1px),linear-gradient(to_bottom,#8c8c8c20_1px,transparent_1px)] bg-[size:30px_30px]">
-        {content}
-      </div>
-    </main>
+    <div className="bg-grid relative flex h-screen w-full overflow-hidden">
+      <EditorNavigation />
+
+      {cameraIsOn && <CameraAi />}
+
+      {selectedModel && !isLoading ? (
+        <Model selectedModel={selectedModel} />
+      ) : (
+        <div className="ml-[5.5rem] flex w-full justify-center">
+          <OpenModel />
+        </div>
+      )}
+    </div>
   );
 }

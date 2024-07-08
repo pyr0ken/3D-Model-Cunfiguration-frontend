@@ -4,10 +4,8 @@ import { jwtDecode } from "jwt-decode";
 import dayjs from "dayjs";
 import { useAuthStore } from "../store/authStore";
 
-const accessToken = Cookies.get("accessToken");
-const refreshToken = Cookies.get("refreshToken");
-
-const API = "http://127.0.0.1:8000/api/v1";
+const BASE_URL = "http://127.0.0.1:8000/"
+const API = BASE_URL + "api/v1";
 
 const apiBase = axios.create({
   baseURL: API,
@@ -19,27 +17,48 @@ const apiAuth = axios.create({
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `Bearer ${accessToken}`,
+    // Authorization: `Bearer ${accessToken}`,
   },
 });
 
-// apiAuth.interceptors.request.use(async (req) => {
-//   let user = jwtDecode(accessToken);
-//   const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+// Function to refresh the access token
+const refreshAccessToken = async () => {
+  try {
+    const refreshToken = Cookies.get("refreshToken");
+    const response = await axios.post(`${API}/users/token/refresh/`, {
+      refresh: refreshToken,
+    });
 
-//   if (!isExpired) return req;
+    const { access } = response.data;
+    Cookies.set("accessToken", access);
+    return access;
+  } catch (error) {
+    // Handle error, e.g., redirect to login page
+    console.error("Error refreshing access token:", error);
+    throw error;
+  }
+};
 
-//   const response = await apiBase.post(`/users/token/refresh/`, {
-//     refresh: refreshToken,
-//   });
+// Axios interceptor to check access token expiration and refresh if needed
+apiAuth.interceptors.request.use(
+  async (config) => {
+    const accessToken = Cookies.get("accessToken");
+    if (accessToken) {
+      const decodedToken = jwtDecode(accessToken);
+      const currentTime = dayjs().unix();
+      if (decodedToken.exp - currentTime < 10) {
+        // Adjusted to check 10 seconds before expiration
+        const newAccessToken = await refreshAccessToken();
+        config.headers.Authorization = `Bearer ${newAccessToken}`;
+      } else {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
-//   const decodedToken = jwtDecode(accessToken);
-//   user = { username: decodedToken.username };
-
-//   useAuthStore().login(response.data.access, response.data.refresh, refreshToken)
-
-//   req.headers.Authorization = `Bearer ${response.data.access}`;
-//   return req;
-// });
-
-export { apiBase, apiAuth, API };
+export { apiBase, apiAuth, API, BASE_URL };
