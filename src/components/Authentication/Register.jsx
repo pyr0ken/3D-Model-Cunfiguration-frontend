@@ -34,9 +34,9 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const username = usernameRef.current.value
-    const password = passwordRef.current.value
-    const confirmPassword = confirmPasswordRef.current.value
+    const username = usernameRef.current.value;
+    const password = passwordRef.current.value;
+    const confirmPassword = confirmPasswordRef.current.value;
 
     if (password !== confirmPassword) {
       showError("Passwords do not match.");
@@ -66,8 +66,8 @@ export default function Register() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center text-white">
-        <ToastContainer />
+      <div className="bg-dot flex flex-col items-center text-white">
+        <ToastContainer position="bottom-left" />
         <Suspense>
           <Background />
         </Suspense>
@@ -76,7 +76,7 @@ export default function Register() {
             <div className="absolute inset-0 -z-10 bg-black blur-xl"></div>
             <div className="mb-5 flex flex-col justify-center ">
               <h1 className="p-6 text-center text-5xl font-semibold">
-                Register
+                ثبت نام
               </h1>
             </div>
             <div className="p-6 pt-0">
@@ -86,7 +86,7 @@ export default function Register() {
                   onChange={(e) => handleInput(e, "username")}
                   type="text"
                   name="username"
-                  placeholder="Enter your username..."
+                  placeholder="لطفا نام کاربری خود را وارد کنید..."
                   autoComplete="off"
                   className="w-full rounded-md border border-white/20 bg-neutral-950 p-4 text-slate-100 transition-colors duration-500 placeholder:select-none  placeholder:text-neutral-500 focus:border-leva-3 focus:outline-none"
                 />
@@ -96,19 +96,19 @@ export default function Register() {
                     onChange={(e) => handleInput(e, "pwd")}
                     type={pwdVisibility ? "text" : "password"}
                     name="password"
-                    placeholder="Enter your password..."
+                    placeholder="لطفا پسورد خود را وارد کنید..."
                     autoComplete="off"
                     className="w-full rounded-md border border-white/20 bg-neutral-950 p-4 text-slate-100 transition-colors duration-500 placeholder:select-none  placeholder:text-neutral-500 focus:border-leva-3 focus:outline-none"
                   />
                   {pwdVisibility ? (
                     <FaRegEye
                       onClick={() => togglePasswordVisibility("pwd")}
-                      className="absolute right-4 top-0 translate-y-5 cursor-pointer text-gray-300"
+                      className="absolute left-4 top-0 translate-y-5 cursor-pointer text-gray-300"
                     />
                   ) : (
                     <FaRegEyeSlash
                       onClick={() => togglePasswordVisibility("pwd")}
-                      className="absolute right-4 top-0 translate-y-5 cursor-pointer text-gray-300"
+                      className="absolute left-4 top-0 translate-y-5 cursor-pointer text-gray-300"
                     />
                   )}
                 </div>
@@ -118,35 +118,38 @@ export default function Register() {
                     onChange={(e) => handleInput(e, "confirmPwd")}
                     type={confirmPwdVisibility ? "text" : "password"}
                     name="confirm-password"
-                    placeholder="Confirm your password..."
+                    placeholder="لطفا پسورد خود را تکرار کنید..."
                     autoComplete="off"
                     className="w-full rounded-md border border-white/20 bg-neutral-950 p-4 text-slate-100 transition-colors duration-500 placeholder:select-none  placeholder:text-neutral-500 focus:border-leva-3 focus:outline-none"
                   />
                   {confirmPwdVisibility ? (
                     <FaRegEye
                       onClick={() => togglePasswordVisibility("confirmPwd")}
-                      className="absolute right-4 top-0 translate-y-5 cursor-pointer text-gray-300"
+                      className="absolute left-4 top-0 translate-y-5 cursor-pointer text-gray-300"
                     />
                   ) : (
                     <FaRegEyeSlash
                       onClick={() => togglePasswordVisibility("confirmPwd")}
-                      className="absolute right-4 top-0 translate-y-5 cursor-pointer text-gray-300"
+                      className="absolute left-4 top-0 translate-y-5 cursor-pointer text-gray-300"
                     />
                   )}
                 </div>
                 <div className="mt-3 flex flex-col items-center justify-between gap-y-6">
                   <input
                     // disabled={!username || !password || !confirmPassword}
-                    value="sign in"
+                    value="ثبت"
                     type="submit"
-                    className="w-full rounded bg-leva-3 py-3 text-lg text-white transition-colors duration-300 hover:bg-leva-3/80"
+                    className="w-full cursor-pointer rounded bg-leva-3 py-3 text-lg text-white transition-colors duration-300 hover:bg-leva-3/80"
                   />
-                  <Link
-                    className="text-sm font-medium text-white underline"
-                    to="/login"
-                  >
-                    Do you have an account? Login here.
-                  </Link>
+                  <p className="text-sm font-medium text-white">
+                    آیا حساب کاربری دارید؟‌
+                    <Link
+                      className="mr-1 underline hover:text-leva-3"
+                      to="/login"
+                    >
+                      وارد صفحه ورود شوید.
+                    </Link>
+                  </p>
                 </div>
               </form>
             </div>

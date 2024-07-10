@@ -20,6 +20,7 @@ import useRoomStore from "../../../store/roomStore";
 import useVideoSdkCreateRoom from "../../../hooks/room/useVideoSdkCreateRoom";
 import { BounceLoader } from "react-spinners";
 import { HiOutlineSignalSlash } from "react-icons/hi2";
+import jMoment from "moment-jalaali";
 
 export default function RoomsList() {
   const { data: rooms, isLoading, isError, error, refetch } = useRooms();
@@ -32,7 +33,8 @@ export default function RoomsList() {
   const joinRoomIdRef = useRef();
   const titleRef = useRef();
 
-  const { setAuthToken, setMeetingId, setJoined } = useRoomStore();
+  const { setAuthToken, setMeetingId, setJoined, setRoomTitle } =
+    useRoomStore();
   const { mutate: createVideoSdkRoom } = useVideoSdkCreateRoom();
   const [roomEnterId, setRoomEnterId] = useState(null);
 
@@ -79,6 +81,7 @@ export default function RoomsList() {
         onSuccess: (response) => {
           setAuthToken(response.data.auth_token);
           setMeetingId(response.data.meeting_id);
+          setRoomTitle(response.data.room_title);
           setJoined(false);
           navigate(`/rooms/${id}`);
         },
@@ -120,8 +123,9 @@ export default function RoomsList() {
         onSuccess: (data) => {
           setAuthToken(data.auth_token);
           setMeetingId(data.meeting_id);
+          setRoomTitle(data.room_title);
           setJoined(false);
-          navigate(`/rooms/${data.id}`);
+          navigate(`/rooms/${data.room_id}`);
         },
         onError: (error) => {
           console.log(error);
@@ -142,18 +146,18 @@ export default function RoomsList() {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer position="bottom-left" />
       <div className="mx-5 mt-2 flex h-screen w-full flex-col gap-y-5 overflow-auto text-white">
         <div className="flex flex-col">
           <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
-            <h1 className="text-2xl font-bold"> Created Rooms </h1>
+            <h1 className="text-2xl font-bold"> جلسات ساخته شده </h1>
             <div className="flex items-center gap-x-2">
               <Input
                 ref={titleRef}
                 className="dark"
                 size="lg"
                 variant="faded"
-                placeholder="Enter the title of room..."
+                placeholder="لطفا عنوان جلسه جدید را وارد کنید..."
                 color="primary"
               />
               <Button
@@ -163,64 +167,59 @@ export default function RoomsList() {
                 color="primary"
                 onClick={() => handleCreateRoom(titleRef.current.value)}
               >
-                Create New Room
+                ساخت جلسه جدید
               </Button>
             </div>
           </div>
 
           <div className="mx-5 mt-1 overflow-y-auto rounded-lg">
             <div className="grid grid-cols-3 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
-              <p className="pl-1">Title</p>
-              <p className="pl-2.5">Created At</p>
-              <p className="text-center">Options</p>
+              <p className="pr-2">عنوان</p>
+              <p className="pr-2.5">زمان ایجاد</p>
+              <p className="text-center">کزینه ها</p>
             </div>
             {isLoading ? (
-              <p className="p-2">Loading...</p>
+              <p className="bg-leva-2/50 p-4 text-center text-lg">
+                در حال بارگیری اطلاعات...
+              </p>
             ) : (
               <div className="max-h-[50vh] overflow-y-auto text-gray-200">
                 {createdRooms.length > 0 ? (
                   createdRooms.map((room) => (
                     <div
                       key={room.id}
-                      className="grid grid-cols-3 bg-leva-3 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
+                      className="grid grid-cols-3 items-center bg-leva-3 p-2 text-lg font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
                     >
-                      <p className="p-3">{room.title}</p>
-                      <p className="p-3">{formatISODate(room.created_at)}</p>
-                      <div className="flex justify-center gap-x-2 font-mono">
+                      <p className="pr-3">{room.title}</p>
+                      <p className="pr-3">
+                        {jMoment(room.created_at).format(
+                          "HH:MM - jYYYY/jMM/jDD",
+                        )}
+                      </p>
+                      <div className="flex justify-center gap-x-2">
                         <button
                           onClick={() => handleEnterRoom(room.id)}
-                          className={`rounded-lg p-2 text-black transition-colors ${roomEnterId === room.id ? "bg-black/70" : "bg-blue-400 hover:bg-green-500"}`}
+                          className={`rounded-lg p-3 text-black transition-colors ${roomEnterId === room.id ? "bg-black/70" : "bg-blue-400 hover:bg-green-500"}`}
                         >
-                          {roomEnterId === room.id ? <Spinner size="lg" /> : "Enter"}
+                          {roomEnterId === room.id ? (
+                            <Spinner size="lg" />
+                          ) : (
+                            "ورود"
+                          )}
                         </button>
                         <button
                           onClick={() => handleDeleteRoom(room.id)}
-                          className="rounded-lg bg-blue-400 p-2 text-black transition-colors hover:bg-red-500"
+                          className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-red-500"
                         >
-                          Delete
+                          حذف
                         </button>
-                        {/* <Button
-                      variant="shadow"
-                      className="dark"
-                      color="secondary"
-                      onClick={() => handleDeleteRoom(room.id)}
-                    >
-                      <IoEnterOutline className="size-10" />
-                    </Button>
-                    <Button
-                      variant="shadow"
-                      className="dark"
-                      color="danger"
-                      onClick={() => handleDeleteRoom(room.id)}
-                    >
-                      <MdDelete className="size-6" />
-                    </Button> */}
                       </div>
                     </div>
                   ))
                 ) : (
                   <p className="bg-leva-2/50 p-4 text-center text-lg">
-                    There Is no room exist, Let's create ones !
+                    هیچ جلسه ای در اینجا وجود ندارد. همین الان میتوانید یک جلسه
+                    بسازید !
                   </p>
                 )}
               </div>
@@ -229,37 +228,39 @@ export default function RoomsList() {
         </div>
         <div className="flex flex-col">
           <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
-            <h1 className="text-2xl font-bold"> Joined Rooms </h1>
+            <h1 className="text-2xl font-bold"> جلسات عضو شده </h1>
             <div className="flex items-center gap-x-2">
               <Input
                 ref={joinRoomIdRef}
                 className="dark"
                 size="lg"
                 variant="faded"
-                placeholder="Enter the room id..."
+                placeholder="لطفا آیدی جلسه را وارد کنید..."
                 color="primary"
               />
               <Button
-                className="text-lg"
+                className="px-11 text-lg"
                 variant="shadow"
                 size="lg"
                 color="primary"
                 onClick={() => handleJoinRoom(joinRoomIdRef.current.value)}
               >
-                Join room
+                پیوستن به جلسه
               </Button>
             </div>
           </div>
           <div className="mx-5 mt-1 overflow-y-auto rounded-lg text-gray-200">
             <div className="grid grid-cols-5 items-center rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
-              <p>Title</p>
-              <p className="pl-1">Owner</p>
-              <p className="pl-1">Is Active</p>
-              <p className="pl-3">Last Join</p>
-              <p className="pl-1 text-center">Options</p>
+              <p>عنوان</p>
+              <p className="pl-1">مدیر</p>
+              <p className="pl-1">وضعیت</p>
+              <p className="pl-3">آخرین تاریخ عضویت</p>
+              <p className="pl-1 text-center">گزینه ها</p>
             </div>
             {isLoading ? (
-              <p className="p-2">Loading...</p>
+              <p className="bg-leva-2/50 p-4 text-center text-lg">
+                در حال بارگیری اطلاعات...
+              </p>
             ) : (
               <div className="max-h-[50vh] overflow-y-auto">
                 {joinedRooms.length > 0 ? (
@@ -287,14 +288,15 @@ export default function RoomsList() {
                           }
                           className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
                         >
-                          Join
+                          پیسوتن
                         </button>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p className="rounded-tl-lg rounded-tr-lg bg-leva-2/50 p-4 text-center text-lg">
-                    There Is no room exist, Let's join ones !
+                  <p className="bg-leva-2/50 p-4 text-center text-lg">
+                    هیچ جلسه ای در اینجا وجود ندارد. همین الان میتوانید به یک
+                    جلسه بپیوندید !
                   </p>
                 )}
               </div>

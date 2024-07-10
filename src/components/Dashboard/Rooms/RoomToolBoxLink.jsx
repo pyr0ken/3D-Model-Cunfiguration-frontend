@@ -1,10 +1,10 @@
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
-const RoomToolBoxLink = ({ children, name, setSelectedProject }) => {
+const RoomToolBoxLink = ({ children, name, componentName, setSelectedTab }) => {
   const handleClick = () => {
     // setSelectedProject(null);
     setTimeout(() => {
-      setSelectedProject(name);
+      setSelectedTab(componentName);
     }, 150);
   };
 
@@ -17,7 +17,7 @@ const RoomToolBoxLink = ({ children, name, setSelectedProject }) => {
       {children}
       <div className="flex w-full place-items-center justify-start overflow-auto">
         <p className="w-full truncate whitespace-nowrap text-inherit">{name}</p>
-        <ChevronRightIcon className="size-8 stroke-inherit stroke-[0.75]" />
+        <ChevronLeftIcon className="size-8 stroke-inherit stroke-[0.75]" />
       </div>
     </div>
   );

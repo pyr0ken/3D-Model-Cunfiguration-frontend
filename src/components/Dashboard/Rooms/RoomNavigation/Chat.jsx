@@ -11,7 +11,7 @@ import { usePubSub } from "@videosdk.live/react-sdk";
 
 const variants = {
   close: {
-    x: -500,
+    x: 500,
     opacity: 0,
   },
   open: {
@@ -20,11 +20,8 @@ const variants = {
   },
 };
 
-const Chat = ({ selectedProject, isOpen, setSelectedProject }) => {
-  const { publish, messages: pubSubMessages } = usePubSub("CHAT", {
-    onMessageReceived: (msg) => {},
-    onOldMessagesReceived: (msg) => {},
-  });
+export default function Chat({ isOpen, setSelectedTab }) {
+  const { publish, messages: pubSubMessages } = usePubSub("CHAT");
 
   const { messages, setMessages } = useChatStore();
 
@@ -74,15 +71,15 @@ const Chat = ({ selectedProject, isOpen, setSelectedProject }) => {
         duration: 0.25,
         ease: "easeInOut",
       }}
-      className={`absolute z-20 ml-0 flex h-full w-96 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "left-[16.5rem] transition-left" : "left-24 transition-left"
+      className={`absolute z-20 mr-0 flex h-full w-96 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
+        isOpen
+          ? "transition-right right-[16.5rem]"
+          : "transition-right right-24"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
-        <h1 className="text-lg font-semibold tracking-wide">
-          {selectedProject}
-        </h1>
-        <button onClick={() => setSelectedProject(null)}>
+        <h1 className="text-lg font-semibold tracking-wide">گفتگو</h1>
+        <button onClick={() => setSelectedTab(null)}>
           <XMarkIcon className="w-8 stroke-neutral-400" />
         </button>
       </div>
@@ -118,7 +115,7 @@ const Chat = ({ selectedProject, isOpen, setSelectedProject }) => {
                 onKeyDown={(event) =>
                   handleEnterMsg(event, inputRef.current.value)
                 }
-                placeholder="Enter your massage..."
+                placeholder="پیام خود را وارد کنید..."
                 type="text"
                 className="w-full resize-none rounded-xl bg-leva-1 px-2 py-2.5 transition-colors placeholder:text-small hover:bg-leva-1/50 focus:outline-none"
               />
@@ -134,6 +131,4 @@ const Chat = ({ selectedProject, isOpen, setSelectedProject }) => {
       </div>
     </motion.nav>
   );
-};
-
-export default Chat;
+}

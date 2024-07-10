@@ -1,6 +1,6 @@
 export const variants = {
     close: {
-      x: -300,
+      x: 300,
       opacity: 0,
     },
     open: {

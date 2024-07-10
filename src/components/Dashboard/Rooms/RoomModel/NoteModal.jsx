@@ -8,63 +8,82 @@ import {
   Textarea,
 } from "@nextui-org/react";
 import { useRef } from "react";
-import useAddNote from "../../hooks/model/useAddNote";
-import useDeleteNote from "../../hooks/model/useDeleteNote";
-import useDeletePoint from "../../hooks/model/useDeletePoint";
+import useAddNote from "../../../../hooks/model/useAddNote";
+import useDeleteNote from "../../../../hooks/model/useDeleteNote";
+import useDeletePoint from "../../../../hooks/model/useDeletePoint";
+import useRoomStore from "../../../../store/roomStore";
+import { usePubSub } from "@videosdk.live/react-sdk";
 
 export default function NoteModal({
   selectedPoint,
   isNoteModalOpen,
   setIsNoteModalOpen,
+  refetch,
 }) {
   const { mutate: addNote } = useAddNote();
   const { mutate: deletePoint } = useDeletePoint();
   const { mutate: deleteNote } = useDeleteNote();
 
+  const { selectedModel } = useRoomStore();
+  const { publish: pointPublish } = usePubSub("POINT");
+
   const noteRef = useRef(null);
 
-  const handleAddNote = (event) => {
+  const handleAddNote = () => {
     const text = noteRef.current.value;
     if (text) {
       addNote(
-        { point_id: selectedPoint.id, note: text },
         {
-          onSuccess: (res) => console.log(res),
+          edit_model_id: selectedModel.id,
+          point_id: selectedPoint.id,
+          note: text,
+        },
+        {
+          onSuccess: (res) => refetch(),
           onError: (err) => console.log(err),
         },
       );
+      pointPublish("New Note", { persist: true });
       handleCloseModal();
     }
   };
 
   const handleDeletePoint = () => {
     deletePoint(
-      { point_id: selectedPoint.id },
       {
-        onSuccess: (res) => console.log(res),
+        edit_model_id: selectedModel.id,
+        point_id: selectedPoint.id,
+      },
+      {
+        onSuccess: (res) => refetch(),
         onError: (err) => console.log(err),
       },
     );
+    pointPublish("Delete Point", { persist: true });
     handleCloseModal();
   };
 
   const handleDeleteNote = () => {
     deleteNote(
-      { point_id: selectedPoint.id },
       {
-        onSuccess: (res) => console.log(res),
+        edit_model_id: selectedModel.id,
+        point_id: selectedPoint.id,
+      },
+      {
+        onSuccess: (res) => refetch(),
         onError: (err) => console.log(err),
       },
     );
+    pointPublish("Delete Note", { persist: true });
     handleCloseModal();
   };
 
-  // const getPointNote = () => {
-  //   if (props.pointRef.current.point.note !== undefined) {
-  //     return props.pointRef.current.point.note;
-  //   }
-  //   return "";
-  // };
+  const getPointNote = () => {
+    if (selectedPoint.note) {
+      return selectedPoint.note;
+    }
+    return "";
+  };
 
   const handleCloseModal = () => {
     setIsNoteModalOpen(false);
@@ -86,7 +105,7 @@ export default function NoteModal({
             ref={noteRef}
             autoFocus
             label="Note"
-            // defaultValue={getPointNote}
+            defaultValue={getPointNote}
             placeholder="Enter your note..."
             variant="flat"
           />

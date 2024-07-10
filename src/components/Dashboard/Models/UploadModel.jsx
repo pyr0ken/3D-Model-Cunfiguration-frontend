@@ -87,7 +87,7 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
     // }
 
     const title = titleRef.current.value;
-    
+
     if (title.length === 0) {
       showAlert("error", "The title field may not be blank.");
     }
@@ -131,12 +131,15 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
           <FaUpload className="m-3" />
           <div className="flex flex-col gap-2">
             <p className="select-none text-center">
-              Drag and Drop Files Or Click Here
+              فایل ها را بکشید و رها کنید یا اینجا کلیک کنید.
             </p>
             {file && (
-              <div className="font-mono font-bold">
-                <p>name: {file.name}</p>
-                <p>size: {fileSizeInMegabytes(file.size).toFixed(2)} MB</p>
+              <div className="mt-2 font-bold">
+                <p>اسم: {file.name}</p>
+                <p className="space-x-1">
+                  <span>سایز: {fileSizeInMegabytes(file.size).toFixed(2)}</span>
+                  <span>MB</span>
+                </p>
               </div>
             )}
           </div>
@@ -163,13 +166,13 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
           <Input
             ref={titleRef}
             className="text-white"
-            placeholder="Enter title..."
+            placeholder="لطفا عنوان مدل را وارد کنید..."
             variant="faded"
             color="success"
             size="lg"
           />
-          <Button onClick={handleUploadModel} color="success" variant="ghost">
-            Upload
+          <Button onClick={handleUploadModel} className="text-lg" size="lg" color="success" variant="ghost">
+            آپلود
           </Button>
         </div>
       </div>

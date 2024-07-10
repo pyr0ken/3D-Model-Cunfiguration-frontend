@@ -1,13 +1,12 @@
-import { useParticipant } from "@videosdk.live/react-sdk";
-import { useEffect, useState } from "react";
+import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
+import { useEffect } from "react";
+import { CiMicrophoneOff, CiMicrophoneOn } from "react-icons/ci";
 import { IoPersonSharp } from "react-icons/io5";
-import useRoomStore from "../../../../store/roomStore";
-import { CiMicrophoneOn, CiMicrophoneOff } from "react-icons/ci";
-import useRoomDetail from "../../../../hooks/room/useRoomDetail";
-import { useParams } from "react-router-dom";
-import { BsSoundwave } from "react-icons/bs";
 import { MdCallEnd } from "react-icons/md";
+import { useParams } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
+import useRoomDetail from "../../../../hooks/room/useRoomDetail";
+import useRoomStore from "../../../../store/roomStore";
 
 export default function MemberConfig({ participantId }) {
   const {
@@ -21,6 +20,8 @@ export default function MemberConfig({ participantId }) {
     isLocal,
     metaData,
   } = useParticipant(participantId);
+
+  const { localMicOn, muteMic, unmuteMic } = useMeeting();
 
   const { isOwner, ownerId, setOwnerId } = useRoomStore();
 
@@ -40,6 +41,12 @@ export default function MemberConfig({ participantId }) {
   }
 
   const handleDisableMic = () => {
+    if (isOwner && localMicOn) {
+      muteMic();
+    } else {
+      unmuteMic();
+    }
+
     if (micOn && micStream) {
       disableMic();
     }
@@ -50,12 +57,12 @@ export default function MemberConfig({ participantId }) {
   };
 
   return (
-    <div className="flex justify-between">
+    <div className="mt-3 flex items-center justify-between">
       <div className="flex items-center justify-center gap-x-3">
         <IoPersonSharp
-          className={`${isParticipantOwner ? "text-red-500" : ""}`}
+          className={`flex items-center justify-center size-6 ${isParticipantOwner ? "text-red-500" : ""}`}
         />
-        <p> {displayName} </p>
+        <p className="flex items-center text-lg"> {displayName} </p>
       </div>
       {micOn && (
         <div className="flex items-center">
@@ -80,7 +87,7 @@ export default function MemberConfig({ participantId }) {
               />
             )}
           </span>
-          {isOwner && (
+          {isOwner && !isParticipantOwner && (
             <span
               onClick={() => handleRemoveParticipant()}
               className="rounded-lg bg-red-500 p-1 transition-colors  hover:bg-red-600"

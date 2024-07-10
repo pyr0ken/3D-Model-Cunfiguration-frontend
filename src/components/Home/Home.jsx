@@ -1,12 +1,11 @@
-import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import Cube from "../Cube";
-import { showAlert } from "../Core/utils";
-import Navbar from "../Core/Navbar";
+import { Canvas } from "@react-three/fiber";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../Core/Navbar";
+import { showAlert } from "../Core/utils";
+import Cube from "../Cube";
 
 export default function Home() {
   const { state, pathname } = useLocation();
@@ -22,14 +21,15 @@ export default function Home() {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer position="bottom-left" />
       <Navbar />
-      <div className="relative flex flex-col justify-center">
+      <div className="bg-dot relative flex flex-col justify-center">
         <div className="h-screen w-full">
           <Canvas>
             <OrbitControls enablePan={false} />
 
             {/* <ambientLight /> */}
+            <ambientLight intensity={0.1} />
             <pointLight
               position={[0, 10, -5]}
               intensity={100}
@@ -60,8 +60,8 @@ export default function Home() {
           </Canvas>
         </div>
 
-        <div className="absolute select-none left-1/2 top-1/2 flex w-full max-w-full -translate-x-1/2 -translate-y-1/2 transform items-center justify-center px-10 font-mono text-[4rem] text-white/95">
-          <h1>Welcome To 3D LAB</h1>
+        <div className="absolute left-1/2 top-1/2 flex w-full max-w-full -translate-x-1/2 -translate-y-1/2 transform select-none items-center justify-center px-10 font-mono text-[4rem] text-white/95">
+          <h1>به آزمایشگاه سه بعدی خوش آمدید!</h1>
         </div>
       </div>
     </>

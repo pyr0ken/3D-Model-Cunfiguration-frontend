@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 export default function Dashboard() {
   return (
     <>
-      <main className="flex h-screen overflow-hidden">
+      <main className="flex bg-dot h-screen overflow-hidden">
         <NavigationDash />
         <Outlet />
       </main>

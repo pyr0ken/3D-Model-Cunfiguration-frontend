@@ -1,21 +1,16 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { motion } from "framer-motion";
-import { useMeeting } from "@videosdk.live/react-sdk";
-import MemberConfig from "./MemberConfig";
 import { Button } from "@nextui-org/react";
-import useRoomStore from "../../../../store/roomStore";
-import { copyText, showAlert } from "../../../Core/utils";
+import { useMeeting } from "@videosdk.live/react-sdk";
+import { motion } from "framer-motion";
 import { MdContentCopy } from "react-icons/md";
 import useRoomEnd from "../../../../hooks/room/useRoomEnd";
 import useRoomLeft from "../../../../hooks/room/useRoomLeft";
+import useRoomStore from "../../../../store/roomStore";
+import { copyText, showAlert } from "../../../Core/utils";
+import MemberConfig from "./MemberConfig";
 import { variants } from "./utils";
 
-
-export default function Members({
-  selectedProject,
-  isOpen,
-  setSelectedProject,
-}) {
+export default function Members({ isOpen, setSelectedTab }) {
   const { isOwner, meetingId, ownerId } = useRoomStore();
 
   const { mutate: roomEnd } = useRoomEnd();
@@ -55,14 +50,14 @@ export default function Members({
         duration: 0.2,
         ease: "easeInOut",
       }}
-      className={`absolute z-20 ml-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "left-[16.5rem] transition-left" : "left-24 transition-left"
+      className={`absolute z-20 mr-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
+        isOpen ? "right-[16.5rem] transition-right" : "right-24 transition-right"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
-        <h1 className="text-lg tracking-wide">{selectedProject}</h1>
-        <button onClick={() => setSelectedProject(null)}>
-          <XMarkIcon className="w-8 rounded-lg stroke-neutral-400 text-neutral-400 transition-colors duration-100 hover:bg-leva-3/30 hover:stroke-neutral-100 hover:text-neutral-100" />
+        <h1 className="text-lg tracking-wide">اعضای جلسه</h1>
+        <button onClick={() => setSelectedTab(null)}>
+          <XMarkIcon className="w-8 rounded-lg stroke-neutral-400 text-neutral-400 transition-colors duration-100" />
         </button>
       </div>
       <div className="no-scrollbar flex flex-col gap-y-2 overflow-y-auto text-white">
@@ -73,10 +68,10 @@ export default function Members({
           title="Click to copy"
         >
           <MdContentCopy className="h-8 min-w-4" />
-          Room ID: <strong>{meetingId}</strong>
+          آیدی جلسه: <strong>{meetingId}</strong>
         </Button>
         <Button onClick={() => handleLeaveRoom()} color="warning">
-          Leave
+          ترک جلسه
         </Button>
 
         {isOwner && (
@@ -86,10 +81,10 @@ export default function Members({
               className="flex-1"
               color="primary"
             >
-              Mute All
+              بی صدا کردن تمام اعضا
             </Button>
             <Button onClick={() => handleEndRoom()} color="danger">
-              End Room
+              پایان جلسه
             </Button>
           </div>
         )}

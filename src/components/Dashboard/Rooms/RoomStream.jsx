@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { useParticipant } from "@videosdk.live/react-sdk";
-import { Rnd } from "react-rnd";
 import ReactPlayer from "react-player";
+import { Rnd } from "react-rnd";
 
 export default function RoomStream(props) {
   const micRef = useRef(null);
@@ -42,17 +42,17 @@ export default function RoomStream(props) {
           className="z-[100]"
           style={{ display: screenShareOn ? "initial" : "none" }}
           default={{
-            x: 0,
+            x: 100,
             y: 0,
-            width: 500,
+            width: 300,
             height: 300,
           }}
-          minWidth={500}
+          minWidth={300}
           minHeight={300}
           maxWidth={900}
           maxHeight={700}
           // bounds="#root"
-          enableResizing={false}
+          enableResizing={true}
         >
           <ReactPlayer
             //
@@ -65,8 +65,8 @@ export default function RoomStream(props) {
             //
             url={screenStream}
             //
-            height={"300px"}
-            width={"300px"}
+            // height={"300px"}
+            // width={"300px"}
             onError={(err) => {
               console.log(err, "participant video error");
             }}

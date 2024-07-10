@@ -13,6 +13,10 @@ export default {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
         spaceGrotesk: ["Space Grotesk", "sans-serif"],
+        vazirmatn: ["Vazirmatn", "sans-serif"],
+      },
+      zIndex: {
+        2147483645: "2147483645",
       },
       colors: {
         white: "#ffffff",
@@ -26,7 +30,8 @@ export default {
         "leva-1": "#181C20",
         "leva-2": "#292D39",
         "leva-3": "#007BFF",
-        "leva-4": "#111827"
+        "leva-4": "#111827",
+        "leva-5": "#0c0e10",
       },
     },
   },

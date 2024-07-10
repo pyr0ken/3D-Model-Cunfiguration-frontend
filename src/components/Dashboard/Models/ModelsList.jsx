@@ -13,7 +13,8 @@ import {
 } from "../../Core/utils";
 import UploadModelModal from "./UploadModelModal";
 import ViewModelModal from "./ViwsModelModal";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import jMoment from "moment-jalaali";
 
 export default function ModelsList() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -98,7 +99,7 @@ export default function ModelsList() {
       <div className="mx-5 mt-2 flex h-screen w-full flex-col gap-y-5 overflow-auto text-white">
         <div className="flex flex-col">
           <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
-            <h1 className="text-2xl font-bold"> Uploaded Models </h1>
+            <h1 className="text-2xl font-bold"> مدل های آپلود شده </h1>
             <Button
               className="text-lg"
               variant="shadow"
@@ -106,17 +107,17 @@ export default function ModelsList() {
               color="primary"
               onClick={() => setIsUploadModalOpen(true)}
             >
-              Upload New Model
+              آپلود مدل جدید
             </Button>
           </div>
           <div className="mx-5 mt-1 overflow-y-auto rounded-lg text-gray-200">
             <>
               <div className="grid grid-cols-5 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
-                <p className="pl-1">Title</p>
-                <p className="pl-1">Format</p>
-                <p className="pl-3">Size</p>
-                <p className="pl-3">Uploaded At</p>
-                <p className="text-center">Options</p>
+                <p className="pl-2">عنوان</p>
+                <p className="pl-3">فرمت</p>
+                <p className="pr-3">سایز</p>
+                <p className="pr-3">تاریخ آپلود</p>
+                <p className="text-center">گزینه ها</p>
               </div>
               {isLoading ? (
                 <p>Loading...</p>
@@ -128,29 +129,35 @@ export default function ModelsList() {
                   >
                     <p className="pl-3">{model.title}</p>
                     <p className="pl-3">{model.format}</p>
-                    <p className="pl-3">
-                      {fileSizeInMegabytes(model.size).toFixed(2)} MB
+                    <p className="pl-3 space-x-1">
+                      <span>{fileSizeInMegabytes(model.size).toFixed(2)}</span>
+                      <span>MB</span>
                     </p>
-                    <p className="pl-2">{formatISODate(model.created_at)}</p>
-                    <div className="flex justify-center gap-x-2 font-mono">
+                    <p className="pl-2">
+                      {jMoment(model.created_at).format(
+                        "HH:MM - jYYYY/jMM/jDD",
+                      )}
+                    </p>
+                    <div className="flex justify-center gap-x-2">
                       <button
                         onClick={() => handleViewModel(model.file)}
                         className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
                       >
-                        View
+                        نمایش
                       </button>
                       <button
                         onClick={() => handleDeleteModel(model.id)}
                         className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-red-500"
                       >
-                        Delete
+                        حذف
                       </button>
                     </div>
                   </div>
                 ))
               ) : (
                 <p className="bg-leva-2/50 p-4 text-center text-lg">
-                  There Is no model exist, Let's upload ones !
+                  هیچ مدلی در اینجا وجود ندارد. همین الان میتوانید یک مدل آپلود
+                  کنید!
                 </p>
               )}
             </>
@@ -168,16 +175,16 @@ export default function ModelsList() {
         />
         <div className="flex flex-col">
           <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
-            <h1 className="text-2xl font-bold"> Edited Models </h1>
+            <h1 className="text-2xl font-bold"> مدل های ویرایش شده </h1>
           </div>
           <div className="mx-5 mb-5 mt-1 overflow-y-auto rounded-lg text-gray-200">
             <>
               <div className="grid grid-cols-5 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
-                <p className="pl-1">Title</p>
-                <p className="pl-1">Points</p>
-                <p className="pl-1">Notes</p>
-                <p className="pl-3">Last Edit</p>
-                <p className="text-center">Options</p>
+                <p className="pl-1">عنوان</p>
+                <p className="pl-1">تعداد نقطه ها</p>
+                <p className="pl-1">تعداد یادداشت ها</p>
+                <p className="pl-3">آخرین تاریخ ویرایش</p>
+                <p className="text-center">گزینه ها</p>
               </div>
               {editedModelIsLoading ? (
                 <p>Loading...</p>
@@ -188,30 +195,31 @@ export default function ModelsList() {
                     className="grid grid-cols-5 items-center bg-leva-3 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
                   >
                     <p className="pl-3">{editModel.display_name}</p>
-                    <p className="pl-3">12</p>
-                    <p className="pl-3">0</p>
+                    <p className="pl-3">{editModel.points_count}</p>
+                    <p className="pl-3">{editModel.notes_count}</p>
                     <p className="pl-1">
-                      {relativeTimeFromNow(editModel.created_at)}
+                      {relativeTimeFromNow(editModel.last_edit)}
                     </p>
-                    <div className="flex justify-center gap-x-2 font-mono">
+                    <div className="flex justify-center gap-x-2">
                       <button
                         onClick={() => handleEditModel(editModel.id)}
                         className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
                       >
-                        Edit
+                        شروع ویرایش
                       </button>
                       <button
                         onClick={() => handleDeleteEditModel(editModel.id)}
                         className="rounded-lg bg-blue-400 p-3  text-black transition-colors hover:bg-red-500"
                       >
-                        Delete
+                        حذف
                       </button>
                     </div>
                   </div>
                 ))
               ) : (
                 <p className="bg-leva-2/50 p-4 text-center text-lg">
-                  There Is no model exist, Let's upload ones !
+                  هیچ جلسه ای در اینجا وجود ندارد. همین الان میتوانید یک مدل را
+                  ویرایش کنید !
                 </p>
               )}
             </>

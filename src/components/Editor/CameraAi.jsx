@@ -1,7 +1,7 @@
 import { Hands } from "@mediapipe/hands";
 import { Camera } from "@mediapipe/camera_utils";
 import { useRef, useState, useEffect } from "react";
-import useAiStore from "../../store/aiStore";
+import useEditorStore from "../../store/editorStore";
 
 const CameraAi = () => {
   const videoRef = useRef(null);
@@ -24,7 +24,7 @@ const CameraAi = () => {
   let virtualMouseX = 0;
   let virtualMouseY = 0;
 
-  const { saveRotation } = useAiStore();
+  const { setAiRotation } = useEditorStore();
 
   useEffect(() => {
     const hands = new Hands({
@@ -103,7 +103,7 @@ const CameraAi = () => {
           y: indexFingerTip.x * 6,
         };
         console.log("Rotation", rotation);
-        saveRotation(rotation);
+        setAiRotation(rotation);
       }
 
       const airCursor0 = { x: 0, y: 0 };

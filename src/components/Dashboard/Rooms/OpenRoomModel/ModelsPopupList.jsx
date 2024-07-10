@@ -35,7 +35,6 @@ export default function ModelsPopupList() {
                   <ModelCard
                     key={index}
                     title={model.title}
-                    file={model.file}
                     id={model.id}
                     createdAt={model.created_at}
                     isPublicModel={true}
@@ -57,15 +56,14 @@ export default function ModelsPopupList() {
               ? Array.from({ length: defaultLoadingCards }, (_, index) => (
                   <ModelCardLoading key={index} />
                 ))
-              : editedModels.map((model, index) => (
+              : editedModels.map((editModel, index) => (
                   <ModelCard
                     key={index}
-                    title={model.title}
-                    file={model.file}
-                    displayName={model.display_name}
-                    id={model.id}
-                    createdAt={model.created_at}
-                    isPublicModel={false}
+                    title={editModel.title}
+                    displayName={editModel.display_name}
+                    id={editModel.model_id}
+                    editModelId={editModel.id}
+                    createdAt={editModel.created_at}
                     isEditModel={true}
                   />
                 ))}
@@ -94,10 +92,8 @@ export default function ModelsPopupList() {
                   <ModelCard
                     key={index}
                     title={model.title}
-                    file={model.file}
                     id={model.id}
                     createdAt={model.created_at}
-                    isPublicModel={false}
                   />
                 ))}
           </div>

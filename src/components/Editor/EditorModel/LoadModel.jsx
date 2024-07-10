@@ -1,18 +1,13 @@
 import { Html, useGLTF } from "@react-three/drei";
-import { useThree, useFrame } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { button, useControls } from "leva";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Vector3 } from "three";
-import usePointsStore from "../../store/pointStore";
-import useAiStore from "../../store/aiStore";
-import { BASE_URL } from "../../services";
-import usePoints from "../../hooks/model/usePoints";
-import useNotes from "../../hooks/model/useNotes";
-import useAddPoint from "../../hooks/model/useAddPoints";
-import useDeletePoint from "../../hooks/model/useDeletePoint";
-import useRoomStore from "../../store/roomStore";
-import NoteModal from "./NoteModal";
-import useEditorStore from "../../store/editorStore";
+import useAddPoint from "../../../hooks/model/useAddPoints";
+import usePoints from "../../../hooks/model/usePoints";
+import { BASE_URL } from "../../../services";
+import useEditorStore from "../../../store/editorStore";
+
 
 function getFirstWords(text, wordsNumber) {
   const words = text.split(" ");
@@ -20,9 +15,14 @@ function getFirstWords(text, wordsNumber) {
   return words.length > wordsNumber ? `${firstWords}...` : firstWords;
 }
 
-export default function LoadModel({ selectedModel }) {
+export default function LoadModel({
+  selectedModel,
+  isNoteModalOpen,
+  setSelectedPoint,
+  setIsNoteModalOpen,
+}) {
   // state
-  // const { points, addPoint, removePoint, updatePoint } = usePointsStore();
+  const [hoverPointId, setHoverPointId] = useState(null);
 
   // Load Model with useGLTF
   const { nodes, materials } = useGLTF(BASE_URL + selectedModel.file);
@@ -38,14 +38,14 @@ export default function LoadModel({ selectedModel }) {
   const { mutate: addPoint } = useAddPoint();
 
   // Ref
-  const { camera } = useThree();
+  const { camera, gl } = useThree();
   const modelRef = useRef();
 
   // Ai Store for hand tracker rotation
-  const { rotation, removeRotation } = useAiStore();
+  const { aiRotation, clearAiRotation } = useEditorStore();
 
   // Controllers
-  const { scale, positionY, resetCamera } = useControls("Model", {
+  const { scale, positionY } = useControls("Model", {
     scale: {
       min: 0,
       max: 10,
@@ -60,10 +60,21 @@ export default function LoadModel({ selectedModel }) {
     "Reset Camera": button(() => {
       camera.position.set(0, 0, 5);
     }),
-    // choice: { options: ["a", "b", "c"] },
+    "Take ScreenShot": button(() => {
+      const link = document.createElement("a");
+      link.setAttribute("download", "canvas.png");
+      link.setAttribute(
+        "href",
+        gl.domElement
+          .toDataURL("image/png")
+          .replace("image/png", "image/octet-stream"),
+      );
+      link.click();
+    }),
   });
 
-  const { pointColor, pointRadius } = useControls("Point", {
+  const { pointIndex, pointColor, pointRadius } = useControls("Point", {
+    pointIndex: false,
     pointColor: "#007BFF",
     pointRadius: {
       min: 0,
@@ -72,28 +83,11 @@ export default function LoadModel({ selectedModel }) {
     },
   });
 
-  // useEffect(() => {
-  //   const handleKeyDown = (e) => {
-  //     if (e.key === "z" && e.ctrlKey) {
-  //       console.log("Before", points);
-  //       const removePointIndex = points.length - 1;
-  //       removePoint(removePointIndex);
-  //       console.log("After", points);
-  //     }
-  //   };
-  //   document.addEventListener("keydown", handleKeyDown);
-
-  //   // Cleanup function to remove the event listener when the component unmounts
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, [points, removePoint]);
-
   useEffect(() => {
-    if (rotation) {
-      modelRef.current.rotation.set(rotation.x, rotation.y, 0);
+    if (aiRotation) {
+      modelRef.current.rotation.set(aiRotation.x, aiRotation.y, 0);
     }
-  }, [rotation]);
+  }, [aiRotation]);
 
   const handleModelClick = (event) => {
     event.stopPropagation();
@@ -169,9 +163,7 @@ export default function LoadModel({ selectedModel }) {
           <mesh
             key={index}
             position={getPositionVector3(point.position)}
-            onContextMenu={(event) =>
-              handlePointContextMenu(event, { point: point })
-            }
+            onContextMenu={(event) => handlePointContextMenu(event, point)}
             onPointerOver={(event) =>
               handlePointOver(event, point.note, point.id)
             }
@@ -179,16 +171,23 @@ export default function LoadModel({ selectedModel }) {
           >
             <sphereGeometry args={[point.radius]} />
             <meshBasicMaterial color={point.color} />
-            {/* <Html className="flex" distanceFactor={5}>
-              <span className="select-none text-gray-300">1</span>
-            </Html> */}
-            {/* {point.note && !isModalOpen && hoverPointId == point.id && (
-              <Html className="flex h-7 w-40 overflow-auto" distanceFactor={5}>
+            {pointIndex && (
+              <Html className="flex" distanceFactor={4}>
+                <span className="select-none font-extrabold text-gray-300">
+                  {index + 1}
+                </span>
+              </Html>
+            )}
+            {point.note && !isNoteModalOpen && hoverPointId == point.id && (
+              <Html
+                className="flex h-7 w-40 overflow-hidden"
+                distanceFactor={5}
+              >
                 <span className="select-none rounded-xl bg-neutral-950/60 p-1 text-tiny text-gray-300">
                   {getFirstWords(point.note, 3)}
                 </span>
               </Html>
-            )} */}
+            )}
           </mesh>
         ))}
     </>

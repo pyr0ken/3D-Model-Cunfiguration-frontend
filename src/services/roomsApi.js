@@ -54,3 +54,11 @@ export const getAllRoomModels = async (meetingId) => {
 export const addRoomModel = async (data) => {
   return await apiAuth.post("/rooms/models/", data);
 };
+
+export const updateSelectedModel = async (data) => {
+  return await apiAuth.post("/rooms/models/select/", data);
+};
+
+export const deleteRoomModel = async (data) => {
+  return await apiAuth.post("/rooms/models/delete/", data);
+};

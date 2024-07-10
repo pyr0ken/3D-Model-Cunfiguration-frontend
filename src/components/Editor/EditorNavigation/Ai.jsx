@@ -2,11 +2,11 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { Button } from "@nextui-org/react";
 import { variants } from "./utils";
-import useCameraStore from "../../../store/cameraStore";
+import useEditorStore from "../../../store/editorStore";
 
 
 const Ai = ({ selectedProject, isOpen, setSelectedProject }) => {
-  const { cameraIsOn, changeCameraStatus } = useCameraStore();
+  const { aiCameraIsOn, changeCameraStatus } = useEditorStore();
 
   const handleHandTracker = () => {
     changeCameraStatus();
@@ -34,15 +34,16 @@ const Ai = ({ selectedProject, isOpen, setSelectedProject }) => {
       </div>
       <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
         <div className="flex flex-col">
-          <p className="mb-3 text-xl font-semibold">Hand Tracker</p>
+          <p className="mb-3 text-xl font-semibold">Hand Tracker [BETA]</p>
           <Button
             className="text-white"
             onClick={handleHandTracker}
             variant="shadow"
-            color={cameraIsOn ? "danger" : "success"}
+            color={aiCameraIsOn ? "danger" : "success"}
           >
-            {cameraIsOn ? "Off" : "On"}
+            {aiCameraIsOn ? "Off" : "On"}
           </Button>
+          <p className="mt-5"> میتوانید در ریلود کردن انجامش بدید !  </p>
         </div>
       </div>
     </motion.nav>

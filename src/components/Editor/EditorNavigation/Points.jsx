@@ -1,13 +1,34 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { ScrollShadow } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { variants } from "./utils";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import useDeletePoint from "../../../hooks/model/useDeletePoint";
 import usePoints from "../../../hooks/model/usePoints";
 import useEditorStore from "../../../store/editorStore";
+import { showAlert } from "../../Core/utils";
+import { variants } from "./utils";
 
 const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
   const { selectedModel } = useEditorStore();
 
-  const { data: points, isLoading } = usePoints(selectedModel.id);
+  const { data: points, isLoading, refetch } = usePoints(selectedModel?.id);
+  const { mutate: deletePoint } = useDeletePoint();
+
+  const handleDeletePoint = (pointId) => {
+    deletePoint(
+      {
+        edit_model_id: selectedModel.id,
+        point_id: pointId,
+      },
+      {
+        onSuccess: (res) => {
+          showAlert("info", "Point deleted successfully");
+          refetch();
+        },
+        onError: (err) => console.log(err),
+      },
+    );
+  };
 
   return (
     <motion.nav
@@ -29,35 +50,47 @@ const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
           <XMarkIcon className="w-8 stroke-neutral-400" />
         </button>
       </div>
-      <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
-        {!isLoading ? (
-          points.map((point, index) => (
-            <div
-              key={index}
-              className="relative rounded-md bg-blue-300/20 p-2 text-center"
-            >
-              <span
-                className="absolute left-2 top-2 flex h-5 w-5 items-center justify-center rounded-full"
-                style={{ backgroundColor: point.color }}
+      <ScrollShadow hideScrollBar>
+        <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
+          {!isLoading ? (
+            points.map((point, index) => (
+              <div
+                key={index}
+                className="relative flex flex-col gap-y-3 rounded-md bg-blue-300/20 p-2 text-center"
               >
-                {index + 1}
-              </span>
-              <div className="mt-6">
-                <div className="flex justify-between">
-                  <strong>Note:</strong>
-                  <span>{point.note ? point.note : "-"}</span>
+                <div className="flex items-center justify-between">
+                  <span
+                    className="flex h-5 w-5 items-center justify-center rounded-full"
+                    style={{ backgroundColor: point.color }}
+                  >
+                    {index + 1}
+                  </span>
+                  <span
+                    onClick={() => handleDeletePoint(point.id)}
+                    className="flex cursor-pointer items-center rounded-full bg-red-500 p-1"
+                  >
+                    <RiDeleteBin6Line className="h-5 min-w-4" />
+                  </span>
                 </div>
-                <div className="flex justify-between">
-                  <strong>Radius:</strong>
-                  <span>{Math.round(point.radius * 100) / 100}</span>
+                <div className="flex flex-col">
+                  <div className="flex justify-between overflow-x-hidden">
+                    <strong>Note:</strong>
+                    <span className="text-right">
+                      {point.note ? point.note : "-"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <strong>Radius:</strong>
+                    <span>{Math.round(point.radius * 100) / 100}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center">:-: There Is no points :-:</p>
-        )}
-      </div>
+            ))
+          ) : (
+            <p className="text-center">:-: There Is no points :-:</p>
+          )}
+        </div>
+      </ScrollShadow>
     </motion.nav>
   );
 };

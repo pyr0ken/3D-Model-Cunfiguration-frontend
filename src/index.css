@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    @apply inset-0 h-full w-full bg-black bg-[radial-gradient(#e5e7eb18_1px,transparent_1px)] [background-size:16px_16px] relative;
+.bg-dot {
+    @apply inset-0 w-full bg-black bg-[radial-gradient(#e5e7eb18_1px,transparent_1px)] [background-size:16px_16px] relative;
 }
 
 
@@ -12,12 +12,9 @@ body {
 }
 
 .bg-grid {
-  @apply bg-leva-1/50 bg-[linear-gradient(to_right,#8c8c8c20_1px,transparent_1px),linear-gradient(to_bottom,#8c8c8c20_1px,transparent_1px)] bg-[size:30px_30px];
+  @apply bg-leva-5 bg-[linear-gradient(to_right,#8c8c8c20_1px,transparent_1px),linear-gradient(to_bottom,#8c8c8c20_1px,transparent_1px)] bg-[size:30px_30px];
 }
 
-/* .bg-grid-view {
-  @apply bg-black/50 bg-[linear-gradient(to_right,#8c8c8c20_1px,transparent_1px),linear-gradient(to_bottom,#8c8c8c20_1px,transparent_1px)] bg-[size:30px_30px];
-} */
 
 @layer utilities {
 
@@ -40,4 +37,14 @@ body {
     -moz-transform: rotateY(180deg);
     /* Firefox */
   }
+}
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("../public/fonts/Vazirmatn-Medium.ttf");
+}
+
+* {
+  direction: rtl;
+  @apply font-vazirmatn;
 }

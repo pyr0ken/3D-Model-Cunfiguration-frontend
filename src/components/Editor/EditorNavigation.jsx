@@ -9,6 +9,7 @@ import {
   IoSettingsOutline,
 } from "react-icons/io5";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
+import { ToastContainer } from "react-toastify";
 import Ai from "./EditorNavigation/Ai";
 import Draw from "./EditorNavigation/Draw";
 import Help from "./EditorNavigation/Help";
@@ -41,7 +42,7 @@ const componentMapping = {
   Points: Points,
   Help: Help,
   Ai: Ai,
-  Settings: Settings,
+  // Settings: Settings,
 };
 
 export default function EditorNavigation() {
@@ -156,12 +157,6 @@ export default function EditorNavigation() {
           >
             <IoHelpSharp className="h-8 w-8 min-w-8" />
           </EditorToolBoxLink>
-          <EditorToolBoxLink
-            name="Settings"
-            setSelectedProject={setSelectedProject}
-          >
-            <IoSettingsOutline className="h-8 w-8 min-w-8" />
-          </EditorToolBoxLink>
         </div>
       </motion.nav>
       <AnimatePresence>
@@ -173,6 +168,7 @@ export default function EditorNavigation() {
           />
         )}
       </AnimatePresence>
+      <ToastContainer position="bottom-left" />
     </>
   );
 }

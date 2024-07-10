@@ -1,34 +1,46 @@
-import { useMeeting } from "@videosdk.live/react-sdk";
+import { useMeeting, usePubSub } from "@videosdk.live/react-sdk";
 import { useEffect } from "react";
+import { HiOutlineStatusOnline } from "react-icons/hi";
 import { ToastContainer } from "react-toastify";
 import useGetAllRoomModels from "../../../hooks/room/useGetALlRoomModels";
 import useRoomLeft from "../../../hooks/room/useRoomLeft";
 import useRoomStore from "../../../store/roomStore";
-import Model from "../../Models/Model";
+import CameraAi from "./CameraAi";
 import JoinLoading from "./JoinLoading";
+import OpenModel from "./OpenRoomModel/OpenModel";
+import Model from "./RoomModel/Model";
 import RoomNavigation from "./RoomNavigation";
 import RoomStream from "./RoomStream";
-import OpenModel from "./OpenRoomModel/OpenModel";
 
 export default function Meeting() {
   // Room Store
   const {
+    isOwner,
+    roomTitle,
     joined,
     meetingId,
     selectedModel,
     closeModel,
+    aiCameraIsOn,
     setMeetingId,
     setJoined,
     setRoomId,
     setSelectedModel,
+    setCloseModel,
+    changeCameraStatus,
   } = useRoomStore();
 
   // Models Store
-  const { data: allModels, isLoading } = useGetAllRoomModels(meetingId);
+  const {
+    data: allModels,
+    isLoading,
+    refetch,
+  } = useGetAllRoomModels(meetingId);
 
   // Left Meet
   const { mutate: roomLeft } = useRoomLeft();
 
+  // VideoSdk meeting config
   const { participants, leave } = useMeeting({
     //callback for when meeting is joined successfully
     onMeetingJoined: () => {
@@ -46,12 +58,36 @@ export default function Meeting() {
     },
   });
 
+  // VideoSdk PubSub for open model
+  const { publish } = usePubSub("MODEL", {
+    onMessageReceived: () => {
+      setCloseModel(false);
+      refetch();
+    },
+  });
+
+  // VideoSdk for selected
+  const { publish: selectedModelPublish } = usePubSub("SELECT_MODEL", {
+    onMessageReceived: () => {
+      setCloseModel(false);
+      refetch();
+    },
+  });
+
+  // VideoSdk for close model
+  const { publish: closeModelPubSub } = usePubSub("CLOSE_MODEL", {
+    onMessageReceived: () => {
+      setCloseModel(true);
+      setSelectedModel(null);
+    },
+  });
+
   useEffect(() => {
     if (allModels && !closeModel) {
       const selectedModelData = allModels.data.selected_model;
       setSelectedModel(selectedModelData);
     }
-  }, [allModels]);
+  }, [allModels, closeModel]);
 
   useEffect(() => {
     window.addEventListener("popstate", (event) => {
@@ -74,17 +110,28 @@ export default function Meeting() {
         <JoinLoading />
       )}
 
-      {/* {cameraIsOn && <CameraAi />} */}
+      {aiCameraIsOn && <CameraAi />}
 
       {selectedModel && joined ? (
-        <Model selectedModel={selectedModel} />
-      ) : (
-        <div className="ml-[5.5rem] flex w-full justify-center">
+        <Model />
+      ) : isOwner && joined ? (
+        <div className="mr-[5.5rem] flex w-full justify-center">
           <OpenModel />
         </div>
+      ) : (
+        joined && (
+          <div className="mr-[5.5rem] flex w-full justify-center text-white">
+            <div className="flex flex-col items-center justify-center gap-y-5">
+              <HiOutlineStatusOnline className="size-48 text-gray-400" />
+              <p className="text-2xl text-gray-400">
+                شما در جلسه <strong>{roomTitle}</strong> هستید
+              </p>
+            </div>
+          </div>
+        )
       )}
 
-      <ToastContainer />
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }

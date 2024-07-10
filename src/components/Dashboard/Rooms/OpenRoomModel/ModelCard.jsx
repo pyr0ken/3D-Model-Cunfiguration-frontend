@@ -5,19 +5,19 @@ import useAddRoomModel from "../../../../hooks/room/useAddRoomModel";
 import useGetAllRoomModels from "../../../../hooks/room/useGetALlRoomModels";
 import useRoomStore from "../../../../store/roomStore";
 import { relativeTimeFromNow } from "../../../Core/utils";
+import { usePubSub } from "@videosdk.live/react-sdk";
 
 export default function ModelCard({
   id,
   title,
-  displayName = null,
-  file,
   createdAt,
-  isPublicModel,
+  isPublicModel = false,
+  displayName = null,
+  editModelId = null,
   isEditModel = false,
 }) {
   const { isOwner, meetingId, setIsRoomModalOpen } = useRoomStore();
 
-  const { mutate: addEditModel } = useAddEditModel();
   const { mutate: addRoomModel } = useAddRoomModel();
   const { refetch } = useGetAllRoomModels(meetingId);
 
@@ -25,6 +25,9 @@ export default function ModelCard({
   const [isFocused, setIsFocused] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
+
+  // VideoSdk PubSub for open model
+  const { publish } = usePubSub("MODEL");
 
   const handleMouseMove = (e) => {
     if (!divRef.current || isFocused) return;
@@ -54,12 +57,24 @@ export default function ModelCard({
   };
 
   const handleClickModel = () => {
-    if (isOwner) {
-      addRoomModel({ model_id: id, meeting_id: meetingId });
+    let data = {
+      model_id: id,
+      meeting_id: meetingId,
+    };
+
+    if (isEditModel) {
+      data.edit_model_id = editModelId;
     }
-    // else {
-    //   addEditModel({ id });
-    // }
+
+    if (isOwner) {
+      addRoomModel(data, {
+        onSuccess: () => {
+          refetch();
+          publish("New Model Open", { persist: true });
+        },
+        onError: (err) => console.log(err),
+      });
+    }
     setIsRoomModalOpen(false);
   };
 

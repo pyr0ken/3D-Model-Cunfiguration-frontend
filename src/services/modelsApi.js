@@ -81,20 +81,14 @@ export const deletePoint = async (data) => {
 
 
 // note api
-export const getNotes = async (modelId) => {
-  return await apiAuth
-    .get(`/models/points/${modelId}`)
-    .then((response) => response.data);
-};
-
 export const addNote = async (data) => {
   return await apiAuth
-    .post("/models/points/add/", data)
+    .post("/models/notes/add/", data)
     .then((response) => response.data);
 };
 
 export const deleteNote = async (data) => {
   return await apiAuth
-    .delete("/models/points/delete/", { data: data })
+    .delete("/models/notes/delete/", { data: data })
     .then((response) => response.data);
 };

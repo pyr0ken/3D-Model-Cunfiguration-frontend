@@ -1,13 +1,47 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { usePubSub } from "@videosdk.live/react-sdk";
 import { motion } from "framer-motion";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import useDeletePoint from "../../../../hooks/model/useDeletePoint";
 import usePoints from "../../../../hooks/model/usePoints";
 import useRoomStore from "../../../../store/roomStore";
 import { variants } from "./utils";
+import { showAlert } from "../../../Core/utils";
 
-const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
-  const { selectedModel } = useRoomStore();
-  
-  const { data: points, isLoading } = usePoints(selectedModel.id);
+export default function Points({ isOpen, setSelectedTab }) {
+  const { selectedModel, isOwner } = useRoomStore();
+
+  const {
+    data: points,
+    isLoading,
+    isError,
+    refetch,
+  } = usePoints(selectedModel?.id);
+  const { mutate: deletePoint } = useDeletePoint();
+
+  // VideoSdk PubSub for new point
+  const { publish: pointPublish } = usePubSub("POINT", {
+    onMessageReceived: () => {
+      refetch();
+    },
+  });
+
+  const handleDeletePoint = (pointId) => {
+    deletePoint(
+      {
+        edit_model_id: selectedModel.id,
+        point_id: pointId,
+      },
+      {
+        onSuccess: (res) => {
+          showAlert("info", "Point deleted successfully");
+          refetch();
+          pointPublish("Delete Point", { persist: true });
+        },
+        onError: (err) => console.log(err),
+      },
+    );
+  };
 
   return (
     <motion.nav
@@ -20,28 +54,40 @@ const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
         ease: "easeInOut",
       }}
       className={`absolute z-20 ml-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "left-[16.5rem] transition-left" : "left-24 transition-left"
+        isOpen
+          ? "transition-right right-[16.5rem]"
+          : "transition-right right-24"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
-        <h1 className="text-lg tracking-wide">{selectedProject}</h1>
-        <button onClick={() => setSelectedProject(null)}>
+        <h1 className="text-lg tracking-wide">نقطه ها</h1>
+        <button onClick={() => setSelectedTab(null)}>
           <XMarkIcon className="w-8 stroke-neutral-400" />
         </button>
       </div>
       <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
-        {!isLoading ? (
+        {!isLoading && !isError ? (
           points.map((point, index) => (
             <div
               key={index}
               className="relative rounded-md bg-blue-300/20 p-2 text-center"
             >
-              <span
-                className="absolute left-2 top-2 flex h-5 w-5 items-center justify-center rounded-full"
-                style={{ backgroundColor: point.color }}
-              >
-                {index + 1}
-              </span>
+              <div className="flex items-center justify-between">
+                <span
+                  className="flex h-5 w-5 items-center justify-center rounded-full"
+                  style={{ backgroundColor: point.color }}
+                >
+                  {index + 1}
+                </span>
+                {isOwner && (
+                  <span
+                    onClick={() => handleDeletePoint(point.id)}
+                    className="flex cursor-pointer items-center rounded-full bg-red-500 p-1 hover:bg-red-600"
+                  >
+                    <RiDeleteBin6Line className="h-5 min-w-4" />
+                  </span>
+                )}
+              </div>
               <div className="mt-6">
                 <div className="flex justify-between">
                   <strong>Note:</strong>
@@ -60,6 +106,4 @@ const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
       </div>
     </motion.nav>
   );
-};
-
-export default Points;
+}

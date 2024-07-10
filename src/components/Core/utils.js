@@ -14,6 +14,13 @@ export const showAlert = (type, message) => {
   });
 };
 
+export const jalaliDate = (isoDateString) => {
+  const date = new Date(isoDateString);
+  const formattedDate =
+    date.toLocaleDateString() + " " + date.toLocaleTimeString();
+  return formattedDate;
+};
+
 export const formatISODate = (isoDateString) => {
   const date = new Date(isoDateString);
   const formattedDate =

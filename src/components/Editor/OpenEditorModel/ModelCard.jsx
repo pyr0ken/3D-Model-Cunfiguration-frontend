@@ -56,7 +56,7 @@ export default function ModelCard({
     // else {
     //   addEditModel({ id });
     // }
-    setIsRoomModalOpen(false);
+    setIsEditModalOpen(false);
   };
 
   return (

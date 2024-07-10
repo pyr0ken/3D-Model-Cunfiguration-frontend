@@ -6,17 +6,19 @@ import { useControls, button } from "leva";
 import { Perf } from "r3f-perf";
 import { Suspense, useEffect, useState, useRef } from "react";
 import LoadModel from "./LoadModel";
-import Placeholder from "./Placeholder";
-import { Leva } from "leva";
+import Placeholder from "../../Models/Placeholder";
+import NoteModal from "./NoteModal";
+import usePoints from "../../../hooks/model/usePoints";
 
-export default function Model({ selectedModel }) {
+export default function Model({ selectedModel  }) {
   const [showZoomInIcon, setShowZoomInIcon] = useState(false);
   const [showZoomOutIcon, setShowZoomOutIcon] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   // note state
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState(null);
-  const [hoverPointId, setHoverPointId] = useState(null);
+  const { refetch } = usePoints(selectedModel.id);
 
   const { Monitoring, ZoomIcons, ZoomToCursor, AutoRotate, Pan, HelpText } =
     useControls("Base", {
@@ -25,6 +27,9 @@ export default function Model({ selectedModel }) {
       ZoomToCursor: false,
       AutoRotate: false,
       Pan: false,
+      "Reload Model": button(() => {
+        setReloadKey((prevKey) => prevKey + 1);
+      }),
     });
 
   const { ambientLight, directionalLight, pointLight } = useControls("Light", {
@@ -74,8 +79,12 @@ export default function Model({ selectedModel }) {
 
   return (
     <div className="h-screen w-screen">
-      <Canvas camera={{}} onWheel={handleModelWheel}>
-
+      <Canvas
+        key={reloadKey}
+        camera={{}}
+        gl={{ preserveDrawingBuffer: true }}
+        onWheel={handleModelWheel}
+      >
         {/* Movement controll */}
         <OrbitControls
           maxDistance={20}
@@ -109,9 +118,8 @@ export default function Model({ selectedModel }) {
             selectedModel={selectedModel}
             selectedPoint={selectedPoint}
             isNoteModalOpen={isNoteModalOpen}
+            setSelectedPoint={setSelectedPoint}
             setIsNoteModalOpen={setIsNoteModalOpen}
-            hoverPointId={hoverPointId}
-            setHoverPointId={setHoverPointId}
           />
         </Suspense>
 
@@ -122,6 +130,7 @@ export default function Model({ selectedModel }) {
         selectedPoint={selectedPoint}
         isNoteModalOpen={isNoteModalOpen}
         setIsNoteModalOpen={setIsNoteModalOpen}
+        refetch={refetch}
       />
     </div>
   );

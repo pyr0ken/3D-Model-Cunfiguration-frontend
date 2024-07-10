@@ -1,17 +1,14 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ErrorPage from "./ErrorPage";
-import Home from "./components/Home/Home";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Login from "./components/Authentication/Login";
 import Register from "./components/Authentication/Register";
-import Editor from "./components/Editor/Editor";
 import Dashboard from "./components/Dashboard/Dashboard";
-import ModelsList from "./components/Dashboard/Models/ModelsList";
-import RoomsList from "./components/Dashboard/Rooms/RoomsList";
-import ModelView from "./components/Dashboard/Models/ModelView";
-import { Navigate } from "react-router-dom";
-import { useAuthStore } from "./store/authStore";
-import Room from "./components/Dashboard/Rooms/Room";
 import DashboardMainPage from "./components/Dashboard/DashboardMainPage";
+import ModelsList from "./components/Dashboard/Models/ModelsList";
+import Room from "./components/Dashboard/Rooms/Room";
+import RoomsList from "./components/Dashboard/Rooms/RoomsList";
+import Editor from "./components/Editor/Editor";
+import Home from "./components/Home/Home";
+import { useAuthStore } from "./store/authStore";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -64,7 +61,15 @@ export default function App() {
           <Route path="models/" element={<ModelsList />} />
           <Route path="rooms/" element={<RoomsList />} />
         </Route>
-        <Route path="/dashboard/editor/:editModelId" element={<Editor />} />
+
+        <Route
+          path="/dashboard/editor/:editModelId"
+          element={
+            <ProtectedRoute>
+              <Editor />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Not Found Page */}
         <Route

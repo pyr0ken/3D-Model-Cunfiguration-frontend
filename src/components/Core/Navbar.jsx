@@ -1,16 +1,17 @@
-import { NavLink, Link } from "react-router-dom";
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { showAlert } from "./utils";
+import { Link, NavLink } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import ThemeToggle from "./ThemeToggle";
+import { showAlert } from "./utils";
+import Logo from "./Logo";
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuthStore();
@@ -23,74 +24,48 @@ export default function Navbar() {
 
   return (
     <div className="absolute z-10 w-full">
-      <nav className="flex justify-between px-4 py-4">
-        <div className="flex gap-x-5">
-          <Link className="text-3xl font-bold leading-none" to="/">
-            <svg
-              className="h-10"
-              version="1.1"
-              id="Capa_1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              viewBox="0 0 58 58"
-              xmlSpace="preserve"
-            >
-              <g>
-                <polygon
-                  style={{ fill: "#007BFF" }}
-                  points="29,58 3,45 3,13 29,26 	"
-                />
-                <polygon
-                  style={{ fill: "#556080" }}
-                  points="29,58 55,45 55,13 29,26 	"
-                />
-                <polygon
-                  style={{ fill: "#434C6D" }}
-                  points="3,13 28,0 55,13 29,26 	"
-                />
-              </g>
-            </svg>
-          </Link>
-          <ThemeToggle />
-        </div>
-        <ul className="ml-40 flex flex-wrap items-center space-x-6 text-lg">
+      <nav className="flex items-center justify-between px-4 py-4">
+        <Link className="text-3xl font-bold leading-none" to="/">
+          <Logo className="h-16" />
+        </Link>
+        <ul className="mr-32 flex flex-wrap items-center gap-x-6 text-xl">
           <li>
             <NavLink
               to="/"
               className={({ isActive }) =>
                 isActive
-                  ? "font-medium text-leva-3 transition-all hover:text-white"
-                  : "font-medium text-gray-400 transition-all hover:text-white"
+                  ? "font-medium text-white transition-all hover:text-[rgb(239,68,68)]"
+                  : "font-medium text-gray-400 transition-all hover:text-[rgb(239,68,68)]"
               }
             >
-              Home
+              صفحه اصلی
             </NavLink>
           </li>
           <li className="text-gray-300">|</li>
           <li>
             <NavLink
               to="/dashboard/"
-              className="font-medium text-gray-400 transition-all hover:text-white"
+              className="font-medium text-gray-400 transition-all hover:text-[rgb(59,130,246)]"
             >
-              Dashboard
+              داشبورد
             </NavLink>
           </li>
           <li className="text-gray-300">|</li>
           <li>
             <NavLink
               to="#"
-              className="font-medium text-gray-400 transition-all hover:text-white"
+              className="font-medium text-gray-400 transition-all hover:text-[rgb(234,179,8)]"
             >
-              About Us
+              ادیتور
             </NavLink>
           </li>
           <li className="text-gray-300">|</li>
           <li>
             <NavLink
               to="#"
-              className="font-medium text-gray-400 transition-all hover:text-white"
+              className="font-medium text-gray-400 transition-all hover:text-[rgb(34,197,94)]"
             >
-              Contact
+              درباره ما
             </NavLink>
           </li>
         </ul>
@@ -99,9 +74,9 @@ export default function Navbar() {
             <>
               <Button
                 onPress={onOpen}
-                className="rounded-xl bg-gray-50 px-6 py-2 font-bold text-gray-900  transition duration-200 hover:bg-gray-300"
+                className="rounded-xl bg-red-500 px-6 py-2 font-bold text-white  transition duration-200 hover:bg-red-500"
               >
-                Logout
+                خروج از حساب کاربری
               </Button>
               <Modal
                 isOpen={isOpen}
@@ -133,12 +108,6 @@ export default function Navbar() {
                   )}
                 </ModalContent>
               </Modal>
-              <Link
-                className="rounded-xl bg-leva-3 px-6 py-2 font-bold text-white transition duration-200 hover:bg-leva-3/60"
-                to=""
-              >
-                Profile <span className="underline">@{user.username}</span>
-              </Link>
             </>
           ) : (
             <>
@@ -146,13 +115,13 @@ export default function Navbar() {
                 className="rounded-xl bg-gray-50 px-6 py-2 font-bold text-gray-900  transition duration-200 hover:bg-gray-300"
                 to="/login"
               >
-                Login
+                ورود به حساب کاربری
               </Link>
               <Link
                 className="rounded-xl bg-leva-3 px-6 py-2 font-bold text-white transition duration-200 hover:bg-leva-3/60"
                 to="/register"
               >
-                Register
+                ثبت نام
               </Link>
             </>
           )}
