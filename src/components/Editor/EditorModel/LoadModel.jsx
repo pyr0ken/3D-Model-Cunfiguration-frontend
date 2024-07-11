@@ -7,22 +7,16 @@ import useAddPoint from "../../../hooks/model/useAddPoints";
 import usePoints from "../../../hooks/model/usePoints";
 import { BASE_URL } from "../../../services";
 import useEditorStore from "../../../store/editorStore";
-
-
-function getFirstWords(text, wordsNumber) {
-  const words = text.split(" ");
-  const firstWords = words.slice(0, wordsNumber).join(" ");
-  return words.length > wordsNumber ? `${firstWords}...` : firstWords;
-}
+import { getFirstWords } from "../../Core/utils";
 
 export default function LoadModel({
-  selectedModel,
   isNoteModalOpen,
   setSelectedPoint,
   setIsNoteModalOpen,
 }) {
   // state
   const [hoverPointId, setHoverPointId] = useState(null);
+  const { selectedModel, aiRotation, aiCameraIsOn } = useEditorStore();
 
   // Load Model with useGLTF
   const { nodes, materials } = useGLTF(BASE_URL + selectedModel.file);
@@ -40,9 +34,6 @@ export default function LoadModel({
   // Ref
   const { camera, gl } = useThree();
   const modelRef = useRef();
-
-  // Ai Store for hand tracker rotation
-  const { aiRotation, clearAiRotation } = useEditorStore();
 
   // Controllers
   const { scale, positionY } = useControls("Model", {
@@ -84,15 +75,15 @@ export default function LoadModel({
   });
 
   useEffect(() => {
-    if (aiRotation) {
+    if (aiRotation && aiCameraIsOn) {
       modelRef.current.rotation.set(aiRotation.x, aiRotation.y, 0);
     }
-  }, [aiRotation]);
+  }, [aiRotation, aiCameraIsOn]);
 
   const handleModelClick = (event) => {
     event.stopPropagation();
 
-    if (event.shiftKey) {
+    if (event.ctrlKey) {
       const mousePoint = new Vector3(
         event.point.x,
         event.point.y,
@@ -159,6 +150,7 @@ export default function LoadModel({
       </group>
 
       {!pointsIsLoading &&
+        !aiCameraIsOn &&
         points.map((point, index) => (
           <mesh
             key={index}
@@ -171,7 +163,7 @@ export default function LoadModel({
           >
             <sphereGeometry args={[point.radius]} />
             <meshBasicMaterial color={point.color} />
-            {pointIndex && (
+            {pointIndex && !isNoteModalOpen && (
               <Html className="flex" distanceFactor={4}>
                 <span className="select-none font-extrabold text-gray-300">
                   {index + 1}

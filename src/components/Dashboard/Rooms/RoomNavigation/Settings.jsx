@@ -71,7 +71,6 @@ export default function Settings ({ isOpen, setSelectedTab }) {
   };
 
   const handleDeleteRoomModel = (id) => {
-    console.log(id);
     deleteRoomModel(
       { meeting_id: meetingId, edit_model_id: id },
       {
@@ -120,7 +119,7 @@ export default function Settings ({ isOpen, setSelectedTab }) {
       <div className="flex flex-col gap-5 text-white">
         <div className="flex flex-col">
           <p className="mb-4 text-xl font-semibold">لیست مدل های جلسه</p>
-          <div className="cursor-pointer rounded-br-xl rounded-tr-xl border-l-3 font-mono ">
+          <div className="cursor-pointer rounded-bl-xl rounded-tl-xl border-r-3 ">
             {allModels.data.models.length > 0 &&
               allModels.data.models.map((editModel, index) => {
                 return (
@@ -129,7 +128,7 @@ export default function Settings ({ isOpen, setSelectedTab }) {
                     onClick={() =>
                       isOwner ? handleSelectedModel(editModel.id) : {}
                     }
-                    className={`${editModel.id === selectedModel?.id ? "bg-leva-3 hover:bg-leva-3" : ""} flex items-center justify-between bg-leva-2/50 p-2 transition-colors first:rounded-tr-xl last:rounded-br-xl hover:bg-leva-3/40`}
+                    className={`${editModel.id === selectedModel?.id ? "bg-leva-3 hover:bg-leva-3" : ""} flex items-center justify-between bg-leva-2/50 p-2 transition-colors first:rounded-tl-xl last:rounded-bl-xl hover:bg-leva-3/40`}
                   >
                     <p>{editModel.display_name}</p>
                     {isOwner && (

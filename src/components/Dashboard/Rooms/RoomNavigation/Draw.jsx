@@ -9,8 +9,6 @@ import useRoomStore from "../../../../store/roomStore";
 
 export default function Draw({ isOpen, setSelectedTab }) {
   const canvasRef = useRef();
-  const strokeWidthRef = useRef();
-  const eraserWidthRef = useRef();
 
   const [eraseMode, setEraseMode] = useState(false);
   const [strokeWidth, setStrokeWidth] = useState(5);
@@ -26,13 +24,12 @@ export default function Draw({ isOpen, setSelectedTab }) {
     canvasRef.current?.eraseMode(false);
   };
 
-  const handleStrokeWidthChange = () => {
-    console.log(strokeWidthRef);
-    setStrokeWidth(strokeWidthRef.current.value);
+  const handleStrokeWidthChange = (value) => {
+    setStrokeWidth(+value);
   };
 
-  const handleEraserWidthChange = () => {
-    setEraserWidth(eraserWidthRef.current.value);
+  const handleEraserWidthChange = (value) => {
+    setEraserWidth(+value);
   };
 
   const { isOwner } = useRoomStore();
@@ -55,8 +52,6 @@ export default function Draw({ isOpen, setSelectedTab }) {
 
   // This callback from the canvas component will give us the stroke json we need to share
   const onStroke = (stroke, isEraser) => {
-    // We will be setting the `persist:true` so that all the strokes
-    // are available for the participants who have recently joined
     publish(JSON.stringify(stroke), { persist: true });
   };
 
@@ -70,7 +65,7 @@ export default function Draw({ isOpen, setSelectedTab }) {
         duration: 0.2,
         ease: "easeInOut",
       }}
-      className={`absolute z-10 ml-0 flex h-full w-[40rem] flex-col gap-3 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
+      className={`absolute z-10 mr-0 flex h-full w-[40rem] flex-col gap-3 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
         isOpen
           ? "transition-right right-[16.5rem]"
           : "transition-right right-24"
@@ -83,7 +78,7 @@ export default function Draw({ isOpen, setSelectedTab }) {
         </button>
       </div>
       <div className="flex flex-col text-white">
-        <div className="my-5 flex w-full  flex-col gap-y-5">
+        <div className="my-5 flex w-full flex-col gap-y-5">
           <div className="flex items-center gap-x-5">
             <Button
               color="primary"
@@ -93,13 +88,12 @@ export default function Draw({ isOpen, setSelectedTab }) {
               مداد
             </Button>
             <Slider
-              ref={strokeWidthRef}
               isDisabled={eraseMode}
               minValue={1}
               maxValue={20}
               showSteps={true} 
               step={1}
-              defaultValue={strokeWidth}
+              value={strokeWidth}
               onChange={handleStrokeWidthChange}
             />
           </div>
@@ -112,13 +106,12 @@ export default function Draw({ isOpen, setSelectedTab }) {
               پاک کن
             </Button>
             <Slider
-              ref={eraserWidthRef}
               isDisabled={!eraseMode}
               minValue={1}
               maxValue={20}
               showSteps={true} 
               step={1}
-              defaultValue={eraserWidth}
+              value={eraserWidth}
               onChange={handleEraserWidthChange}
             />
           </div>

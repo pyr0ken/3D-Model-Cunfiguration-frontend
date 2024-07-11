@@ -1,26 +1,20 @@
-import useRooms from "../../../hooks/room/useRooms";
+import { Button, Input, Spinner } from "@nextui-org/react";
+import jMoment from "moment-jalaali";
+import { useEffect, useRef, useState } from "react";
+import { HiOutlineSignalSlash } from "react-icons/hi2";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BounceLoader } from "react-spinners";
+import { ToastContainer } from "react-toastify";
 import useCreateRoom from "../../../hooks/room/useCreateRoom";
 import useDeleteRoom from "../../../hooks/room/useDeleteRoom";
-import { Button, Input } from "@nextui-org/react";
-import { Spinner } from "@nextui-org/react";
-import { ToastContainer } from "react-toastify";
-import {
-  showAlert,
-  formatISODate,
-  relativeTimeFromNow,
-} from "../../Core/utils";
-import { useNavigate } from "react-router-dom";
-import { useRef, useEffect, useState } from "react";
-import { IoEnterOutline } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
-import { MdContentCopy } from "react-icons/md";
-import { useLocation } from "react-router-dom";
 import useJoinRoom from "../../../hooks/room/useJoinRoom";
-import useRoomStore from "../../../store/roomStore";
+import useRooms from "../../../hooks/room/useRooms";
 import useVideoSdkCreateRoom from "../../../hooks/room/useVideoSdkCreateRoom";
-import { BounceLoader } from "react-spinners";
-import { HiOutlineSignalSlash } from "react-icons/hi2";
-import jMoment from "moment-jalaali";
+import useRoomStore from "../../../store/roomStore";
+import {
+  relativeTimeFromNow,
+  showAlert
+} from "../../Core/utils";
 
 export default function RoomsList() {
   const { data: rooms, isLoading, isError, error, refetch } = useRooms();
@@ -146,7 +140,7 @@ export default function RoomsList() {
 
   return (
     <>
-      <ToastContainer position="bottom-left" />
+      <ToastContainer rtl />
       <div className="mx-5 mt-2 flex h-screen w-full flex-col gap-y-5 overflow-auto text-white">
         <div className="flex flex-col">
           <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">

@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import dayjs from "dayjs";
-import { useAuthStore } from "../store/authStore";
 
 const BASE_URL = "http://127.0.0.1:8000/"
 const API = BASE_URL + "api/v1";
@@ -17,7 +16,6 @@ const apiAuth = axios.create({
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
-    // Authorization: `Bearer ${accessToken}`,
   },
 });
 

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
-export default function EditorNavigationLink ({ children, name, link, chevron = true }) {
+export default function EditorNavigationLink({ children, name, link }) {
   return (
     <Link
       to={link}
@@ -11,10 +10,7 @@ export default function EditorNavigationLink ({ children, name, link, chevron = 
       {children}
       <div className="flex w-full place-items-center justify-start overflow-auto">
         <p className="w-full truncate whitespace-nowrap text-inherit">{name}</p>
-        {chevron && (
-          <ChevronRightIcon className="size-8 stroke-inherit stroke-[0.75]" />
-        )}
       </div>
     </Link>
   );
-};
+}

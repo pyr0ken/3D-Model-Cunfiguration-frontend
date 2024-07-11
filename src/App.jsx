@@ -63,7 +63,7 @@ export default function App() {
         </Route>
 
         <Route
-          path="/dashboard/editor/:editModelId"
+          path="/dashboard/editor/"
           element={
             <ProtectedRoute>
               <Editor />
@@ -76,8 +76,9 @@ export default function App() {
           path="*"
           element={
             <>
-              <div className="flex h-screen items-center justify-center text-white">
-                <h1>|: NotFound 404 :|</h1>
+              <div className="flex gap-y-4 flex-col bg-dot h-screen items-center justify-center text-white">
+                <h1 className="text-3xl">| صفحه مورد نظر پیدا نشد 404 |</h1>
+                <a className="text-xl text-leva-3 hover:text-leva-3/70" href="/"> صفحه اصلی </a>
               </div>
             </>
           }

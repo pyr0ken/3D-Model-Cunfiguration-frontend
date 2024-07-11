@@ -1,11 +1,10 @@
+import { usePubSub } from "@videosdk.live/react-sdk";
 import { useRef, useState } from "react";
-import { GiHeartOrgan } from "react-icons/gi";
-import useAddEditModel from "../../../../hooks/model/useAddEditModel";
+import { IoCube } from "react-icons/io5";
 import useAddRoomModel from "../../../../hooks/room/useAddRoomModel";
 import useGetAllRoomModels from "../../../../hooks/room/useGetALlRoomModels";
 import useRoomStore from "../../../../store/roomStore";
 import { relativeTimeFromNow } from "../../../Core/utils";
-import { usePubSub } from "@videosdk.live/react-sdk";
 
 export default function ModelCard({
   id,
@@ -74,6 +73,7 @@ export default function ModelCard({
         },
         onError: (err) => console.log(err),
       });
+      refetch();
     }
     setIsRoomModalOpen(false);
   };
@@ -97,7 +97,7 @@ export default function ModelCard({
         }}
       />
       <span className="mb-4 inline-flex items-center justify-center rounded-md bg-[#007BFF] p-3 shadow-lg">
-        <GiHeartOrgan className="h-10 w-10 text-white" />
+        <IoCube className="h-10 w-10 text-white" />
       </span>
       <div className="flex flex-col gap-3">
         <h3 className="font-medium tracking-tight text-gray-200">

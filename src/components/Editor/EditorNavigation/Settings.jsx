@@ -1,23 +1,23 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import useEditorStore from "../../../store/editorStore";
 import ModelsPopupList from "../OpenEditorModel/ModelsPopupList";
 import { variants } from "./utils";
 
-
-const Settings = ({ selectedProject, isOpen, setSelectedProject }) => {
+const Settings = ({ isOpen, setSelectedTab }) => {
   const {
+    editModels,
     isEditModalOpen,
     selectedModel,
     setIsEditModalOpen,
     setSelectedModel,
-    setCloseModel,
+    removeEditModel,
   } = useEditorStore();
-  
+
   const handleCloseMode = () => {
     setSelectedModel(null);
-    setCloseModel(true);
     setIsEditModalOpen(false);
   };
 
@@ -25,8 +25,12 @@ const Settings = ({ selectedProject, isOpen, setSelectedProject }) => {
     setIsEditModalOpen(true);
   };
 
-  const handleSelectedModel = (model) => {
-    setSelectedModel(model);
+  const handleSelectedModel = (editModel) => {
+    setSelectedModel(editModel);
+  };
+
+  const handleDeleteRoomModel = (editModelId) => {
+    removeEditModel(editModelId);
   };
 
   return (
@@ -39,41 +43,51 @@ const Settings = ({ selectedProject, isOpen, setSelectedProject }) => {
         duration: 0.2,
         ease: "easeInOut",
       }}
-      className={`absolute z-20 ml-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "left-[16.5rem] transition-left" : "left-24 transition-left"
+      className={`absolute z-20 mr-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
+        isOpen
+          ? "transition-right right-[16.5rem]"
+          : "transition-right right-24"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
-        <h1 className="text-lg tracking-wide">{selectedProject}</h1>
-        <button onClick={() => setSelectedProject(null)}>
+        <h1 className="text-lg tracking-wide">تنظمات مدل ها</h1>
+        <button onClick={() => setSelectedTab(null)}>
           <XMarkIcon className="w-8 stroke-neutral-400" />
         </button>
       </div>
       <div className="flex flex-col gap-5 text-white">
         <div className="flex flex-col">
-          <p className="mb-4 text-xl font-semibold">Models List</p>
-          <div className="cursor-pointer rounded-br-xl rounded-tr-xl border-l-3 bg-leva-2 font-mono ">
-            {/* {allModels.data.models.length > 0 &&
-              allModels.data.models.map((model, index) => {
+          <p className="mb-4 text-xl font-semibold">
+            لیست مدل های باز شده در ادیتور
+          </p>
+          <div className="cursor-pointer rounded-bl-xl rounded-tl-xl border-r-3 bg-leva-2 ">
+            {editModels.length > 0 &&
+              editModels.map((editModel, index) => {
                 return (
-                  <p
+                  <div
                     key={index}
-                    onClick={() => handleSelectedModel(model)}
-                    className={`${model.id === selectedModel?.id ? "bg-leva-3 hover:bg-leva-3" : ""} p-2 transition-colors first:rounded-tr-xl last:rounded-br-xl hover:bg-leva-3/40`}
+                    onClick={() => handleSelectedModel(editModel)}
+                    className={`${editModel.id === selectedModel?.id ? "bg-leva-3 hover:bg-leva-3" : ""} flex items-center justify-between bg-leva-2/50 p-2 transition-colors first:rounded-tl-xl last:rounded-bl-xl hover:bg-leva-3/40`}
                   >
-                    {model.display_name}
-                  </p>
+                    <p>{editModel.display_name}</p>
+                    <span
+                      onClick={() => handleDeleteRoomModel(editModel.id)}
+                      className="flex cursor-pointer items-center rounded-full bg-red-500 p-1 hover:bg-red-600"
+                    >
+                      <RiDeleteBin6Line className="h-5 min-w-4" />
+                    </span>
+                  </div>
                 );
-              })} */}
+              })}
           </div>
         </div>
         <div className="flex flex-col gap-y-2">
           <Button variant="shadow" onClick={handleAddModel} color="success">
-            Open New Model
+            باز کردن مدل جدید
           </Button>
           {selectedModel && (
             <Button variant="shadow" onClick={handleCloseMode} color="danger">
-              Close Model
+              بستن مدل فعلی
             </Button>
           )}
         </div>

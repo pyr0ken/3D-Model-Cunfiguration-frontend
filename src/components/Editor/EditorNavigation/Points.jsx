@@ -8,10 +8,15 @@ import useEditorStore from "../../../store/editorStore";
 import { showAlert } from "../../Core/utils";
 import { variants } from "./utils";
 
-const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
+const Points = ({ isOpen, setSelectedTab }) => {
   const { selectedModel } = useEditorStore();
 
-  const { data: points, isLoading, refetch } = usePoints(selectedModel?.id);
+  const {
+    data: points,
+    isLoading,
+    isError,
+    refetch,
+  } = usePoints(selectedModel?.id);
   const { mutate: deletePoint } = useDeletePoint();
 
   const handleDeletePoint = (pointId) => {
@@ -22,7 +27,7 @@ const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
       },
       {
         onSuccess: (res) => {
-          showAlert("info", "Point deleted successfully");
+          showAlert("info", "نقطه مورد نظر با موفقیت حذف شد");
           refetch();
         },
         onError: (err) => console.log(err),
@@ -40,19 +45,21 @@ const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
         duration: 0.2,
         ease: "easeInOut",
       }}
-      className={`absolute z-20 ml-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "left-[16.5rem] transition-left" : "left-24 transition-left"
+      className={`absolute z-20 mr-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
+        isOpen
+          ? "transition-right right-[16.5rem]"
+          : "transition-right right-24"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
-        <h1 className="text-lg tracking-wide">{selectedProject}</h1>
-        <button onClick={() => setSelectedProject(null)}>
+        <h1 className="text-lg tracking-wide">نقطه ها</h1>
+        <button onClick={() => setSelectedTab(null)}>
           <XMarkIcon className="w-8 stroke-neutral-400" />
         </button>
       </div>
       <ScrollShadow hideScrollBar>
         <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
-          {!isLoading ? (
+          {!isLoading && !isError ? (
             points.map((point, index) => (
               <div
                 key={index}
@@ -60,7 +67,7 @@ const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
               >
                 <div className="flex items-center justify-between">
                   <span
-                    className="flex h-5 w-5 items-center justify-center rounded-full"
+                    className="flex h-5 w-5 justify-center rounded-full"
                     style={{ backgroundColor: point.color }}
                   >
                     {index + 1}
@@ -74,13 +81,13 @@ const Points = ({ selectedProject, isOpen, setSelectedProject }) => {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex justify-between overflow-x-hidden">
-                    <strong>Note:</strong>
+                    <strong>یادداشت :</strong>
                     <span className="text-right">
                       {point.note ? point.note : "-"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <strong>Radius:</strong>
+                    <strong>اندازه :</strong>
                     <span>{Math.round(point.radius * 100) / 100}</span>
                   </div>
                 </div>

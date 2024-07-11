@@ -4,11 +4,20 @@ import { Button } from "@nextui-org/react";
 import { variants } from "./utils";
 import useRoomStore from "../../../../store/roomStore";
 
-export default function Ai ({ isOpen, setSelectedTab }) {
-  const { aiCameraIsOn, changeCameraStatus } = useRoomStore();
+export default function Ai({ isOpen, setSelectedTab }) {
+  const {
+    aiCameraIsOn,
+    changeAiCameraStatus,
+    changeReloadModelKey,
+  } = useRoomStore();
 
   const handleHandTracker = () => {
-    changeCameraStatus();
+    if (aiCameraIsOn) {
+      changeAiCameraStatus();
+      changeReloadModelKey();
+    } else {
+      changeAiCameraStatus();
+    }
   };
 
   return (
@@ -22,7 +31,9 @@ export default function Ai ({ isOpen, setSelectedTab }) {
         ease: "easeInOut",
       }}
       className={`absolute z-20 ml-0 flex h-full w-80 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "right-[16.5rem] transition-right" : "right-24 transition-right"
+        isOpen
+          ? "transition-right right-[16.5rem]"
+          : "transition-right right-24"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
@@ -33,18 +44,31 @@ export default function Ai ({ isOpen, setSelectedTab }) {
       </div>
       <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
         <div className="flex flex-col">
-          <p className="mb-3 text-xl font-semibold text-center">چرخاندن مدل با پردازش تصویر</p>
+          <p className="mb-3 text-center text-xl font-semibold">
+            چرخاندن مدل با پردازش تصویر
+          </p>
           <Button
-            className="text-white"
             onClick={handleHandTracker}
             variant="shadow"
             color={aiCameraIsOn ? "danger" : "success"}
           >
             {aiCameraIsOn ? "خاموش" : "روشن"}
           </Button>
+          <p className="mt-8 text-xl">نحوه کار:</p>
+          <p className="mt-2">
+            ابتدا دست خود را رو به روی وبکم قرار داده تا انگشت سبابه دست شما
+            شناسایی شود و یک نقطه قرمز روی اون قرار بگیرد. سپس با وصل کردن انگشت
+            سبابه به انکشت شست آن نقطه قرمز به رنگ زرد در می آید و اکنون
+            میتوانید با حرکت به سمت راست یا چپ مدل سه بعدی را بچرخانید.
+          </p>
+          <p className="mt-8 text-xl">توجه:</p>
+          <p className="mt-۲">
+            اگر موقعیت چرخشی مدل خراب شد میتوانید با گزینه Reload Model در پنل
+            سمت چپ مدل را دوباره بارگزاری کنید. و تمامی چرخش ها به حالت اولیه
+            خود باز میگردد
+          </p>
         </div>
       </div>
     </motion.nav>
   );
-};
-
+}

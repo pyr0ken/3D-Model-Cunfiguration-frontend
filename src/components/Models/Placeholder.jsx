@@ -13,8 +13,8 @@ export default function Placeholder() {
       >
         <boxGeometry />
         <meshNormalMaterial wireframe />
-        <Html center style={{ fontSize: "2rem", color: "white" }}>
-          {progress} Loading
+        <Html center className="text-3xl flex flex-wrap text-white break-words">
+          {progress} در حال بارگزاری مدل
         </Html>
       </mesh>
     </>

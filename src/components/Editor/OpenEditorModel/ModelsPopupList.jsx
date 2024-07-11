@@ -35,7 +35,6 @@ export default function ModelsPopupList() {
                   <ModelCard
                     key={index}
                     title={model.title}
-                    file={model.file}
                     id={model.id}
                     createdAt={model.created_at}
                     isPublicModel={true}
@@ -57,15 +56,14 @@ export default function ModelsPopupList() {
               ? Array.from({ length: defaultLoadingCards }, (_, index) => (
                   <ModelCardLoading key={index} />
                 ))
-              : editedModels.map((model, index) => (
+              : editedModels.map((editModel, index) => (
                   <ModelCard
                     key={index}
-                    title={model.title}
-                    file={model.file}
-                    displayName={model.display_name}
-                    id={model.id}
-                    createdAt={model.created_at}
-                    isPublicModel={false}
+                    title={editModel.title}
+                    displayName={editModel.display_name}
+                    id={editModel.model_id}
+                    createdAt={editModel.created_at}
+                    editModelId={editModel.id}
                     isEditModel={true}
                   />
                 ))}
@@ -80,11 +78,6 @@ export default function ModelsPopupList() {
             </div>
           }
         >
-          {/* <Link to="/dashboard/models/">
-            <p className="font-bold text-blue-500 underline">
-              Click here for upload new model.
-            </p>
-          </Link> */}
           <div className="grid grid-cols-1 gap-x-3 sm:grid-cols-2 xl:grid-cols-4">
             {isLoading
               ? Array.from({ length: defaultLoadingCards }, (_, index) => (
@@ -94,10 +87,8 @@ export default function ModelsPopupList() {
                   <ModelCard
                     key={index}
                     title={model.title}
-                    file={model.file}
                     id={model.id}
                     createdAt={model.created_at}
-                    isPublicModel={false}
                   />
                 ))}
           </div>

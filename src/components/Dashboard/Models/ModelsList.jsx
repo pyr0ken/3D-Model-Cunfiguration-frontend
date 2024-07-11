@@ -1,20 +1,20 @@
 import { Button } from "@nextui-org/react";
+import jMoment from "moment-jalaali";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import useDeleteModel from "../../../hooks/model/useDeleteModel";
 import useDeleteEditModel from "../../../hooks/model/useDeleteEditModel";
+import useDeleteModel from "../../../hooks/model/useDeleteModel";
 import useEditedModels from "../../../hooks/model/useEditedModels";
 import useUploadedModels from "../../../hooks/model/useUploadedModels";
+import useEditorStore from "../../../store/editorStore";
 import {
   fileSizeInMegabytes,
-  formatISODate,
   relativeTimeFromNow,
   showAlert,
 } from "../../Core/utils";
 import UploadModelModal from "./UploadModelModal";
 import ViewModelModal from "./ViwsModelModal";
-import { useNavigate } from "react-router-dom";
-import jMoment from "moment-jalaali";
 
 export default function ModelsList() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -32,13 +32,17 @@ export default function ModelsList() {
 
   const navigate = useNavigate();
 
+  const { addEditModel, setSelectedModel } = useEditorStore();
+
   const handleViewModel = (modelFile) => {
     setModelFileURL(modelFile);
     setIsViewModalOpen(true);
   };
 
-  const handleEditModel = (editModelId) => {
-    navigate(`/dashboard/editor/${editModelId}/`);
+  const handleEditModel = (editModel) => {
+    addEditModel(editModel);
+    setSelectedModel(editModel);
+    navigate(`/dashboard/editor/`);
   };
 
   const handleDeleteModel = (id) => {
@@ -95,7 +99,7 @@ export default function ModelsList() {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer rtl />
       <div className="mx-5 mt-2 flex h-screen w-full flex-col gap-y-5 overflow-auto text-white">
         <div className="flex flex-col">
           <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
@@ -120,7 +124,9 @@ export default function ModelsList() {
                 <p className="text-center">گزینه ها</p>
               </div>
               {isLoading ? (
-                <p>Loading...</p>
+                <p className="bg-leva-2/50 p-4 text-center text-lg">
+                  در حال بارگیری اطلاعات...
+                </p>
               ) : uploadedModels.length > 0 ? (
                 uploadedModels.map((model, index) => (
                   <div
@@ -129,7 +135,7 @@ export default function ModelsList() {
                   >
                     <p className="pl-3">{model.title}</p>
                     <p className="pl-3">{model.format}</p>
-                    <p className="pl-3 space-x-1">
+                    <p className="space-x-1 pl-3">
                       <span>{fileSizeInMegabytes(model.size).toFixed(2)}</span>
                       <span>MB</span>
                     </p>
@@ -187,7 +193,9 @@ export default function ModelsList() {
                 <p className="text-center">گزینه ها</p>
               </div>
               {editedModelIsLoading ? (
-                <p>Loading...</p>
+                <p className="bg-leva-2/50 p-4 text-center text-lg">
+                  در حال بارگیری اطلاعات...
+                </p>
               ) : editedModels.length > 0 ? (
                 editedModels.map((editModel, index) => (
                   <div
@@ -202,7 +210,7 @@ export default function ModelsList() {
                     </p>
                     <div className="flex justify-center gap-x-2">
                       <button
-                        onClick={() => handleEditModel(editModel.id)}
+                        onClick={() => handleEditModel(editModel)}
                         className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
                       >
                         شروع ویرایش
@@ -218,7 +226,7 @@ export default function ModelsList() {
                 ))
               ) : (
                 <p className="bg-leva-2/50 p-4 text-center text-lg">
-                  هیچ جلسه ای در اینجا وجود ندارد. همین الان میتوانید یک مدل را
+                  هیچ مدلی در اینجا وجود ندارد. همین الان میتوانید یک مدل را
                   ویرایش کنید !
                 </p>
               )}

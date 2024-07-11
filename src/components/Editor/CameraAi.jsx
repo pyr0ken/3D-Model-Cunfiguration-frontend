@@ -24,7 +24,7 @@ const CameraAi = () => {
   let virtualMouseX = 0;
   let virtualMouseY = 0;
 
-  const { setAiRotation } = useEditorStore();
+const { setAiRotation } = useEditorStore();
 
   useEffect(() => {
     const hands = new Hands({

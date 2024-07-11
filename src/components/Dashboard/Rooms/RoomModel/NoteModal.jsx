@@ -7,12 +7,12 @@ import {
   ModalHeader,
   Textarea,
 } from "@nextui-org/react";
+import { usePubSub } from "@videosdk.live/react-sdk";
 import { useRef } from "react";
 import useAddNote from "../../../../hooks/model/useAddNote";
 import useDeleteNote from "../../../../hooks/model/useDeleteNote";
 import useDeletePoint from "../../../../hooks/model/useDeletePoint";
 import useRoomStore from "../../../../store/roomStore";
-import { usePubSub } from "@videosdk.live/react-sdk";
 
 export default function NoteModal({
   selectedPoint,
@@ -94,33 +94,33 @@ export default function NoteModal({
       isOpen={isNoteModalOpen}
       onClose={handleCloseModal}
       placement="top-center"
-      className="text-white dark"
+      className="text-white dark rtl font-vazirmatn"
     >
       <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">
-          Add & Edit Note
+        <ModalHeader className="flex justify-center">
+          افزدون یا ویرایش یادداشت
         </ModalHeader>
         <ModalBody>
           <Textarea
             ref={noteRef}
             autoFocus
-            label="Note"
+            label="یادداشت: "
             defaultValue={getPointNote}
-            placeholder="Enter your note..."
+            placeholder="یادداشت خود را وارد کنید..."
             variant="flat"
           />
         </ModalBody>
         <ModalFooter className="flex justify-between">
-          <div className="space-x-2">
+          <div className="flex gap-x-1">
             <Button color="danger" onClick={handleDeletePoint}>
-              Delete Point
+              حذف نقطه
             </Button>
             <Button color="danger" onClick={handleDeleteNote}>
-              Delete Note
+              حذف یادداشت
             </Button>
           </div>
           <Button color="primary" onClick={handleAddNote}>
-            Save Note
+            ذخیره یادداشت
           </Button>
         </ModalFooter>
       </ModalContent>

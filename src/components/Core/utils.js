@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
-import moment from "moment";
+import moment from "jalali-moment";
 
 export const showAlert = (type, message) => {
   toast[type](message, {
-    position: "bottom-right",
+    position: "bottom-left",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -14,12 +14,11 @@ export const showAlert = (type, message) => {
   });
 };
 
-export const jalaliDate = (isoDateString) => {
-  const date = new Date(isoDateString);
-  const formattedDate =
-    date.toLocaleDateString() + " " + date.toLocaleTimeString();
-  return formattedDate;
-};
+export const getFirstWords = (text, wordsNumber) => {
+  const words = text.split(" ");
+  const firstWords = words.slice(0, wordsNumber).join(" ");
+  return words.length > wordsNumber ? `${firstWords}...` : firstWords;
+}
 
 export const formatISODate = (isoDateString) => {
   const date = new Date(isoDateString);
@@ -29,7 +28,8 @@ export const formatISODate = (isoDateString) => {
 };
 
 export const relativeTimeFromNow = (dateTime) => {
-  return moment(dateTime).fromNow();
+  const text = moment(dateTime).locale('fa').fromNow()
+  return text
 };
 
 export const fileSizeInMegabytes = (bytes) => {

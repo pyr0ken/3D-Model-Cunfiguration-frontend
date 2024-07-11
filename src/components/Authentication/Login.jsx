@@ -15,7 +15,6 @@ export default function Login() {
   const usernameRef = useRef();
   const passwordRef = useRef();
 
-  // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { state, pathname } = useLocation();
   const { mutate } = useLogin();
@@ -26,27 +25,27 @@ export default function Login() {
 
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
-    // setLoading(true);
+
+    if (!username || !password) {
+      showAlert("error", "لطفا تمامی فیلد های خواسته شده را وارد کنید.")
+      return;
+    }
 
     mutate(
       { username, password },
       {
         onSuccess: (data) => {
-          // Save data in coockie and zustand
+          // Save data in cookies and zustand
           login(data.user, data.accessToken, data.refreshToken);
           navigate("/", {
-            state: { successMessage: "Welcome to your 3d laboratory." },
+            state: { successMessage: "با موفقیت وارد شدید." },
           });
         },
         onError: (error) => {
-          if (!error?.originalStatus) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 400) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 401) {
+          if (error.response.status === 400) {
             showAlert("error", error.response?.data?.detail);
           } else {
-            showAlert("error", "Login Failed");
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
           }
         },
       },
@@ -65,7 +64,7 @@ export default function Login() {
     <>
       <Navbar />
       <div className="bg-dot relative flex flex-col items-center text-white">
-        <ToastContainer position="bottom-left" />
+      <ToastContainer rtl />
         <Suspense>
           <Background />
         </Suspense>

@@ -5,16 +5,10 @@ import { button, useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
 import { Vector3 } from "three";
 import useAddPoint from "../../../../hooks/model/useAddPoints";
-import useDeletePoint from "../../../../hooks/model/useDeletePoint";
 import usePoints from "../../../../hooks/model/usePoints";
 import { BASE_URL } from "../../../../services";
 import useRoomStore from "../../../../store/roomStore";
-
-function getFirstWords(text, wordsNumber) {
-  const words = text.split(" ");
-  const firstWords = words.slice(0, wordsNumber).join(" ");
-  return words.length > wordsNumber ? `${firstWords}...` : firstWords;
-}
+import { getFirstWords } from "../../../Core/utils";
 
 export default function LoadModel({
   isNoteModalOpen,
@@ -23,7 +17,7 @@ export default function LoadModel({
 }) {
   // state
   const [hoverPointId, setHoverPointId] = useState(null);
-  const {selectedModel, setSelectedModel} = useRoomStore()
+  const { selectedModel, aiRotation, aiCameraIsOn } = useRoomStore();
 
   // Load Model with useGLTF
   const { nodes, materials } = useGLTF(BASE_URL + selectedModel.file);
@@ -37,7 +31,6 @@ export default function LoadModel({
     refetch,
   } = usePoints(selectedModel.id);
   const { mutate: addPoint } = useAddPoint();
-  const { mutate: deletePoint } = useDeletePoint();
 
   // ThreeJs
   const { camera, gl } = useThree();
@@ -45,16 +38,13 @@ export default function LoadModel({
   // Ref
   const modelRef = useRef();
 
-  // Ai Store for hand tracker rotation
-  const { aiRotation, clearAiRotation } = useRoomStore();
-
   // VideoSdk PubSub for new point or note
   const { publish: pointPublish } = usePubSub("POINT", {
     onMessageReceived: () => {
       refetch();
     },
   });
-  
+
   // Controllers
   const { scale, positionY, resetCamera } = useControls("Model", {
     scale: {
@@ -68,7 +58,7 @@ export default function LoadModel({
       value: 0,
       step: 0.01,
     },
-    "Reset Camera": button(() => {
+    "Reset Model View": button(() => {
       camera.position.set(0, 0, 5);
     }),
     "Take ScreenShot": button(() => {
@@ -95,7 +85,7 @@ export default function LoadModel({
   });
 
   useEffect(() => {
-    if (aiRotation) {
+    if (aiRotation && aiCameraIsOn) {
       modelRef.current.rotation.set(aiRotation.x, aiRotation.y, 0);
     }
   }, [aiRotation]);
@@ -103,7 +93,7 @@ export default function LoadModel({
   const handleModelClick = (event) => {
     event.stopPropagation();
 
-    if (event.shiftKey) {
+    if (event.ctrlKey) {
       const mousePoint = new Vector3(
         event.point.x,
         event.point.y,
@@ -172,7 +162,7 @@ export default function LoadModel({
         </group>
       </group>
 
-      {!pointsIsLoading &&
+      {!pointsIsLoading && !aiCameraIsOn &&
         points.map((point, index) => (
           <mesh
             key={index}
@@ -185,7 +175,7 @@ export default function LoadModel({
           >
             <sphereGeometry args={[point.radius]} />
             <meshBasicMaterial color={point.color} />
-            {pointIndex && (
+            {pointIndex && !isNoteModalOpen && (
               <Html className="flex" distanceFactor={4}>
                 <span className="select-none font-extrabold text-gray-300">
                   {index + 1}

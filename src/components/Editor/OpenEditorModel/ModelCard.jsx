@@ -1,19 +1,23 @@
 import { useRef, useState } from "react";
-import { GiHeartOrgan } from "react-icons/gi";
 import useAddEditModel from "../../../hooks/model/useAddEditModel";
 import useEditorStore from "../../../store/editorStore";
 import { relativeTimeFromNow } from "../../Core/utils";
+import { IoCube } from "react-icons/io5";
 
 export default function ModelCard({
   id,
   title,
-  displayName = null,
-  file,
   createdAt,
-  isPublicModel,
+  isPublicModel = false,
+  displayName = null,
+  editModelId = null,
   isEditModel = false,
 }) {
-  const { setIsEditModalOpen } = useEditorStore();
+  const {
+    setSelectedModel,
+    setIsEditModalOpen,
+    addEditModel: addEdotModelStore,
+  } = useEditorStore();
 
   const { mutate: addEditModel } = useAddEditModel();
 
@@ -50,13 +54,22 @@ export default function ModelCard({
   };
 
   const handleClickModel = () => {
-    if (isOwner) {
-      addEditModel({ model_id: id });
+    let data = {
+      model_id: id,
+    };
+
+    if (isEditModel) {
+      data.edit_model_id = editModelId;
     }
-    // else {
-    //   addEditModel({ id });
-    // }
-    setIsEditModalOpen(false);
+
+    addEditModel(data, {
+      onSuccess: (data) => {
+        addEdotModelStore(data);
+        setSelectedModel(data);
+        setIsEditModalOpen(false);
+      },
+      onError: (err) => console.log(err),
+    });
   };
 
   return (
@@ -78,7 +91,7 @@ export default function ModelCard({
         }}
       />
       <span className="mb-4 inline-flex items-center justify-center rounded-md bg-[#007BFF] p-3 shadow-lg">
-        <GiHeartOrgan className="h-10 w-10 text-white" />
+        <IoCube className="h-10 w-10 text-white" />
       </span>
       <div className="flex flex-col gap-3">
         <h3 className="font-medium tracking-tight text-gray-200">

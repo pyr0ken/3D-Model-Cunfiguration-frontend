@@ -44,7 +44,21 @@
   src: url("../public/fonts/Vazirmatn-Medium.ttf");
 }
 
-* {
+#root {
   direction: rtl;
+  @apply font-vazirmatn;
+}
+
+.rtl {
+  direction: rtl;
+}
+
+.leva-c-kWgxhW-bCBHqk-fill-false {
+  top: 10px !important;
+  right: 0px !important;
+  left: 10px !important;
+}
+
+.Toastify__toast {
   @apply font-vazirmatn;
 }

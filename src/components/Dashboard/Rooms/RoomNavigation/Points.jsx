@@ -34,7 +34,7 @@ export default function Points({ isOpen, setSelectedTab }) {
       },
       {
         onSuccess: (res) => {
-          showAlert("info", "Point deleted successfully");
+          showAlert("info", "نقطه مورد نظر با موفقیت حذف شد");
           refetch();
           pointPublish("Delete Point", { persist: true });
         },
@@ -74,7 +74,7 @@ export default function Points({ isOpen, setSelectedTab }) {
             >
               <div className="flex items-center justify-between">
                 <span
-                  className="flex h-5 w-5 items-center justify-center rounded-full"
+                  className="flex h-5 w-5 justify-center rounded-full"
                   style={{ backgroundColor: point.color }}
                 >
                   {index + 1}
@@ -90,11 +90,11 @@ export default function Points({ isOpen, setSelectedTab }) {
               </div>
               <div className="mt-6">
                 <div className="flex justify-between">
-                  <strong>Note:</strong>
+                  <strong>یادداشت :</strong>
                   <span>{point.note ? point.note : "-"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <strong>Radius:</strong>
+                  <strong>اندازه :</strong>
                   <span>{Math.round(point.radius * 100) / 100}</span>
                 </div>
               </div>

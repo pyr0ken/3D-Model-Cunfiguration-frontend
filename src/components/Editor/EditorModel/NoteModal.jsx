@@ -61,9 +61,9 @@ export default function NoteModal({
 
   const handleDeleteNote = () => {
     deleteNote(
-      { 
+      {
         edit_model_id: selectedModel.id,
-        point_id: selectedPoint.id
+        point_id: selectedPoint.id,
       },
       {
         onSuccess: (res) => refetch(),
@@ -89,33 +89,33 @@ export default function NoteModal({
       isOpen={isNoteModalOpen}
       onClose={handleCloseModal}
       placement="top-center"
-      className="text-white dark"
+      className="rtl font-vazirmatn text-white dark"
     >
       <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">
-          Add & Edit Note
+        <ModalHeader className="flex justify-center">
+          افزدون یا ویرایش یادداشت
         </ModalHeader>
         <ModalBody>
           <Textarea
             ref={noteRef}
             autoFocus
-            label="Note"
+            label="یادداشت: "
             defaultValue={getPointNote}
-            placeholder="Enter your note..."
+            placeholder="یادداشت خود را وارد کنید..."
             variant="flat"
           />
         </ModalBody>
         <ModalFooter className="flex justify-between">
-          <div className="space-x-2">
+          <div className="flex gap-x-1">
             <Button color="danger" onClick={handleDeletePoint}>
-              Delete Point
+              حذف نقطه
             </Button>
             <Button color="danger" onClick={handleDeleteNote}>
-              Delete Note
+              حذف یادداشت
             </Button>
           </div>
           <Button color="primary" onClick={handleAddNote}>
-            Save Note
+            ذخیره یادداشت
           </Button>
         </ModalFooter>
       </ModalContent>

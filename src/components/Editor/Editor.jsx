@@ -9,67 +9,30 @@ import EditorNavigation from "./EditorNavigation";
 import OpenModel from "./OpenEditorModel/OpenModel";
 
 export default function Editor() {
-  // state
-  const [screenCapture, setScreenCapture] = useState("");
-
-  // get edit model id from url path
-  const { editModelId } = useParams();
-
   // Editor Store
   const {
     selectedModel,
     closeModel,
     aiCameraIsOn,
     setSelectedModel,
-    changeCameraStatus,
   } = useEditorStore();
 
-  // Edit model
-  const {
-    data: editModel,
-    isLoading,
-    isError,
-  } = useEditModelDetail(editModelId);
-
-  useEffect(() => {
-    if (editModel && !closeModel) {
-      setSelectedModel(editModel);
-    }
-  }, [editModel]);
-
-  // const handleScreenCapture = (screenCapture) => {
-  //   console.log("screenCapture:", screenCapture);
-  //   setScreenCapture(screenCapture);
-  // };
+  // useEffect(() => {
+  //   if (editModel && !closeModel) {
+  //     setSelectedModel(editModel);
+  //   }
+  // }, [editModel]);
 
   return (
     <div className="bg-grid relative flex h-screen w-full overflow-hidden">
       <EditorNavigation />
 
-      {/* {screenCapture && (
-        <img
-          src={screenCapture}
-          alt=""
-          className="ml-52"
-          width={200}
-          height={100}
-        />
-      )} */}
-
       {aiCameraIsOn && <CameraAi />}
 
-      {selectedModel && !isLoading ? (
-        // <ScreenCapture onEndCapture={handleScreenCapture}>
-        //   {({ onStartCapture }) => (
-        //     <Model
-        //       onStartCapture={onStartCapture}
-        //       selectedModel={selectedModel}
-        //     />
-        //   )}
-        // </ScreenCapture>
-        <Model selectedModel={selectedModel} />
+      {selectedModel ? (
+        <Model />
       ) : (
-        <div className="ml-[5.5rem] flex w-full justify-center">
+        <div className="mr-[5.5rem] flex w-full justify-center">
           <OpenModel />
         </div>
       )}

@@ -1,12 +1,12 @@
 import { Suspense, useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import Background from "../Background";
-import Navbar from "../Core/Navbar";
-import { apiBase } from "../../services/index.js";
-import { showAlert } from "../Core/utils.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useRegister from "../../hooks/auth/useRegitser.jsx";
+import Background from "../Background";
+import Navbar from "../Core/Navbar";
+import { showAlert } from "../Core/utils.js";
 
 export default function Register() {
   const [pwdVisibility, setPwdVisibility] = useState(false);
@@ -17,6 +17,7 @@ export default function Register() {
   const confirmPasswordRef = useRef();
 
   const navigate = useNavigate();
+  const { mutate: register } = useRegister();
 
   const togglePasswordVisibility = (type) => {
     switch (type) {
@@ -38,36 +39,42 @@ export default function Register() {
     const password = passwordRef.current.value;
     const confirmPassword = confirmPasswordRef.current.value;
 
-    if (password !== confirmPassword) {
-      showError("Passwords do not match.");
+    if (!username || !password || !confirmPassword) {
+      showAlert("error", "لطفا تمامی فیلد های خواسته شده را وارد کنید.");
       return;
     }
 
-    await apiBase
-      .post("/users/register/", {
-        username: username,
-        password: password,
-      })
-      .then((response) => {
-        navigate("/login", {
-          state: { successMessage: "Registration successful. Please log in." },
-        });
-      })
-      .catch((error) => {
-        const errorMessage = error.response?.data?.detail;
-        console.log(error);
-        showAlert(
-          "error",
-          errorMessage || "An error occurred while registering",
-        );
-      });
+    if (password !== confirmPassword) {
+      showAlert("error", "پسورد های ورودی مطابقت ندارند.");
+      return;
+    }
+
+    register(
+      { username: username, password: password },
+      {
+        onSuccess: (response) => {
+          navigate("/login", {
+            state: {
+              successMessage: "ثبت نام با موفقیت انجام شد! لطفا وارد شوید.",
+            },
+          });
+        },
+        onError: (error) => {
+          if (error.response.status === 400) {
+            showAlert("error", error.response?.data?.detail);
+          } else {
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
+          }
+        },
+      },
+    );
   };
 
   return (
     <>
       <Navbar />
       <div className="bg-dot flex flex-col items-center text-white">
-        <ToastContainer position="bottom-left" />
+        <ToastContainer rtl />
         <Suspense>
           <Background />
         </Suspense>
@@ -82,8 +89,7 @@ export default function Register() {
             <div className="p-6 pt-0">
               <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
                 <input
-                  required
-                  onChange={(e) => handleInput(e, "username")}
+                  ref={usernameRef}
                   type="text"
                   name="username"
                   placeholder="لطفا نام کاربری خود را وارد کنید..."
@@ -92,8 +98,7 @@ export default function Register() {
                 />
                 <div className="relative">
                   <input
-                    required
-                    onChange={(e) => handleInput(e, "pwd")}
+                    ref={passwordRef}
                     type={pwdVisibility ? "text" : "password"}
                     name="password"
                     placeholder="لطفا پسورد خود را وارد کنید..."
@@ -114,8 +119,7 @@ export default function Register() {
                 </div>
                 <div className="relative">
                   <input
-                    required
-                    onChange={(e) => handleInput(e, "confirmPwd")}
+                    ref={confirmPasswordRef}
                     type={confirmPwdVisibility ? "text" : "password"}
                     name="confirm-password"
                     placeholder="لطفا پسورد خود را تکرار کنید..."
@@ -136,7 +140,6 @@ export default function Register() {
                 </div>
                 <div className="mt-3 flex flex-col items-center justify-between gap-y-6">
                   <input
-                    // disabled={!username || !password || !confirmPassword}
                     value="ثبت"
                     type="submit"
                     className="w-full cursor-pointer rounded bg-leva-3 py-3 text-lg text-white transition-colors duration-300 hover:bg-leva-3/80"

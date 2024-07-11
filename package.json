@@ -31,6 +31,7 @@
     "cookies-js": "^1.2.3",
     "dayjs": "^1.11.10",
     "framer-motion": "^11.0.24",
+    "jalali-moment": "^3.3.11",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "leva": "^0.9.35",

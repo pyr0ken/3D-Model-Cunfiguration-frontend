@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <>
-      <ToastContainer position="bottom-left" />
+      <ToastContainer rtl />
       <Navbar />
       <div className="bg-dot relative flex flex-col justify-center">
         <div className="h-screen w-full">
@@ -60,7 +60,7 @@ export default function Home() {
           </Canvas>
         </div>
 
-        <div className="absolute left-1/2 top-1/2 flex w-full max-w-full -translate-x-1/2 -translate-y-1/2 transform select-none items-center justify-center px-10 font-mono text-[4rem] text-white/95">
+        <div className="absolute left-1/2 top-1/2 flex w-full max-w-full -translate-x-1/2 -translate-y-1/2 transform select-none items-center justify-center px-10 text-[4rem] text-white/95">
           <h1>به آزمایشگاه سه بعدی خوش آمدید!</h1>
         </div>
       </div>

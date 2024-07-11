@@ -81,27 +81,27 @@ export default function Navbar() {
               <Modal
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
-                className="text-white dark"
+                className="rtl text-center font-vazirmatn text-white dark"
               >
                 <ModalContent>
                   {(onClose) => (
                     <>
                       <ModalHeader className="flex flex-col gap-1">
-                        Confirm Logout
+                        تایید خروج
                       </ModalHeader>
                       <ModalBody>
-                        <p>Are you sure you want to logout?</p>
+                        <p>آیا برای خارج شدن مطمئن هستید؟</p>
                       </ModalBody>
                       <ModalFooter>
                         <Button
-                          color="danger"
+                          color="primary"
                           variant="solid"
                           onPress={onClose}
                         >
-                          Close
+                          بستن
                         </Button>
-                        <Button color="primary" onPress={handleLogout}>
-                          Logout
+                        <Button color="danger" onPress={handleLogout}>
+                          خروج
                         </Button>
                       </ModalFooter>
                     </>

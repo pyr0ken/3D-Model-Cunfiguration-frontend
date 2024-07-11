@@ -162,7 +162,7 @@ export default function RoomNavigation() {
           >
             <FaUsers className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
-          <RoomToolBoxLink name="نقاشی" componentName="Draw" setSelectedTab={setSelectedTab}>
+          <RoomToolBoxLink name="تخته مجازی" componentName="Draw" setSelectedTab={setSelectedTab}>
             <FaPaintBrush className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
           <RoomToolBoxLink name="گفتگو" componentName="Chat" setSelectedTab={setSelectedTab}>

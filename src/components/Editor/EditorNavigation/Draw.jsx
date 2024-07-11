@@ -5,10 +5,8 @@ import { variants } from "./utils";
 import { useRef, useState } from "react";
 import { Button, Slider } from "@nextui-org/react";
 
-export default function Draw({ selectedProject, isOpen, setSelectedProject }) {
+export default function Draw({ isOpen, setSelectedTab }) {
   const canvasRef = useRef();
-  const strokeWidthRef = useRef();
-  const eraserWidthRef = useRef();
 
   const [eraseMode, setEraseMode] = useState(false);
   const [strokeWidth, setStrokeWidth] = useState(5);
@@ -24,28 +22,12 @@ export default function Draw({ selectedProject, isOpen, setSelectedProject }) {
     canvasRef.current?.eraseMode(false);
   };
 
-  const handleStrokeWidthChange = () => {
-    setStrokeWidth(strokeWidthRef.current.value);
+  const handleStrokeWidthChange = (value) => {
+    setStrokeWidth(+value);
   };
 
-  const handleEraserWidthChange = () => {
-    setEraserWidth(eraserWidthRef.current.value);
-  };
-
-  const handleUndoClick = () => {
-    canvasRef.current?.undo();
-  };
-
-  const handleRedoClick = () => {
-    canvasRef.current?.redo();
-  };
-
-  const handleClearClick = () => {
-    canvasRef.current?.clearCanvas();
-  };
-
-  const handleResetClick = () => {
-    canvasRef.current?.resetCanvas();
+  const handleEraserWidthChange = (value) => {
+    setEraserWidth(+value);
   };
 
   return (
@@ -58,75 +40,53 @@ export default function Draw({ selectedProject, isOpen, setSelectedProject }) {
         duration: 0.2,
         ease: "easeInOut",
       }}
-      className={`absolute z-10 ml-0 flex h-full w-[40rem] flex-col gap-3 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "left-[16.5rem] transition-left" : "left-24 transition-left"
+      className={`absolute z-10 mr-0 flex h-full w-[40rem] flex-col gap-3 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
+        isOpen
+          ? "transition-right right-[16.5rem]"
+          : "transition-right right-24"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
-        <h1 className="text-lg tracking-wide">{selectedProject}</h1>
-        <button onClick={() => setSelectedProject(null)}>
+        <h1 className="text-lg tracking-wide">تخته مجازی</h1>
+        <button onClick={() => setSelectedTab(null)}>
           <XMarkIcon className="w-8 stroke-neutral-400" />
         </button>
       </div>
       <div className="flex flex-col text-white">
-        <div className="mb-4 flex flex-col gap-2">
-          <div className="flex justify-between">
-            <div className="flex gap-x-1">
-              <Button
-                color="primary"
-                isDisabled={!eraseMode}
-                onClick={handlePenClick}
-              >
-                Pen
-              </Button>
-              <Button
-                color="primary"
-                isDisabled={eraseMode}
-                onClick={handleEraserClick}
-              >
-                Eraser
-              </Button>
-            </div>
-            <div className="flex gap-x-1">
-              <Button color="primary" onClick={handleUndoClick}>
-                Undo
-              </Button>
-              <Button color="primary" onClick={handleRedoClick}>
-                Redo
-              </Button>
-              <Button color="primary" onClick={handleClearClick}>
-                Clear
-              </Button>
-              <Button color="primary" onClick={handleResetClick}>
-                Reset
-              </Button>
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="strokeWidth" className="text-sm">
-              Stroke width
-            </label>
+      <div className="my-5 flex w-full flex-col gap-y-5">
+          <div className="flex items-center gap-x-5">
+            <Button
+              color="primary"
+              isDisabled={!eraseMode}
+              onClick={handlePenClick}
+            >
+              مداد
+            </Button>
             <Slider
-              ref={strokeWidthRef}
               isDisabled={eraseMode}
               minValue={1}
               maxValue={20}
+              showSteps={true} 
               step={1}
-              id="strokeWidth"
-              defaultValue={strokeWidth}
+              value={strokeWidth}
               onChange={handleStrokeWidthChange}
             />
-            <label htmlFor="eraserWidth" className="text-sm">
-              Eraser width
-            </label>
+          </div>
+          <div className="flex items-center gap-x-5">
+            <Button
+              color="primary"
+              isDisabled={eraseMode}
+              onClick={handleEraserClick}
+            >
+              پاک کن
+            </Button>
             <Slider
-              ref={eraserWidthRef}
               isDisabled={!eraseMode}
               minValue={1}
               maxValue={20}
+              showSteps={true} 
               step={1}
-              id="eraserWidth"
-              defaultValue={eraserWidth}
+              value={eraserWidth}
               onChange={handleEraserWidthChange}
             />
           </div>

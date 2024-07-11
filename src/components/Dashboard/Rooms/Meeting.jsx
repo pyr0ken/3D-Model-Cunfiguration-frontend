@@ -131,7 +131,7 @@ export default function Meeting() {
         )
       )}
 
-      <ToastContainer position="bottom-right" />
+      <ToastContainer rtl />
     </div>
   );
 }

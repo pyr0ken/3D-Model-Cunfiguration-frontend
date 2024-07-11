@@ -13,6 +13,7 @@ const useRoomStore = create((set) => ({
   isRoomModalOpen: false,
   aiCameraIsOn: false,
   aiRotation: { x: 0, y: 0 },
+  reloadModelKey: 0,
   setRoomTitle: (data) => set((state) => ({ roomTitle: data })),
   setRoomId: (data) => set((state) => ({ roomId: data })),
   setAuthToken: (data) => set((state) => ({ authToken: data })),
@@ -24,8 +25,9 @@ const useRoomStore = create((set) => ({
   setCloseModel: (data) => set((state) => ({ closeModel: data })),
   setIsRoomModalOpen: (status) => set((state) => ({ isRoomModalOpen: status })),
   setAiRotation: ({ x, y }) => set((state) => ({ aiRotation: { x, y } })),
-  clearAiRotation: () => set((state) => ({ aiRotation: { x: 0, y: 0 } })),
-  changeCameraStatus: () => set((state) => ({ aiCameraIsOn: !state.aiCameraIsOn })),
+  changeAiCameraStatus: () => set((state) => ({ aiCameraIsOn: !state.aiCameraIsOn })),
+  changeReloadModelKey: () =>
+    set((state) => ({ reloadModelKey: state.reloadModelKey + 1 })),
 }));
 
 export default useRoomStore;

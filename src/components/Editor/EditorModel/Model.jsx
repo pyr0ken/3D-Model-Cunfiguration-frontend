@@ -1,36 +1,54 @@
-import { CiZoomIn as ZoomInIcon } from "react-icons/ci";
-import { CiZoomOut as ZoomOutIcon } from "react-icons/ci";
-import { Environment, Html, OrbitControls } from "@react-three/drei";
-import { Canvas, useThree } from "@react-three/fiber";
-import { useControls, button } from "leva";
+import { Html, OrbitControls } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { button, useControls } from "leva";
 import { Perf } from "r3f-perf";
-import { Suspense, useEffect, useState, useRef } from "react";
-import LoadModel from "./LoadModel";
-import Placeholder from "../../Models/Placeholder";
-import NoteModal from "./NoteModal";
+import { Suspense, useEffect, useState } from "react";
+import {
+  CiZoomIn as ZoomInIcon,
+  CiZoomOut as ZoomOutIcon,
+} from "react-icons/ci";
 import usePoints from "../../../hooks/model/usePoints";
+import useEditorStore from "../../../store/editorStore";
+import Placeholder from "../../Models/Placeholder";
+import LoadModel from "./LoadModel";
+import NoteModal from "./NoteModal";
 
-export default function Model({ selectedModel  }) {
+export default function Model() {
   const [showZoomInIcon, setShowZoomInIcon] = useState(false);
   const [showZoomOutIcon, setShowZoomOutIcon] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
+
+  // Editor state
+  const {
+    selectedModel,
+    reloadModelKey,
+    aiCameraIsOn,
+    changeReloadModelKey,
+    changeAiCameraStatus,
+  } = useEditorStore();
 
   // note state
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState(null);
   const { refetch } = usePoints(selectedModel.id);
 
-  const { Monitoring, ZoomIcons, ZoomToCursor, AutoRotate, Pan, HelpText } =
-    useControls("Base", {
+  const { Monitoring, ZoomIcons, ZoomToCursor, AutoRotate, Pan } = useControls(
+    "Base",
+    {
       Monitoring: false,
       ZoomIcons: true,
       ZoomToCursor: false,
       AutoRotate: false,
       Pan: false,
       "Reload Model": button(() => {
-        setReloadKey((prevKey) => prevKey + 1);
+        if (aiCameraIsOn) {
+          changeAiCameraStatus();
+          changeReloadModelKey();
+        } else {
+          changeReloadModelKey();
+        }
       }),
-    });
+    },
+  );
 
   const { ambientLight, directionalLight, pointLight } = useControls("Light", {
     ambientLight: {
@@ -80,8 +98,7 @@ export default function Model({ selectedModel  }) {
   return (
     <div className="h-screen w-screen">
       <Canvas
-        key={reloadKey}
-        camera={{}}
+        key={reloadModelKey}
         gl={{ preserveDrawingBuffer: true }}
         onWheel={handleModelWheel}
       >
@@ -115,7 +132,6 @@ export default function Model({ selectedModel  }) {
         {/* Load GLTF Model */}
         <Suspense fallback={<Placeholder />}>
           <LoadModel
-            selectedModel={selectedModel}
             selectedPoint={selectedPoint}
             isNoteModalOpen={isNoteModalOpen}
             setSelectedPoint={setSelectedPoint}

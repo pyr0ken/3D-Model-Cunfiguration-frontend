@@ -11,8 +11,8 @@ export default function () {
     <div className="flex flex-col items-center justify-center gap-y-5">
       <TbCubePlus className="size-52 text-gray-400" />
       <div className="text-center text-gray-400">
-        <p className="text-2xl">No models have been opened yet.</p>
-        <p className="text-xl">You can open any model right now!</p>
+        <p className="text-2xl">هنوز هیچ مدلی افزوده نشده است.</p>
+        <p className="text-xl">شما می توانید هر مدلی را همین الان باز کنید!</p>
       </div>
       <Button
         onClick={() => setIsRoomModalOpen(true)}
@@ -20,7 +20,7 @@ export default function () {
         color="primary"
         size="lg"
       >
-        Open Model
+       افزودن مدل
       </Button>
       <Modal
         isOpen={isRoomModalOpen}
