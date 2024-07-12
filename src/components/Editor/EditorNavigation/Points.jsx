@@ -80,7 +80,7 @@ const Points = ({ isOpen, setSelectedTab }) => {
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <div className="flex justify-between overflow-x-hidden">
+                  <div className="flex justify-between overflow-x-hidden gap-x-4">
                     <strong>یادداشت :</strong>
                     <span className="text-right">
                       {point.note ? point.note : "-"}

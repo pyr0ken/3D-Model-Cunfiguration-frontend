@@ -9,7 +9,7 @@ import {
 } from "react-icons/ci";
 import usePoints from "../../../hooks/model/usePoints";
 import useEditorStore from "../../../store/editorStore";
-import Placeholder from "../../Models/Placeholder";
+import Placeholder from "../../Model/Placeholder";
 import LoadModel from "./LoadModel";
 import NoteModal from "./NoteModal";
 

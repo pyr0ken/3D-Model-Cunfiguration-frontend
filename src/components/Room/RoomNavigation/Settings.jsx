@@ -2,16 +2,17 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import { usePubSub } from "@videosdk.live/react-sdk";
 import { motion } from "framer-motion";
-import useDeleteEditModel from "../../../../hooks/model/useDeleteEditModel";
-import useGetAllRoomModels from "../../../../hooks/room/useGetALlRoomModels";
-import useUpdateSelectedModel from "../../../../hooks/room/useUpdateSelectedModel";
-import useRoomStore from "../../../../store/roomStore";
+import useDeleteEditModel from "../../../hooks/model/useDeleteEditModel";
+import useGetAllRoomModels from "../../../hooks/room/useGetALlRoomModels";
+import useUpdateSelectedModel from "../../../hooks/room/useUpdateSelectedModel";
+import useRoomStore from "../../../store/roomStore";
 import ModelsPopupList from "../OpenRoomModel/ModelsPopupList";
 import { variants } from "./utils";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import useDeleteRoomModel from "../../../../hooks/room/useDeleteRoomModel";
+import useDeleteRoomModel from "../../../hooks/room/useDeleteRoomModel";
+import { showAlert } from "../../Core/utils";
 
-export default function Settings ({ isOpen, setSelectedTab }) {
+export default function Settings({ isOpen, setSelectedTab }) {
   const {
     isOwner,
     meetingId,
@@ -30,7 +31,7 @@ export default function Settings ({ isOpen, setSelectedTab }) {
   const { mutate: updateSelectedModel } = useUpdateSelectedModel();
   const { mutate: deleteRoomModel } = useDeleteRoomModel();
 
-  const { publish } = usePubSub("SELECT_MODEL", {
+  const { publish: selectModel } = usePubSub("SELECT_MODEL", {
     onMessageReceived: () => {
       refetch();
     },
@@ -42,7 +43,13 @@ export default function Settings ({ isOpen, setSelectedTab }) {
     },
   });
 
-  const handleCloseMode = () => {
+  const { publish: deleteModel } = usePubSub("DELETE_MODEL", {
+    onMessageReceived: () => {
+      refetch();
+    },
+  });
+
+  const handleCloseModel = () => {
     setSelectedModel(null);
     setCloseModel(true);
     setIsRoomModalOpen(false);
@@ -63,7 +70,7 @@ export default function Settings ({ isOpen, setSelectedTab }) {
         onSuccess: (res) => {
           setCloseModel(false);
           refetch();
-          publish("New Select Model", { persist: true });
+          selectModel("New Select Model", { persist: true });
         },
         onError: (err) => console.log(err),
       },
@@ -74,22 +81,17 @@ export default function Settings ({ isOpen, setSelectedTab }) {
     deleteRoomModel(
       { meeting_id: meetingId, edit_model_id: id },
       {
-        onSuccess: (data) => {
+        onSuccess: (response) => {
           refetch();
-          showAlert("success", data.detail);
-          publish("New Select Model", { persist: true });
+          console.log(response);
+          showAlert("success", response.data.detail);
+          deleteModel("Delete Room Model", { persist: true });
         },
         onError: (error) => {
-          console.log(error);
-          showAlert("error", error.response?.data?.id);
-          if (!error?.originalStatus) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 400) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 401) {
+          if (error.response.status === 400) {
             showAlert("error", error.response?.data?.detail);
           } else {
-            showAlert("error", "Failed");
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
           }
         },
       },
@@ -107,7 +109,9 @@ export default function Settings ({ isOpen, setSelectedTab }) {
         ease: "easeInOut",
       }}
       className={`absolute z-20 ml-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "right-[16.5rem] transition-right" : "right-24 transition-right"
+        isOpen
+          ? "transition-right right-[16.5rem]"
+          : "transition-right right-24"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
@@ -119,24 +123,25 @@ export default function Settings ({ isOpen, setSelectedTab }) {
       <div className="flex flex-col gap-5 text-white">
         <div className="flex flex-col">
           <p className="mb-4 text-xl font-semibold">لیست مدل های جلسه</p>
-          <div className="cursor-pointer rounded-bl-xl rounded-tl-xl border-r-3 ">
+          <div className="flex cursor-pointer flex-col gap-y-2 rounded border-r-3">
             {allModels.data.models.length > 0 &&
               allModels.data.models.map((editModel, index) => {
                 return (
-                  <div
-                    key={index}
-                    onClick={() =>
-                      isOwner ? handleSelectedModel(editModel.id) : {}
-                    }
-                    className={`${editModel.id === selectedModel?.id ? "bg-leva-3 hover:bg-leva-3" : ""} flex items-center justify-between bg-leva-2/50 p-2 transition-colors first:rounded-tl-xl last:rounded-bl-xl hover:bg-leva-3/40`}
-                  >
-                    <p>{editModel.display_name}</p>
+                  <div className="flex justify-between" key={index}>
+                    <p
+                      onClick={() =>
+                        isOwner ? handleSelectedModel(editModel.id) : {}
+                      }
+                      className={`${editModel.id === selectedModel?.id ? "bg-leva-3 hover:bg-leva-3" : "hover:bg-leva-3/40"} ${!isOwner && "rounded-l-xl"} flex w-full items-center justify-between p-2 transition-colors`}
+                    >
+                      {editModel.display_name}
+                    </p>
                     {isOwner && (
                       <span
                         onClick={() => handleDeleteRoomModel(editModel.id)}
-                        className="flex cursor-pointer items-center rounded-full bg-red-500 p-1 hover:bg-red-600"
+                        className="flex items-center rounded-l-xl bg-red-500 p-2 transition-colors hover:bg-red-600"
                       >
-                        <RiDeleteBin6Line className="h-5 min-w-4" />
+                        <RiDeleteBin6Line className="size-5" />
                       </span>
                     )}
                   </div>
@@ -150,7 +155,11 @@ export default function Settings ({ isOpen, setSelectedTab }) {
               باز کردن مدل جدید
             </Button>
             {selectedModel && (
-              <Button variant="shadow" onClick={handleCloseMode} color="danger">
+              <Button
+                variant="shadow"
+                onClick={handleCloseModel}
+                color="danger"
+              >
                 بستن مدل فعلی
               </Button>
             )}
@@ -172,5 +181,4 @@ export default function Settings ({ isOpen, setSelectedTab }) {
       </Modal>
     </motion.nav>
   );
-};
-
+}

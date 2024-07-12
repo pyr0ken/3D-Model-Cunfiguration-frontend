@@ -1,13 +1,12 @@
-import Navbar from "../Core/Navbar";
-import Background from "../Background";
-import { Suspense, useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import React from "react";
-import { showAlert } from "../Core/utils.js";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useAuthStore } from "../../store/authStore.js";
 import useLogin from "../../hooks/auth/useLogin.jsx";
+import { useAuthStore } from "../../store/authStore.js";
+import Navbar from "../Core/Navbar";
+import { showAlert } from "../Core/utils.js";
+import Background from "../Model/Background.jsx";
 
 export default function Login() {
   const [pwdVisibility, setPwdVisibility] = useState(false);
@@ -27,7 +26,7 @@ export default function Login() {
     const password = passwordRef.current.value;
 
     if (!username || !password) {
-      showAlert("error", "لطفا تمامی فیلد های خواسته شده را وارد کنید.")
+      showAlert("error", "لطفا تمامی فیلد های خواسته شده را وارد کنید.");
       return;
     }
 
@@ -64,7 +63,7 @@ export default function Login() {
     <>
       <Navbar />
       <div className="bg-dot relative flex flex-col items-center text-white">
-      <ToastContainer rtl />
+        <ToastContainer rtl />
         <Suspense>
           <Background />
         </Suspense>
@@ -114,7 +113,7 @@ export default function Login() {
                   <p className="text-sm font-medium text-white">
                     آیا حساب کاربری ندارید؟‌
                     <Link
-                      className="underline mr-1 hover:text-leva-3"
+                      className="mr-1 underline hover:text-leva-3"
                       to="/register"
                     >
                       وارد صفحه ثبت نام شوید.

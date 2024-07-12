@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Navbar from "../Core/Navbar";
 import { showAlert } from "../Core/utils";
-import Cube from "../Cube";
+import Cube from "../Model/Cube";
 
 export default function Home() {
   const { state, pathname } = useLocation();

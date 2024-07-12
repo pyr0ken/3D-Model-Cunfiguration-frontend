@@ -3,7 +3,7 @@ import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import ModelView from "./ModelView";
-import Placeholder from "../../Models/Placeholder";
+import Placeholder from "../../Model/Placeholder";
 
 export default function ViewModelModal({
   isViewModalOpen,
@@ -11,7 +11,6 @@ export default function ViewModelModal({
   modelFileURL,
   setModelFileURL,
 }) {
-
   return (
     <Modal
       isOpen={isViewModalOpen}

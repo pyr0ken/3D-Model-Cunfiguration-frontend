@@ -2,9 +2,9 @@ import { useMeeting, usePubSub } from "@videosdk.live/react-sdk";
 import { useEffect } from "react";
 import { HiOutlineStatusOnline } from "react-icons/hi";
 import { ToastContainer } from "react-toastify";
-import useGetAllRoomModels from "../../../hooks/room/useGetALlRoomModels";
-import useRoomLeft from "../../../hooks/room/useRoomLeft";
-import useRoomStore from "../../../store/roomStore";
+import useGetAllRoomModels from "../../hooks/room/useGetALlRoomModels";
+import useRoomLeft from "../../hooks/room/useRoomLeft";
+import useRoomStore from "../../store/roomStore";
 import CameraAi from "./CameraAi";
 import JoinLoading from "./JoinLoading";
 import OpenModel from "./OpenRoomModel/OpenModel";
@@ -59,7 +59,7 @@ export default function Meeting() {
   });
 
   // VideoSdk PubSub for open model
-  const { publish } = usePubSub("MODEL", {
+  const { publish: modelPubSub } = usePubSub("MODEL", {
     onMessageReceived: () => {
       setCloseModel(false);
       refetch();
@@ -79,6 +79,13 @@ export default function Meeting() {
     onMessageReceived: () => {
       setCloseModel(true);
       setSelectedModel(null);
+    },
+  });
+
+  // VideoSdk for delete model
+  const { publish: deleteModelPubSub } = usePubSub("DELETE_MODEL", {
+    onMessageReceived: () => {
+      refetch();
     },
   });
 

@@ -2,14 +2,11 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { Button } from "@nextui-org/react";
 import { variants } from "./utils";
-import useRoomStore from "../../../../store/roomStore";
+import useRoomStore from "../../../store/roomStore";
 
 export default function Ai({ isOpen, setSelectedTab }) {
-  const {
-    aiCameraIsOn,
-    changeAiCameraStatus,
-    changeReloadModelKey,
-  } = useRoomStore();
+  const { aiCameraIsOn, changeAiCameraStatus, changeReloadModelKey } =
+    useRoomStore();
 
   const handleHandTracker = () => {
     if (aiCameraIsOn) {

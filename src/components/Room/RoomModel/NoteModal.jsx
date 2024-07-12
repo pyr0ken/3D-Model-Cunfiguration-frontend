@@ -9,10 +9,11 @@ import {
 } from "@nextui-org/react";
 import { usePubSub } from "@videosdk.live/react-sdk";
 import { useRef } from "react";
-import useAddNote from "../../../../hooks/model/useAddNote";
-import useDeleteNote from "../../../../hooks/model/useDeleteNote";
-import useDeletePoint from "../../../../hooks/model/useDeletePoint";
-import useRoomStore from "../../../../store/roomStore";
+import useAddNote from "../../../hooks/model/useAddNote";
+import useDeleteNote from "../../../hooks/model/useDeleteNote";
+import useDeletePoint from "../../../hooks/model/useDeletePoint";
+import useRoomStore from "../../../store/roomStore";
+import { showAlert } from "../../Core/utils";
 
 export default function NoteModal({
   selectedPoint,
@@ -39,7 +40,10 @@ export default function NoteModal({
           note: text,
         },
         {
-          onSuccess: (res) => refetch(),
+          onSuccess: (data) => {
+            refetch();
+            showAlert("success", data.detail);
+          },
           onError: (err) => console.log(err),
         },
       );
@@ -55,7 +59,10 @@ export default function NoteModal({
         point_id: selectedPoint.id,
       },
       {
-        onSuccess: (res) => refetch(),
+        onSuccess: (data) => {
+          refetch();
+          showAlert("info", data.detail);
+        },
         onError: (err) => console.log(err),
       },
     );
@@ -70,7 +77,10 @@ export default function NoteModal({
         point_id: selectedPoint.id,
       },
       {
-        onSuccess: (res) => refetch(),
+        onSuccess: (data) => {
+          refetch();
+          showAlert("info", data.detail);
+        },
         onError: (err) => console.log(err),
       },
     );
@@ -94,7 +104,7 @@ export default function NoteModal({
       isOpen={isNoteModalOpen}
       onClose={handleCloseModal}
       placement="top-center"
-      className="text-white dark rtl font-vazirmatn"
+      className="rtl font-vazirmatn text-white dark"
     >
       <ModalContent>
         <ModalHeader className="flex justify-center">

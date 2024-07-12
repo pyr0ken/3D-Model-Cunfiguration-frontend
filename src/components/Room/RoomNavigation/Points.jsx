@@ -2,11 +2,12 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { usePubSub } from "@videosdk.live/react-sdk";
 import { motion } from "framer-motion";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import useDeletePoint from "../../../../hooks/model/useDeletePoint";
-import usePoints from "../../../../hooks/model/usePoints";
-import useRoomStore from "../../../../store/roomStore";
+import useDeletePoint from "../../../hooks/model/useDeletePoint";
+import usePoints from "../../../hooks/model/usePoints";
+import useRoomStore from "../../../store/roomStore";
 import { variants } from "./utils";
-import { showAlert } from "../../../Core/utils";
+import { showAlert } from "../../Core/utils";
+import { ScrollShadow } from "@nextui-org/react";
 
 export default function Points({ isOpen, setSelectedTab }) {
   const { selectedModel, isOwner } = useRoomStore();
@@ -65,45 +66,47 @@ export default function Points({ isOpen, setSelectedTab }) {
           <XMarkIcon className="w-8 stroke-neutral-400" />
         </button>
       </div>
-      <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
-        {!isLoading && !isError ? (
-          points.map((point, index) => (
-            <div
-              key={index}
-              className="relative rounded-md bg-blue-300/20 p-2 text-center"
-            >
-              <div className="flex items-center justify-between">
-                <span
-                  className="flex h-5 w-5 justify-center rounded-full"
-                  style={{ backgroundColor: point.color }}
-                >
-                  {index + 1}
-                </span>
-                {isOwner && (
+      <ScrollShadow hideScrollBar>
+        <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
+          {!isLoading && !isError ? (
+            points.map((point, index) => (
+              <div
+                key={index}
+                className="relative rounded-md bg-blue-300/20 p-2 text-center"
+              >
+                <div className="flex items-center justify-between">
                   <span
-                    onClick={() => handleDeletePoint(point.id)}
-                    className="flex cursor-pointer items-center rounded-full bg-red-500 p-1 hover:bg-red-600"
+                    className="flex h-5 w-5 justify-center rounded-full"
+                    style={{ backgroundColor: point.color }}
                   >
-                    <RiDeleteBin6Line className="h-5 min-w-4" />
+                    {index + 1}
                   </span>
-                )}
-              </div>
-              <div className="mt-6">
-                <div className="flex justify-between">
-                  <strong>یادداشت :</strong>
-                  <span>{point.note ? point.note : "-"}</span>
+                  {isOwner && (
+                    <span
+                      onClick={() => handleDeletePoint(point.id)}
+                      className="flex cursor-pointer items-center rounded-full bg-red-500 p-1 hover:bg-red-600"
+                    >
+                      <RiDeleteBin6Line className="h-5 min-w-4" />
+                    </span>
+                  )}
                 </div>
-                <div className="flex justify-between">
-                  <strong>اندازه :</strong>
-                  <span>{Math.round(point.radius * 100) / 100}</span>
+                <div className="mt-6">
+                  <div className="flex justify-between overflow-x-hidden gap-x-4">
+                    <strong>یادداشت :</strong>
+                    <span>{point.note ? point.note : "-"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <strong>اندازه :</strong>
+                    <span>{Math.round(point.radius * 100) / 100}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center">:-: There Is no points :-:</p>
-        )}
-      </div>
+            ))
+          ) : (
+            <p className="text-center">:-: There Is no points :-:</p>
+          )}
+        </div>
+      </ScrollShadow>
     </motion.nav>
   );
 }

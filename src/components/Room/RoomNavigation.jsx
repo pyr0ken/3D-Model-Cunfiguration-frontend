@@ -14,8 +14,8 @@ import {
 } from "react-icons/io5";
 import { LuScreenShare, LuScreenShareOff } from "react-icons/lu";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
-import useRoomStore from "../../../store/roomStore";
-import Logo from "../../Core/Logo";
+import useRoomStore from "../../store/roomStore";
+import Logo from "../Core/Logo";
 import Ai from "./RoomNavigation/Ai";
 import Chat from "./RoomNavigation/Chat";
 import Draw from "./RoomNavigation/Draw";
@@ -156,16 +156,24 @@ export default function RoomNavigation() {
           <hr className="h-1 rounded border-0 bg-leva-3/35" />
 
           <RoomToolBoxLink
-            name="اعضا"
+            name="اعضای آنلاین"
             componentName="Members"
             setSelectedTab={setSelectedTab}
           >
             <FaUsers className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
-          <RoomToolBoxLink name="تخته مجازی" componentName="Draw" setSelectedTab={setSelectedTab}>
+          <RoomToolBoxLink
+            name="تخته مجازی"
+            componentName="Draw"
+            setSelectedTab={setSelectedTab}
+          >
             <FaPaintBrush className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
-          <RoomToolBoxLink name="گفتگو" componentName="Chat" setSelectedTab={setSelectedTab}>
+          <RoomToolBoxLink
+            name="گفتگو"
+            componentName="Chat"
+            setSelectedTab={setSelectedTab}
+          >
             <IoChatboxEllipsesOutline className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
           <RoomToolBoxLink
@@ -175,10 +183,18 @@ export default function RoomNavigation() {
           >
             <IoList className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
-          <RoomToolBoxLink name="هوش مصنوعی" componentName="Ai" setSelectedTab={setSelectedTab}>
+          <RoomToolBoxLink
+            name="هوش مصنوعی"
+            componentName="Ai"
+            setSelectedTab={setSelectedTab}
+          >
             <BsCpu className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
-          <RoomToolBoxLink name="راهنما" componentName="Help" setSelectedTab={setSelectedTab}>
+          <RoomToolBoxLink
+            name="راهنما"
+            componentName="Help"
+            setSelectedTab={setSelectedTab}
+          >
             <IoHelpSharp className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
           <RoomToolBoxLink
@@ -225,10 +241,7 @@ export default function RoomNavigation() {
       </motion.nav>
       <AnimatePresence>
         {SelectedComponent && (
-          <SelectedComponent
-            setSelectedTab={setSelectedTab}
-            isOpen={isOpen}
-          />
+          <SelectedComponent setSelectedTab={setSelectedTab} isOpen={isOpen} />
         )}
       </AnimatePresence>
     </>

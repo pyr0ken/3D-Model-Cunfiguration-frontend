@@ -1,10 +1,10 @@
-import { Navigate, useParams } from "react-router-dom";
-import { useAuthStore } from "../../../store/authStore";
 import { MeetingProvider } from "@videosdk.live/react-sdk";
-import useRoomStore from "../../../store/roomStore";
-import Meeting from "./Meeting";
-import useRoomDetail from "../../../hooks/room/useRoomDetail";
 import { useEffect } from "react";
+import { Navigate, useParams } from "react-router-dom";
+import useRoomDetail from "../../hooks/room/useRoomDetail";
+import { useAuthStore } from "../../store/authStore";
+import useRoomStore from "../../store/roomStore";
+import Meeting from "./Meeting";
 
 export default function Room() {
   // Get room id from path
@@ -40,7 +40,6 @@ export default function Room() {
       }}
       token={authToken}
       joinWithoutUserInteraction={true}
-      // reinitialiseMeetingOnConfigChange={true}
     >
       <Meeting />
     </MeetingProvider>

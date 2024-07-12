@@ -1,14 +1,20 @@
-import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import Login from "./components/Authentication/Login";
 import Register from "./components/Authentication/Register";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DashboardMainPage from "./components/Dashboard/DashboardMainPage";
 import ModelsList from "./components/Dashboard/Models/ModelsList";
-import Room from "./components/Dashboard/Rooms/Room";
+import Room from "./components/Room/Room";
 import RoomsList from "./components/Dashboard/Rooms/RoomsList";
 import Editor from "./components/Editor/Editor";
 import Home from "./components/Home/Home";
 import { useAuthStore } from "./store/authStore";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -18,7 +24,7 @@ const ProtectedRoute = ({ children }) => {
     return (
       <Navigate
         to={"/login"}
-        state={{ successMessage: "Please Log in and try again" }}
+        state={{ successMessage: "لطفا اول وارد شوید." }}
       />
     );
   }
@@ -38,19 +44,9 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Room Links */}
-        <Route
-          path="/rooms/:id"
-          element={
-            <ProtectedRoute>
-              <Room />
-            </ProtectedRoute>
-          }
-        />
-
         {/* Dashboard Links */}
         <Route
-          path="/dashboard"
+          path="/dashboard/"
           element={
             <ProtectedRoute>
               <Dashboard />
@@ -62,8 +58,19 @@ export default function App() {
           <Route path="rooms/" element={<RoomsList />} />
         </Route>
 
+        {/* Room Links */}
         <Route
-          path="/dashboard/editor/"
+          path="/rooms/:id"
+          element={
+            <ProtectedRoute>
+              <Room />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Editor Links */}
+        <Route
+          path="/editor/"
           element={
             <ProtectedRoute>
               <Editor />
@@ -76,9 +83,15 @@ export default function App() {
           path="*"
           element={
             <>
-              <div className="flex gap-y-4 flex-col bg-dot h-screen items-center justify-center text-white">
+              <div className="bg-dot flex h-screen flex-col items-center justify-center gap-y-4 text-white">
                 <h1 className="text-3xl">| صفحه مورد نظر پیدا نشد 404 |</h1>
-                <a className="text-xl text-leva-3 hover:text-leva-3/70" href="/"> صفحه اصلی </a>
+                <a
+                  className="text-xl text-leva-3 hover:text-leva-3/70"
+                  href="/"
+                >
+                  {" "}
+                  صفحه اصلی{" "}
+                </a>
               </div>
             </>
           }

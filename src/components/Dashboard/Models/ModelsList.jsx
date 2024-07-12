@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/react";
 import jMoment from "moment-jalaali";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import useDeleteEditModel from "../../../hooks/model/useDeleteEditModel";
 import useDeleteModel from "../../../hooks/model/useDeleteModel";
@@ -10,6 +10,7 @@ import useUploadedModels from "../../../hooks/model/useUploadedModels";
 import useEditorStore from "../../../store/editorStore";
 import {
   fileSizeInMegabytes,
+  formatDateTime,
   relativeTimeFromNow,
   showAlert,
 } from "../../Core/utils";
@@ -21,18 +22,24 @@ export default function ModelsList() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [modelFileURL, setModelFileURL] = useState(null);
 
-  const { data: uploadedModels, isLoading, refetch } = useUploadedModels();
+  const {
+    data: uploadedModels,
+    uploadedModelIsLoading,
+    refetch: uploadedModelRefetch,
+  } = useUploadedModels();
   const {
     data: editedModels,
     isLoading: editedModelIsLoading,
     refetch: refreshEditedModels,
   } = useEditedModels();
+
   const { mutate: deleteModel } = useDeleteModel();
   const { mutate: deleteEditModel } = useDeleteEditModel();
 
   const navigate = useNavigate();
 
-  const { addEditModel, setSelectedModel } = useEditorStore();
+  const { addEditModel: addEdotModelStore, setSelectedModel } =
+    useEditorStore();
 
   const handleViewModel = (modelFile) => {
     setModelFileURL(modelFile);
@@ -40,30 +47,25 @@ export default function ModelsList() {
   };
 
   const handleEditModel = (editModel) => {
-    addEditModel(editModel);
+    addEdotModelStore(editModel);
     setSelectedModel(editModel);
-    navigate(`/dashboard/editor/`);
+    navigate(`/editor/`);
   };
 
   const handleDeleteModel = (id) => {
     deleteModel(
-      { id },
+      { model_id: id },
       {
         onSuccess: (data) => {
-          refetch();
+          uploadedModelRefetch();
           refreshEditedModels();
           showAlert("success", data.detail);
         },
         onError: (error) => {
-          showAlert("error", error.response?.data?.id);
-          if (!error?.originalStatus) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 400) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 401) {
+          if (error.response.status === 400) {
             showAlert("error", error.response?.data?.detail);
           } else {
-            showAlert("error", "Failed");
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
           }
         },
       },
@@ -71,26 +73,19 @@ export default function ModelsList() {
   };
 
   const handleDeleteEditModel = (id) => {
-    console.log(id);
     deleteEditModel(
       { edit_model_id: id },
       {
         onSuccess: (data) => {
-          refetch();
+          uploadedModelRefetch();
           refreshEditedModels();
           showAlert("success", data.detail);
         },
         onError: (error) => {
-          console.log(error);
-          showAlert("error", error.response?.data?.id);
-          if (!error?.originalStatus) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 400) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 401) {
+          if (error.response.status === 400) {
             showAlert("error", error.response?.data?.detail);
           } else {
-            showAlert("error", "Failed");
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
           }
         },
       },
@@ -123,15 +118,15 @@ export default function ModelsList() {
                 <p className="pr-3">تاریخ آپلود</p>
                 <p className="text-center">گزینه ها</p>
               </div>
-              {isLoading ? (
+              {uploadedModelIsLoading ? (
                 <p className="bg-leva-2/50 p-4 text-center text-lg">
                   در حال بارگیری اطلاعات...
                 </p>
-              ) : uploadedModels.length > 0 ? (
+              ) : uploadedModels && uploadedModels.length > 0 ? (
                 uploadedModels.map((model, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-5 items-center bg-leva-3 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
+                    className="grid grid-cols-5 items-center bg-leva-3/90 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
                   >
                     <p className="pl-3">{model.title}</p>
                     <p className="pl-3">{model.format}</p>
@@ -140,9 +135,7 @@ export default function ModelsList() {
                       <span>MB</span>
                     </p>
                     <p className="pl-2">
-                      {jMoment(model.created_at).format(
-                        "HH:MM - jYYYY/jMM/jDD",
-                      )}
+                      {formatDateTime(model.created_at)}
                     </p>
                     <div className="flex justify-center gap-x-2">
                       <button
@@ -172,7 +165,7 @@ export default function ModelsList() {
         <UploadModelModal
           isUploadModalOpen={isUploadModalOpen}
           setIsUploadModalOpen={setIsUploadModalOpen}
-          refetch={refetch}
+          uploadedModelRefetch={uploadedModelRefetch}
         />
         <ViewModelModal
           isViewModalOpen={isViewModalOpen}
@@ -182,13 +175,23 @@ export default function ModelsList() {
         <div className="flex flex-col">
           <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
             <h1 className="text-2xl font-bold"> مدل های ویرایش شده </h1>
+            <Link to="/editor/">
+              <Button
+                className="px-8 text-lg"
+                variant="shadow"
+                size="lg"
+                color="warning"
+              >
+                برو به ادیتور
+              </Button>
+            </Link>
           </div>
           <div className="mx-5 mb-5 mt-1 overflow-y-auto rounded-lg text-gray-200">
             <>
               <div className="grid grid-cols-5 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
                 <p className="pl-1">عنوان</p>
-                <p className="pl-1">تعداد نقطه ها</p>
-                <p className="pl-1">تعداد یادداشت ها</p>
+                <p className="pl-3">تعداد نقطه ها</p>
+                <p className="pl-3">تعداد یادداشت ها</p>
                 <p className="pl-3">آخرین تاریخ ویرایش</p>
                 <p className="text-center">گزینه ها</p>
               </div>
@@ -196,15 +199,15 @@ export default function ModelsList() {
                 <p className="bg-leva-2/50 p-4 text-center text-lg">
                   در حال بارگیری اطلاعات...
                 </p>
-              ) : editedModels.length > 0 ? (
+              ) : editedModels && editedModels.length > 0 ? (
                 editedModels.map((editModel, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-5 items-center bg-leva-3 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
+                    className="grid grid-cols-5 items-center bg-leva-3/90 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
                   >
                     <p className="pl-3">{editModel.display_name}</p>
-                    <p className="pl-3">{editModel.points_count}</p>
-                    <p className="pl-3">{editModel.notes_count}</p>
+                    <p className="pr-3">{editModel.points_count}</p>
+                    <p className="pr-3">{editModel.notes_count}</p>
                     <p className="pl-1">
                       {relativeTimeFromNow(editModel.last_edit)}
                     </p>

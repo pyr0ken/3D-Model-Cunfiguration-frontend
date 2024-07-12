@@ -5,7 +5,7 @@ import { variants } from "./utils";
 import { useRef, useState } from "react";
 import { useMeeting, usePubSub } from "@videosdk.live/react-sdk";
 import { Button, Slider } from "@nextui-org/react";
-import useRoomStore from "../../../../store/roomStore";
+import useRoomStore from "../../../store/roomStore";
 
 export default function Draw({ isOpen, setSelectedTab }) {
   const canvasRef = useRef();
@@ -91,7 +91,7 @@ export default function Draw({ isOpen, setSelectedTab }) {
               isDisabled={eraseMode}
               minValue={1}
               maxValue={20}
-              showSteps={true} 
+              showSteps={true}
               step={1}
               value={strokeWidth}
               onChange={handleStrokeWidthChange}
@@ -109,7 +109,7 @@ export default function Draw({ isOpen, setSelectedTab }) {
               isDisabled={!eraseMode}
               minValue={1}
               maxValue={20}
-              showSteps={true} 
+              showSteps={true}
               step={1}
               value={eraserWidth}
               onChange={handleEraserWidthChange}

@@ -7,9 +7,9 @@ import {
   CiZoomIn as ZoomInIcon,
   CiZoomOut as ZoomOutIcon,
 } from "react-icons/ci";
-import usePoints from "../../../../hooks/model/usePoints";
-import useRoomStore from "../../../../store/roomStore";
-import Placeholder from "../../../Models/Placeholder";
+import usePoints from "../../../hooks/model/usePoints";
+import useRoomStore from "../../../store/roomStore";
+import Placeholder from "../../Model/Placeholder";
 import LoadModel from "./LoadModel";
 import NoteModal from "./NoteModal";
 
@@ -18,8 +18,13 @@ export default function Model() {
   const [showZoomOutIcon, setShowZoomOutIcon] = useState(false);
 
   // Room Model state
-  const { selectedModel, aiCameraIsOn, reloadModelKey, changeAiCameraStatus, changeReloadModelKey } =
-    useRoomStore();
+  const {
+    selectedModel,
+    aiCameraIsOn,
+    reloadModelKey,
+    changeAiCameraStatus,
+    changeReloadModelKey,
+  } = useRoomStore();
 
   // note state
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);

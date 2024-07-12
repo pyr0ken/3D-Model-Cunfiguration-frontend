@@ -1,7 +1,7 @@
 import { Camera } from "@mediapipe/camera_utils";
 import { Hands } from "@mediapipe/hands";
 import { useEffect, useRef, useState } from "react";
-import useRoomStore from "../../../store/roomStore";
+import useRoomStore from "../../store/roomStore";
 
 const CameraAi = () => {
   const videoRef = useRef(null);
@@ -205,118 +205,7 @@ const CameraAi = () => {
       }
       canvasRef.current.style.visibility = "visible";
     }
-
-    // if (results.multiHandLandmarks[1]) {
-    //   const airCursor1 = { x: 0, y: 0 };
-    //   handToScreenCoordinates(
-    //     airCursor1,
-    //     results.multiHandLandmarks[1][8].x,
-    //     results.multiHandLandmarks[1][8].y,
-    //   );
-    //   if (clicking1)
-    //     drawCircle(
-    //       canvasCtx,
-    //       airCursor1.x,
-    //       airCursor1.y,
-    //       20,
-    //       "yellow",
-    //       "red",
-    //       2,
-    //     );
-    //   else
-    //     drawCircle(canvasCtx, airCursor1.x, airCursor1.y, 10, "red", "red", 2);
-
-    //   if (scrolling1)
-    //     drawCircle(
-    //       canvasCtx,
-    //       airCursor1.x,
-    //       airCursor1.y,
-    //       20,
-    //       "green",
-    //       "red",
-    //       2,
-    //     );
-
-    //   //compute distance between index finger tip and thumb tip
-    //   let distanceClick =
-    //     Math.hypot(
-    //       results.multiHandLandmarks[1][8].x -
-    //         results.multiHandLandmarks[1][4].x,
-    //       results.multiHandLandmarks[1][8].y -
-    //         results.multiHandLandmarks[1][4].y,
-    //     ) / zMultiplier;
-
-    //   //compute distance between middle finger tip and thumb tip
-    //   let distanceScroll =
-    //     Math.hypot(
-    //       results.multiHandLandmarks[1][12].x -
-    //         results.multiHandLandmarks[1][4].x,
-    //       results.multiHandLandmarks[1][12].y -
-    //         results.multiHandLandmarks[1][4].y,
-    //     ) / zMultiplier;
-
-    //   //scroll logic
-    //   if (distanceScroll < distanceThresholdScroll) {
-    //     scrolling1 = true;
-    //     canvasRef.current.style.visibility = "hidden";
-    //     let verticalMagnitude = results.multiHandLandmarks[1][12].y - 0.5;
-    //     let horizontalMagnitude = results.multiHandLandmarks[1][12].x - 0.5;
-    //     currentScrollY = document.documentElement.scrollTop;
-    //     currentScrollX = document.documentElement.scrollLeft;
-
-    //     //vertical scrolling
-    //     if (verticalMagnitude > 0 && currentScrollY >= newScrollY) {
-    //       newScrollY = Math.floor(
-    //         currentScrollY + scrollAmount * Math.abs(verticalMagnitude),
-    //       );
-    //       window.scrollTo(newScrollX, newScrollY);
-    //     }
-    //     if (verticalMagnitude < 0 && currentScrollY <= newScrollY) {
-    //       newScrollY = Math.floor(
-    //         currentScrollY - scrollAmount * Math.abs(verticalMagnitude),
-    //       );
-    //       window.scrollTo(newScrollX, newScrollY);
-    //     }
-
-    //     //horizontal scrolling (logic is inverted for horizontal axys because the camera coordinates are flipped)
-    //     if (horizontalMagnitude > 0 && currentScrollX >= newScrollX) {
-    //       newScrollX = Math.floor(
-    //         currentScrollX + scrollAmount * Math.abs(horizontalMagnitude),
-    //       );
-    //       window.scrollTo(newScrollX, newScrollY);
-    //     }
-    //     if (horizontalMagnitude < 0 && currentScrollX <= newScrollX) {
-    //       newScrollX = Math.floor(
-    //         currentScrollX - scrollAmount * Math.abs(horizontalMagnitude),
-    //       );
-    //       window.scrollTo(newScrollX, newScrollY);
-    //     }
-    //   }
-    //   if (distanceScroll > distanceThresholdScroll) {
-    //     scrolling1 = false;
-    //   }
-    //   canvasRef.current.style.visibility = "visible";
-
-    //   //click logic
-    //   if (distanceClick < distanceThresholdClick && !clicking1) {
-    //     clicking1 = true;
-    //     canvasRef.current.style.visibility = "hidden";
-    //     //subtracting windowWidht for horizontal axys because the camera coordinates are flipped
-    //     let elementToClick = document.elementFromPoint(
-    //       windowWidth - airCursor1.x,
-    //       airCursor1.y,
-    //     );
-    //     //console.log(elementToClick)
-    //     if (elementToClick) {
-    //       elementToClick.click();
-    //     }
-    //   }
-    //   if (distanceClick > distanceThresholdClick) {
-    //     clicking1 = false;
-    //   }
-    //   canvasRef.current.style.visibility = "visible";
-    // }
-
+    
     if (!results.multiHandLandmarks[0]) {
       canvasRef.current.style.visibility = "hidden";
     }

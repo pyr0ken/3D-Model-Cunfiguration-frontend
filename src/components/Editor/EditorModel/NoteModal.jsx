@@ -12,6 +12,7 @@ import useAddNote from "../../../hooks/model/useAddNote";
 import useDeleteNote from "../../../hooks/model/useDeleteNote";
 import useDeletePoint from "../../../hooks/model/useDeletePoint";
 import useEditorStore from "../../../store/editorStore";
+import { showAlert } from "../../Core/utils";
 
 export default function NoteModal({
   selectedPoint,
@@ -37,7 +38,10 @@ export default function NoteModal({
           note: text,
         },
         {
-          onSuccess: (res) => refetch(),
+          onSuccess: (data) => {
+            refetch();
+            showAlert("success", data.detail);
+          },
           onError: (err) => console.log(err),
         },
       );
@@ -52,7 +56,10 @@ export default function NoteModal({
         point_id: selectedPoint.id,
       },
       {
-        onSuccess: (res) => refetch(),
+        onSuccess: (data) => {
+          refetch();
+          showAlert("info", data.detail);
+        },
         onError: (err) => console.log(err),
       },
     );
@@ -66,7 +73,10 @@ export default function NoteModal({
         point_id: selectedPoint.id,
       },
       {
-        onSuccess: (res) => refetch(),
+        onSuccess: (data) => {
+          refetch();
+          showAlert("info", data.detail);
+        },
         onError: (err) => console.log(err),
       },
     );

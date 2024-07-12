@@ -1,7 +1,7 @@
 import { Tab, Tabs } from "@nextui-org/react";
 import { FaRegEdit } from "react-icons/fa";
 import { FaEarthAmericas, FaUpload } from "react-icons/fa6";
-import useModels from "../../../../hooks/model/useModels";
+import useModels from "../../../hooks/model/useModels";
 import ModelCard from "./ModelCard";
 import ModelCardLoading from "./ModelCardLoading";
 
@@ -15,7 +15,7 @@ export default function ModelsPopupList() {
   const defaultLoadingCards = 12;
 
   return (
-    <div className="flex w-full items-center flex-col p-2 rtl font-vazirmatn">
+    <div className="rtl flex w-full flex-col items-center p-2 font-vazirmatn">
       <Tabs color="primary" size="lg" radius="full">
         <Tab
           key="publicModels"
@@ -63,6 +63,7 @@ export default function ModelsPopupList() {
                     displayName={editModel.display_name}
                     id={editModel.model_id}
                     editModelId={editModel.id}
+                    pointsCount={editModel.points_count}
                     createdAt={editModel.created_at}
                     isEditModel={true}
                   />

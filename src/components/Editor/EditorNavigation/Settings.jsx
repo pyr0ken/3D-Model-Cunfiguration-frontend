@@ -1,5 +1,11 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Button, Modal, ModalBody, ModalContent } from "@nextui-org/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ScrollShadow,
+} from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import useEditorStore from "../../../store/editorStore";
@@ -16,7 +22,7 @@ const Settings = ({ isOpen, setSelectedTab }) => {
     removeEditModel,
   } = useEditorStore();
 
-  const handleCloseMode = () => {
+  const handleCloseModel = () => {
     setSelectedModel(null);
     setIsEditModalOpen(false);
   };
@@ -29,8 +35,9 @@ const Settings = ({ isOpen, setSelectedTab }) => {
     setSelectedModel(editModel);
   };
 
-  const handleDeleteRoomModel = (editModelId) => {
+  const handleDeleteEditModel = (editModelId) => {
     removeEditModel(editModelId);
+    setSelectedModel(null);
   };
 
   return (
@@ -55,43 +62,50 @@ const Settings = ({ isOpen, setSelectedTab }) => {
           <XMarkIcon className="w-8 stroke-neutral-400" />
         </button>
       </div>
-      <div className="flex flex-col gap-5 text-white">
-        <div className="flex flex-col">
-          <p className="mb-4 text-xl font-semibold">
-            لیست مدل های باز شده در ادیتور
-          </p>
-          <div className="cursor-pointer rounded-bl-xl rounded-tl-xl border-r-3 bg-leva-2 ">
-            {editModels.length > 0 &&
-              editModels.map((editModel, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => handleSelectedModel(editModel)}
-                    className={`${editModel.id === selectedModel?.id ? "bg-leva-3 hover:bg-leva-3" : ""} flex items-center justify-between bg-leva-2/50 p-2 transition-colors first:rounded-tl-xl last:rounded-bl-xl hover:bg-leva-3/40`}
-                  >
-                    <p>{editModel.display_name}</p>
-                    <span
-                      onClick={() => handleDeleteRoomModel(editModel.id)}
-                      className="flex cursor-pointer items-center rounded-full bg-red-500 p-1 hover:bg-red-600"
-                    >
-                      <RiDeleteBin6Line className="h-5 min-w-4" />
-                    </span>
-                  </div>
-                );
-              })}
+      <ScrollShadow hideScrollBar>
+        <div className="no-scrollbar flex flex-col gap-5 overflow-y-scroll text-white">
+          <div className="flex flex-col">
+            <p className="mb-4 text-xl font-semibold">
+              لیست مدل های باز شده در ادیتور
+            </p>
+            <div className="flex cursor-pointer flex-col gap-y-2 rounded border-r-3">
+              {editModels.length > 0 &&
+                editModels.map((editModel, index) => {
+                  return (
+                    <div className="flex justify-between" key={index}>
+                      <p
+                        onClick={() => handleSelectedModel(editModel)}
+                        className={`${editModel.id === selectedModel?.id ? "bg-leva-3 hover:bg-leva-3" : "hover:bg-leva-3/40"} flex w-full items-center justify-between p-2 transition-colors`}
+                      >
+                        {editModel.display_name}
+                      </p>
+                      <span
+                        onClick={() => handleDeleteEditModel(editModel.id)}
+                        className="flex items-center rounded-l-xl bg-red-500 p-2 transition-colors hover:bg-red-600"
+                      >
+                        <RiDeleteBin6Line className="size-5" />
+                      </span>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <Button variant="shadow" onClick={handleAddModel} color="success">
+              باز کردن مدل جدید
+            </Button>
+            {selectedModel && (
+              <Button
+                variant="shadow"
+                onClick={handleCloseModel}
+                color="danger"
+              >
+                بستن مدل فعلی
+              </Button>
+            )}
           </div>
         </div>
-        <div className="flex flex-col gap-y-2">
-          <Button variant="shadow" onClick={handleAddModel} color="success">
-            باز کردن مدل جدید
-          </Button>
-          {selectedModel && (
-            <Button variant="shadow" onClick={handleCloseMode} color="danger">
-              بستن مدل فعلی
-            </Button>
-          )}
-        </div>
-      </div>
+      </ScrollShadow>
       <Modal
         isOpen={isEditModalOpen}
         size="3xl"

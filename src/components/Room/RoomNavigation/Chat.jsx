@@ -2,11 +2,11 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { IoIosSend } from "react-icons/io";
-import { useAuthStore } from "../../../../store/authStore";
+import { useAuthStore } from "../../../store/authStore";
 // import socket from "../../../socket";
 import Sender from "./Chat/Sender";
 import Me from "./Chat/Me";
-import useChatStore from "../../../../store/chatStoer";
+import useChatStore from "../../../store/chatStoer";
 import { usePubSub } from "@videosdk.live/react-sdk";
 
 const variants = {

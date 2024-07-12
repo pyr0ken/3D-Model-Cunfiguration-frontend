@@ -1,5 +1,4 @@
 import { Button, Input, Spinner } from "@nextui-org/react";
-import jMoment from "moment-jalaali";
 import { useEffect, useRef, useState } from "react";
 import { HiOutlineSignalSlash } from "react-icons/hi2";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,15 +8,16 @@ import useCreateRoom from "../../../hooks/room/useCreateRoom";
 import useDeleteRoom from "../../../hooks/room/useDeleteRoom";
 import useJoinRoom from "../../../hooks/room/useJoinRoom";
 import useRooms from "../../../hooks/room/useRooms";
-import useVideoSdkCreateRoom from "../../../hooks/room/useVideoSdkCreateRoom";
+import useEnterRoom from "../../../hooks/room/useEnterRoom";
 import useRoomStore from "../../../store/roomStore";
 import {
+  formatDateTime,
   relativeTimeFromNow,
-  showAlert
+  showAlert,
 } from "../../Core/utils";
 
 export default function RoomsList() {
-  const { data: rooms, isLoading, isError, error, refetch } = useRooms();
+  const { data: rooms, isLoading, refetch } = useRooms();
   const { mutate: createRoom } = useCreateRoom();
   const { mutate: deleteRoom } = useDeleteRoom();
   const { mutate: joinRoom } = useJoinRoom();
@@ -29,7 +29,7 @@ export default function RoomsList() {
 
   const { setAuthToken, setMeetingId, setJoined, setRoomTitle } =
     useRoomStore();
-  const { mutate: createVideoSdkRoom } = useVideoSdkCreateRoom();
+  const { mutate: enterRoom } = useEnterRoom();
   const [roomEnterId, setRoomEnterId] = useState(null);
 
   const createdRooms = rooms?.created_rooms || [];
@@ -44,6 +44,10 @@ export default function RoomsList() {
   }, [state, navigate, pathname]);
 
   const handleCreateRoom = (title) => {
+    if (!title) {
+      showAlert("error", "لطفا عنوان جلسه را وارد کنید");
+    }
+
     createRoom(
       { title },
       {
@@ -52,15 +56,10 @@ export default function RoomsList() {
           showAlert("success", data.detail);
         },
         onError: (error) => {
-          showAlert("error", `title: ${error.response?.data?.title?.join()}`);
-          if (!error?.originalStatus) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 400) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 401) {
+          if (error.response.status === 400) {
             showAlert("error", error.response?.data?.detail);
           } else {
-            showAlert("error", "Failed");
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
           }
         },
       },
@@ -69,8 +68,8 @@ export default function RoomsList() {
 
   const handleEnterRoom = (id) => {
     setRoomEnterId(id);
-    createVideoSdkRoom(
-      { id },
+    enterRoom(
+      { room_id: id },
       {
         onSuccess: (response) => {
           setAuthToken(response.data.auth_token);
@@ -80,8 +79,12 @@ export default function RoomsList() {
           navigate(`/rooms/${id}`);
         },
         onError: (error) => {
-          console.error("Error creating room:", error);
-          setRoomEnterId(null);
+          setRoomEnterId(null)
+          if (error.response.status === 400) {
+            showAlert("error", error.response?.data?.detail);
+          } else {
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
+          }
         },
       },
     );
@@ -89,21 +92,17 @@ export default function RoomsList() {
 
   const handleDeleteRoom = (id) => {
     deleteRoom(
-      { id },
+      { room_id: id },
       {
         onSuccess: (data) => {
           refetch();
+          showAlert("success", data.detail);
         },
         onError: (error) => {
-          showAlert("error", error.response?.data?.room_id);
-          if (!error?.originalStatus) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 400) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 401) {
+          if (error.response.status === 400) {
             showAlert("error", error.response?.data?.detail);
           } else {
-            showAlert("error", "Failed");
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
           }
         },
       },
@@ -111,6 +110,10 @@ export default function RoomsList() {
   };
 
   const handleJoinRoom = async (meetingId) => {
+    if (!meetingId) {
+      showAlert("error", "لطفا آیدی جلسه را وارد کنید");
+    }
+
     joinRoom(
       { room_id: meetingId },
       {
@@ -122,16 +125,10 @@ export default function RoomsList() {
           navigate(`/rooms/${data.room_id}`);
         },
         onError: (error) => {
-          console.log(error);
-          showAlert("error", error.response?.data?.room_id);
-          if (!error?.originalStatus) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 400) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 401) {
+          if (error.response.status === 400) {
             showAlert("error", error.response?.data?.detail);
           } else {
-            showAlert("error", "Failed");
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
           }
         },
       },
@@ -167,10 +164,12 @@ export default function RoomsList() {
           </div>
 
           <div className="mx-5 mt-1 overflow-y-auto rounded-lg">
-            <div className="grid grid-cols-3 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
+            <div className="grid grid-cols-5 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
               <p className="pr-2">عنوان</p>
               <p className="pr-2.5">زمان ایجاد</p>
-              <p className="text-center">کزینه ها</p>
+              <p className="pr-2.5">تعداد اعضا</p>
+              <p className="pr-2.5">تعداد مدل ها</p>
+              <p className="text-center">گزینه ها</p>
             </div>
             {isLoading ? (
               <p className="bg-leva-2/50 p-4 text-center text-lg">
@@ -182,14 +181,12 @@ export default function RoomsList() {
                   createdRooms.map((room) => (
                     <div
                       key={room.id}
-                      className="grid grid-cols-3 items-center bg-leva-3 p-2 text-lg font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
+                      className="grid grid-cols-5 items-center bg-leva-3/90 p-2 text-lg font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
                     >
-                      <p className="pr-3">{room.title}</p>
-                      <p className="pr-3">
-                        {jMoment(room.created_at).format(
-                          "HH:MM - jYYYY/jMM/jDD",
-                        )}
-                      </p>
+                      <p className="pr-1">{room.title}</p>
+                      <p className="pr-3">{formatDateTime(room.created_at)}</p>
+                      <p className="pr-4">{room.members_count}</p>
+                      <p className="pr-3">{room.edit_models_count}</p>
                       <div className="flex justify-center gap-x-2">
                         <button
                           onClick={() => handleEnterRoom(room.id)}
@@ -261,28 +258,28 @@ export default function RoomsList() {
                   joinedRooms.map((userRoom) => (
                     <div
                       key={userRoom.id}
-                      className="grid grid-cols-5 items-center bg-leva-3 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
+                      className="grid grid-cols-5 items-center bg-leva-3/90 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
                     >
-                      <p className="p-3">{userRoom.room.title}</p>
-                      <p className="p-3">{userRoom.room.owner.username}</p>
-                      <p className="p-3">
+                      <p className="pl-3">{userRoom.room.title}</p>
+                      <p className="pr-1">{userRoom.room.owner.username}</p>
+                      <p className="pl-3">
                         {userRoom.room.is_active ? (
                           <BounceLoader color="rgb(34,197,94)" />
                         ) : (
                           <HiOutlineSignalSlash className="h-8 min-w-6 stroke-2 text-red-500" />
                         )}
                       </p>
-                      <p className="p-3">
+                      <p className="pl-3">
                         {relativeTimeFromNow(userRoom.last_join)}
                       </p>
-                      <div className="flex justify-center gap-x-2 font-mono">
+                      <div className="flex pl-4 justify-center gap-x-2">
                         <button
                           onClick={() =>
                             handleJoinRoom(userRoom.room.meeting_id)
                           }
                           className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
                         >
-                          پیسوتن
+                          پیوستن
                         </button>
                       </div>
                     </div>

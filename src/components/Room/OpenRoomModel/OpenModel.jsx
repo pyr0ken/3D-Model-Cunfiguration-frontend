@@ -1,8 +1,7 @@
 import { TbCubePlus } from "react-icons/tb";
 import ModelsPopupList from "./ModelsPopupList";
 import { Modal, ModalContent, ModalBody, Button } from "@nextui-org/react";
-import useRoomStore from "../../../../store/roomStore";
-
+import useRoomStore from "../../../store/roomStore";
 
 export default function () {
   const { isRoomModalOpen, setIsRoomModalOpen } = useRoomStore();
@@ -20,7 +19,7 @@ export default function () {
         color="primary"
         size="lg"
       >
-       افزودن مدل
+        افزودن مدل
       </Button>
       <Modal
         isOpen={isRoomModalOpen}

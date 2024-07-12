@@ -1,6 +1,5 @@
-import { React, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useControls } from "leva";
+import { React, useRef } from "react";
 
 export default function Cube() {
   const boxRef = useRef();

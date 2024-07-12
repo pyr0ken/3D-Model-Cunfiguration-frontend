@@ -4,11 +4,11 @@ import { usePubSub } from "@videosdk.live/react-sdk";
 import { button, useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
 import { Vector3 } from "three";
-import useAddPoint from "../../../../hooks/model/useAddPoints";
-import usePoints from "../../../../hooks/model/usePoints";
-import { BASE_URL } from "../../../../services";
-import useRoomStore from "../../../../store/roomStore";
-import { getFirstWords } from "../../../Core/utils";
+import useAddPoint from "../../../hooks/model/useAddPoints";
+import usePoints from "../../../hooks/model/usePoints";
+import { BASE_URL } from "../../../services";
+import useRoomStore from "../../../store/roomStore";
+import { getFirstWords } from "../../Core/utils";
 
 export default function LoadModel({
   isNoteModalOpen,
@@ -162,7 +162,8 @@ export default function LoadModel({
         </group>
       </group>
 
-      {!pointsIsLoading && !aiCameraIsOn &&
+      {!pointsIsLoading &&
+        !aiCameraIsOn &&
         points.map((point, index) => (
           <mesh
             key={index}

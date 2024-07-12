@@ -5,8 +5,8 @@ import { IoPersonSharp } from "react-icons/io5";
 import { MdCallEnd } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
-import useRoomDetail from "../../../../hooks/room/useRoomDetail";
-import useRoomStore from "../../../../store/roomStore";
+import useRoomDetail from "../../../hooks/room/useRoomDetail";
+import useRoomStore from "../../../store/roomStore";
 
 export default function MemberConfig({ participantId }) {
   const {
@@ -60,7 +60,7 @@ export default function MemberConfig({ participantId }) {
     <div className="mt-3 flex items-center justify-between">
       <div className="flex items-center justify-center gap-x-3">
         <IoPersonSharp
-          className={`flex items-center justify-center size-6 ${isParticipantOwner ? "text-red-500" : ""}`}
+          className={`flex size-6 items-center justify-center ${isParticipantOwner ? "text-red-500" : ""}`}
         />
         <p className="flex items-center text-lg"> {displayName} </p>
       </div>

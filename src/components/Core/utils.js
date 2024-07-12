@@ -18,18 +18,14 @@ export const getFirstWords = (text, wordsNumber) => {
   const words = text.split(" ");
   const firstWords = words.slice(0, wordsNumber).join(" ");
   return words.length > wordsNumber ? `${firstWords}...` : firstWords;
-}
+};
 
-export const formatISODate = (isoDateString) => {
-  const date = new Date(isoDateString);
-  const formattedDate =
-    date.toLocaleDateString() + " " + date.toLocaleTimeString();
-  return formattedDate;
+export const formatDateTime = (isoDateString) => {
+  return moment(isoDateString).locale("fa").format("HH:MM - jYYYY/jMM/jDD");
 };
 
 export const relativeTimeFromNow = (dateTime) => {
-  const text = moment(dateTime).locale('fa').fromNow()
-  return text
+  return moment(dateTime).locale("fa").fromNow();
 };
 
 export const fileSizeInMegabytes = (bytes) => {
@@ -46,15 +42,4 @@ export const isValidFileTypeByExtension = (fileExtension) => {
 
 export const copyText = async (text) => {
   return await navigator.clipboard.writeText(text);
-};
-
-export const variants = {
-  close: {
-    x: -300,
-    opacity: 0,
-  },
-  open: {
-    x: 0,
-    opacity: 100,
-  },
 };

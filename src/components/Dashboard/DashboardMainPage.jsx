@@ -12,6 +12,7 @@ import useDashboardCard from "../../hooks/dashboard/useDashboardCard";
 import { FaUpload } from "react-icons/fa6";
 import { FaRegEdit } from "react-icons/fa";
 import { FaNoteSticky } from "react-icons/fa6";
+import { TbAlignBoxBottomRightFilled } from "react-icons/tb";
 
 export default function DashboardMainPage() {
   const { data: editModels, isLoading: editModelsIsLoading } =
@@ -23,13 +24,13 @@ export default function DashboardMainPage() {
 
   return (
     <div className="mx-10 my-8 flex flex-col justify-between">
-      <div className="flex text-white">
+      <div className="flex text-white gap-x-10">
         <div className="flex flex-col gap-y-3">
-          {!roomMembersIsLoading && (
+          <p className="ml-10 text-center text-2xl">
+            نمودار جلسات شما و تعداد اعضا
+          </p>
+          {!roomMembersIsLoading && roomMembers.length > 0 ? (
             <>
-              <p className="ml-10 text-center text-2xl">
-                نمودار جلسات شما و تعداد اعضا
-              </p>
               <AreaChart
                 width={700}
                 height={400}
@@ -64,14 +65,19 @@ export default function DashboardMainPage() {
                 />
               </AreaChart>
             </>
+          ) : (
+            <div className="h-[400px] w-[700px] hover:text-white transition-colors gap-y-5 flex flex-col justify-center items-center rounded-3xl border text-gray-400">
+              <TbAlignBoxBottomRightFilled className="size-40" />
+              <p className="text-xl">هنوز جلسه ای نساخته اید.</p>
+            </div>
           )}
         </div>
         <div className="flex flex-col gap-y-3">
-          {!editModelsIsLoading && (
+          <p className="ml-10 text-center text-2xl">
+            نمودار مدل های ویرایش شده و تعداد نقطه ها
+          </p>
+          {!editModelsIsLoading && editModels.length > 0 ? (
             <>
-              <p className="ml-10 text-center text-2xl">
-                نمودار مدل های ویرایش شده و تعداد نقطه ها
-              </p>
               <AreaChart
                 width={800}
                 height={400}
@@ -106,11 +112,16 @@ export default function DashboardMainPage() {
                 />
               </AreaChart>
             </>
+          ) : (
+            <div className="h-[400px] hover:text-white transition-colors w-[700px] gap-y-5 flex flex-col justify-center items-center rounded-3xl border text-gray-400">
+              <TbAlignBoxBottomRightFilled className="size-40" />
+              <p className="text-xl">هنوز مدلی را ویرایش نکرده اید.</p>
+            </div>
           )}
         </div>
       </div>
       {!dashboardCardIsLoading && (
-        <div className="flex mb-10 items-center justify-around text-white dark">
+        <div className="mb-10 flex items-center justify-around text-white dark">
           <div className="flex flex-col items-center justify-center gap-y-5 rounded-xl bg-leva-5 p-6 transition-colors hover:text-leva-3">
             <p className="text-xl">مدل های ادیت شده</p>
             <p>
@@ -124,11 +135,10 @@ export default function DashboardMainPage() {
               <FaRegEdit className="size-20" />
             </p>
             <p className="text-[4rem]">
-              {" "}
               {dashboardCard.uploaded_models_count}
             </p>
           </div>
-          <div className="flex flex-col items-center justify-center gap-y-5 rounded-xl bg-leva-5 p-6 px-10 transition-colors hover:text-leva-3">
+          <div className="flex flex-col items-center justify-center gap-y-5 rounded-xl bg-leva-5 p-6 px-14 transition-colors hover:text-leva-3">
             <p className="text-xl">نقطه ها</p>
             <p>
               <FaNoteSticky className="size-20" />

@@ -9,7 +9,7 @@ import { Button, Input } from "@nextui-org/react";
 import { Progress } from "@nextui-org/react";
 import useUploadModel from "../../../hooks/model/useUploadModel";
 
-export default function UploadModel({ setIsUploadModalOpen, refetch }) {
+export default function UploadModel({ setIsUploadModalOpen, uploadedModelRefetch }) {
   const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0); // State to hold upload progress
@@ -34,7 +34,7 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
     setDragOver(false);
     const files = Array.from(event.dataTransfer.files);
     if (files.length > 1) {
-      showAlert("error", "Please upload only one file at a time.");
+      showAlert("error", "لطفا فقط یک فایل را برای آپلود انتخاب کنید.");
       return;
     }
 
@@ -43,7 +43,7 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
     if (!isValidFileTypeByExtension(fileExtension)) {
       showAlert(
         "error",
-        `File extension "${fileExtension}" is not allowed, Allowed extensions are: gltf, gltb, obj`,
+        `پسوند فایل "${fileExtension}" مجاز نیست، پسوندهای مجاز عبارتند از: gltf، glb`,
       );
       return;
     }
@@ -52,14 +52,13 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
   };
 
   const handleClick = () => {
-    // Trigger the hidden file input click event
     fileInputRef.current.click();
   };
 
   const handleFilesChange = (event) => {
     const files = Array.from(event.target.files);
     if (files.length > 1) {
-      showAlert("error", "Please upload only one file at a time.");
+      showAlert("error", "لطفا فقط یک فایل را برای آپلود انتخاب کنید.");
       return;
     }
 
@@ -68,7 +67,7 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
     if (!isValidFileTypeByExtension(fileExtension)) {
       showAlert(
         "error",
-        `File extension "${fileExtension}" is not allowed, Allowed extensions are: gltf, gltb, obj`,
+        `پسوند فایل "${fileExtension}" مجاز نیست، پسوندهای مجاز عبارتند از: gltf، glb`,
       );
       return;
     }
@@ -78,39 +77,28 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
 
   const handleUploadModel = () => {
     if (!file) {
-      showAlert("error", "Please select a file to upload.");
+      showAlert("error", "لطفا یک فایل را برای آپلود انتخاب کنید");
       return;
     }
-    // if (file.size > 10000000) {
-    //   showAlert("error", `File size should be less than 10MB.`);
-    //   return;
-    // }
 
     const title = titleRef.current.value;
 
-    if (title.length === 0) {
-      showAlert("error", "The title field may not be blank.");
+    if (!title) {
+      showAlert("error", "لطفا عنوان مدل را وارد کنید");
     }
 
     mutate(
       { file, title, setUploadProgress },
       {
         onSuccess: (data) => {
-          // setIsUploadModalOpen(false);
-          refetch();
+          uploadedModelRefetch();
           showAlert("success", data.detail);
         },
         onError: (error) => {
-          console.log(error);
-          showAlert("error", error.response?.data?.file.join());
-          if (!error?.originalStatus) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 400) {
-            showAlert("error", error.response?.data?.detail);
-          } else if (error.originalStatus === 401) {
+          if (error.response.status === 400) {
             showAlert("error", error.response?.data?.detail);
           } else {
-            showAlert("error", "Failed");
+            showAlert("error", "مشکلی در ارسال اطلاعات پیش آمده است");
           }
         },
       },
@@ -118,7 +106,7 @@ export default function UploadModel({ setIsUploadModalOpen, refetch }) {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col rtl font-vazirmatn">
       <div
         ref={dragRef}
         onDragOver={handleDragOver}

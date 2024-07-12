@@ -4,7 +4,7 @@ import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
 export default function UploadModelModal({
   isUploadModalOpen,
   setIsUploadModalOpen,
-  refetch,
+  uploadedModelRefetch,
 }) {
   return (
     <Modal
@@ -18,7 +18,7 @@ export default function UploadModelModal({
         <ModalBody>
           <UploadModel
             setIsUploadModalOpen={setIsUploadModalOpen}
-            refetch={refetch}
+            uploadedModelRefetch={uploadedModelRefetch}
           />
         </ModalBody>
       </ModalContent>

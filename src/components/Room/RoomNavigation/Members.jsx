@@ -1,12 +1,12 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Button } from "@nextui-org/react";
+import { Button, ScrollShadow } from "@nextui-org/react";
 import { useMeeting } from "@videosdk.live/react-sdk";
 import { motion } from "framer-motion";
 import { MdContentCopy } from "react-icons/md";
-import useRoomEnd from "../../../../hooks/room/useRoomEnd";
-import useRoomLeft from "../../../../hooks/room/useRoomLeft";
-import useRoomStore from "../../../../store/roomStore";
-import { copyText, showAlert } from "../../../Core/utils";
+import useRoomEnd from "../../../hooks/room/useRoomEnd";
+import useRoomLeft from "../../../hooks/room/useRoomLeft";
+import useRoomStore from "../../../store/roomStore";
+import { copyText, showAlert } from "../../Core/utils";
 import MemberConfig from "./MemberConfig";
 import { variants } from "./utils";
 
@@ -37,7 +37,7 @@ export default function Members({ isOpen, setSelectedTab }) {
 
   const handleCopyRoomId = () => {
     copyText(meetingId);
-    showAlert("info", "The room id copied.");
+    showAlert("success", "آیدی جلسه با موفقیت کپی شد");
   };
 
   return (
@@ -51,7 +51,9 @@ export default function Members({ isOpen, setSelectedTab }) {
         ease: "easeInOut",
       }}
       className={`absolute z-20 mr-0 flex h-full w-72 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
-        isOpen ? "right-[16.5rem] transition-right" : "right-24 transition-right"
+        isOpen
+          ? "transition-right right-[16.5rem]"
+          : "transition-right right-24"
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
@@ -88,10 +90,11 @@ export default function Members({ isOpen, setSelectedTab }) {
             </Button>
           </div>
         )}
-
-        {[...participants.keys()].map((participantId) => (
-          <MemberConfig participantId={participantId} key={participantId} />
-        ))}
+        <ScrollShadow hideScrollBar>
+          {[...participants.keys()].map((participantId) => (
+            <MemberConfig participantId={participantId} key={participantId} />
+          ))}
+        </ScrollShadow>
       </div>
     </motion.nav>
   );

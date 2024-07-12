@@ -9,9 +9,8 @@ import {
 } from "@nextui-org/react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
-import ThemeToggle from "./ThemeToggle";
-import { showAlert } from "./utils";
 import Logo from "./Logo";
+import { showAlert } from "./utils";
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuthStore();
@@ -19,7 +18,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     logout();
-    showAlert("info", "User logged out successfully.");
+    showAlert("info", "با موفقیت خارج شدید");
   };
 
   return (
@@ -53,7 +52,7 @@ export default function Navbar() {
           <li className="text-gray-300">|</li>
           <li>
             <NavLink
-              to="#"
+              to="/editor/"
               className="font-medium text-gray-400 transition-all hover:text-[rgb(234,179,8)]"
             >
               ادیتور

@@ -29,8 +29,8 @@ export const getRoomMembers = async (roomId) => {
 
 
 // room video sdk api
-export const createVideoSdkRoom = async (data) => {
-  return await apiAuth.post("/rooms/video-sdk/create/", data);
+export const enterRoom = async (data) => {
+  return await apiAuth.post("/rooms/enter/", data);
 };
 export const joinRoom = async (data) => {
   return await apiAuth

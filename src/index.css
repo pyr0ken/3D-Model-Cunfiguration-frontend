@@ -60,5 +60,5 @@
 }
 
 .Toastify__toast {
-  @apply font-vazirmatn;
+  @apply font-vazirmatn !important;
 }

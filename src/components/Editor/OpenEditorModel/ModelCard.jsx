@@ -10,10 +10,12 @@ export default function ModelCard({
   createdAt,
   isPublicModel = false,
   displayName = null,
+  pointsCount = null,
   editModelId = null,
   isEditModel = false,
 }) {
   const {
+    editModels,
     setSelectedModel,
     setIsEditModalOpen,
     addEditModel: addEdotModelStore,
@@ -64,12 +66,18 @@ export default function ModelCard({
 
     addEditModel(data, {
       onSuccess: (data) => {
-        addEdotModelStore(data);
+        if (!existsEditModel(data.id)) {
+          addEdotModelStore(data);
+        }
         setSelectedModel(data);
         setIsEditModalOpen(false);
       },
       onError: (err) => console.log(err),
     });
+  };
+
+  const existsEditModel = (editModelId) => {
+    return editModels.some((editModel) => editModel.id === editModelId);
   };
 
   return (
@@ -81,7 +89,7 @@ export default function ModelCard({
       onBlur={handleBlur}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="relative mt-4 max-w-md cursor-pointer overflow-hidden rounded-xl border border-neutral-800 bg-gradient-to-r from-neutral-900 to-neutral-950 px-3 py-10 text-center shadow-2xl"
+      className="relative mt-4 max-w-md cursor-pointer overflow-hidden rounded-xl border border-neutral-800 bg-gradient-to-r from-neutral-900 to-neutral-950 px-5 py-10 text-center shadow-2xl"
     >
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
@@ -93,10 +101,15 @@ export default function ModelCard({
       <span className="mb-4 inline-flex items-center justify-center rounded-md bg-[#007BFF] p-3 shadow-lg">
         <IoCube className="h-10 w-10 text-white" />
       </span>
-      <div className="flex flex-col gap-3">
-        <h3 className="font-medium tracking-tight text-gray-200">
+      <div className="flex flex-col gap-y-3">
+        <p className="font-medium tracking-tight text-gray-200">
           {isEditModel ? displayName : title}
-        </h3>
+        </p>
+        {pointsCount && (
+          <p className="text-gray-400">
+            نقطه ها :‌ <strong className="text-white">{pointsCount}</strong>
+          </p>
+        )}
         {!isPublicModel && (
           <h3 className="text-sm text-gray-300">
             {relativeTimeFromNow(createdAt)}

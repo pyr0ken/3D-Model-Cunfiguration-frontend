@@ -2,11 +2,10 @@ import { Suspense, useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import useRegister from "../../hooks/auth/useRegitser.jsx";
-import Background from "../Background";
 import Navbar from "../Core/Navbar";
 import { showAlert } from "../Core/utils.js";
+import Background from "../Model/Background.jsx";
 
 export default function Register() {
   const [pwdVisibility, setPwdVisibility] = useState(false);

@@ -1,10 +1,6 @@
-// import MouseTracker from "../Models/MouseTracker";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import useEditModelDetail from "../../hooks/model/useEditModelDetail";
 import useEditorStore from "../../store/editorStore";
-import Model from "./EditorModel/Model";
 import CameraAi from "./CameraAi";
+import Model from "./EditorModel/Model";
 import EditorNavigation from "./EditorNavigation";
 import OpenModel from "./OpenEditorModel/OpenModel";
 
@@ -12,16 +8,10 @@ export default function Editor() {
   // Editor Store
   const {
     selectedModel,
-    closeModel,
     aiCameraIsOn,
-    setSelectedModel,
   } = useEditorStore();
 
-  // useEffect(() => {
-  //   if (editModel && !closeModel) {
-  //     setSelectedModel(editModel);
-  //   }
-  // }, [editModel]);
+  console.log("selectedModel :", selectedModel);
 
   return (
     <div className="bg-grid relative flex h-screen w-full overflow-hidden">

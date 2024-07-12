@@ -6,7 +6,7 @@ import ModelCard from "./ModelCard";
 import ModelCardLoading from "./ModelCardLoading";
 
 export default function ModelsPopupList() {
-  const { data, isLoading, isError, error } = useModels();
+  const { data, isLoading } = useModels();
 
   const publicModels = data?.public_models || [];
   const editedModels = data?.edited_models || [];
@@ -15,15 +15,15 @@ export default function ModelsPopupList() {
   const defaultLoadingCards = 12;
 
   return (
-    <div className="flex w-full items-center flex-col p-2">
+    <div className="flex w-full items-center flex-col p-2 rtl font-vazirmatn">
       <Tabs color="primary" size="lg" radius="full">
         <Tab
           key="publicModels"
           title={
-            <div className="flex items-center space-x-2">
-              <FaEarthAmericas />
-              <span>Public Models</span>
-            </div>
+            <div className="flex items-center gap-x-2">
+            <FaEarthAmericas />
+            <span>مدل های عمومی</span>
+          </div>
           }
         >
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -45,9 +45,9 @@ export default function ModelsPopupList() {
         <Tab
           key="editedModels"
           title={
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-2">
               <FaRegEdit />
-              <span>Edited Models</span>
+              <span>مدل های ویرایش شده</span>
             </div>
           }
         >
@@ -64,6 +64,7 @@ export default function ModelsPopupList() {
                     id={editModel.model_id}
                     createdAt={editModel.created_at}
                     editModelId={editModel.id}
+                    pointsCount={editModel.points_count}
                     isEditModel={true}
                   />
                 ))}
@@ -72,9 +73,9 @@ export default function ModelsPopupList() {
         <Tab
           key="uploadedModels"
           title={
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-2">
               <FaUpload />
-              <span>Upload Models</span>
+              <span>مدل های آپلود شده</span>
             </div>
           }
         >

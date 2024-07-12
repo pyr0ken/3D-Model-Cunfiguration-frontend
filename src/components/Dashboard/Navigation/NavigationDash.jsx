@@ -1,13 +1,12 @@
-import { CgProfile } from "react-icons/cg";
+import { FaVideo } from "react-icons/fa";
 import {
   IoCubeOutline,
   IoHomeOutline,
-  IoSettingsOutline,
   IoStatsChartOutline,
 } from "react-icons/io5";
 import { PiShareNetworkDuotone } from "react-icons/pi";
-import NavigationLinkDash from "./NavigationLinkDash";
 import Logo from "../../Core/Logo";
+import NavigationLinkDash from "./NavigationLinkDash";
 
 export default function NavigationDash() {
   return (
@@ -30,8 +29,8 @@ export default function NavigationDash() {
           <NavigationLinkDash name="مدل های سه بعدی" link={"/dashboard/models/"}>
             <IoCubeOutline className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
-          <NavigationLinkDash name="پروفایل">
-            <CgProfile className="h-8 w-8 min-w-8" />
+          <NavigationLinkDash name="ویدیو راهنما">
+            <FaVideo className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
         </div>
       </nav>
