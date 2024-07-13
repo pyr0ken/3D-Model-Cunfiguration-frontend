@@ -83,7 +83,6 @@ export default function Settings({ isOpen, setSelectedTab }) {
       {
         onSuccess: (response) => {
           refetch();
-          console.log(response);
           showAlert("success", response.data.detail);
           deleteModel("Delete Room Model", { persist: true });
         },

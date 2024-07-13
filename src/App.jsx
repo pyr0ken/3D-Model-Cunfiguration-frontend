@@ -53,9 +53,30 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<DashboardMainPage />} />{" "}
-          <Route path="models/" element={<ModelsList />} />
-          <Route path="rooms/" element={<RoomsList />} />
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <DashboardMainPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="models/"
+            element={
+              <ProtectedRoute>
+                <ModelsList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="rooms/"
+            element={
+              <ProtectedRoute>
+                <RoomsList />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* Room Links */}

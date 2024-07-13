@@ -19,8 +19,7 @@ const useEditorStore = create((set) => ({
         (editModel) => editModel.id !== editModelId,
       ),
     })),
-  changeAiCameraStatus: () =>
-    set((state) => ({ aiCameraIsOn: !state.aiCameraIsOn })),
+  setAiCameraIsOn: (data) => set((state) => ({ aiCameraIsOn: data })),
   setAiRotation: ({ x, y }) => set((state) => ({ aiRotation: { x, y } })),
   changeReloadModelKey: () =>
     set((state) => ({ reloadModelKey: state.reloadModelKey + 1 })),

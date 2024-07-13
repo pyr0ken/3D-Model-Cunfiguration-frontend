@@ -5,10 +5,6 @@ export const getModels = async () => {
   return await apiAuth.get("/models/").then((response) => response.data);
 };
 
-export const getModel = async (id) => {
-  return await apiAuth.get(`/models/${id}`).then((response) => response.data);
-};
-
 export const deleteModel = async (data) => {
   return await apiAuth
     .delete("/models/delete/", { data: data })
@@ -37,12 +33,6 @@ export const uploadModel = async (variables) => {
 };
 
 // edit model api
-export const getEditModelDetail = async (modelEditId) => {
-  return await apiAuth
-    .get(`/models/edit/${modelEditId}/`)
-    .then((response) => response.data);
-};
-
 export const getEditedModel = async () => {
   return await apiAuth.get("/models/edit/").then((response) => response.data);
 };

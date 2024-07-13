@@ -10,9 +10,7 @@ const CameraAi = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   let zMultiplier = 1;
   let clicking0 = false;
-  let clicking1 = false;
   let scrolling0 = false;
-  let scrolling1 = false;
   let distanceThresholdClick = 0.04;
   let distanceThresholdScroll = 0.04;
   let scrollAmount = 500;
@@ -20,16 +18,13 @@ const CameraAi = () => {
   let currentScrollX = 0;
   let newScrollY = 0;
   let newScrollX = 0;
-  let isVirtualMouseDown = false;
-  let virtualMouseX = 0;
-  let virtualMouseY = 0;
 
   const { setAiRotation } = useRoomStore();
 
   useEffect(() => {
     const hands = new Hands({
       locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        return `/mediapipe-hands/${file}`;
       },
     });
     hands.setOptions({
@@ -195,7 +190,6 @@ const CameraAi = () => {
           windowWidth - airCursor0.x,
           airCursor0.y,
         );
-        //console.log(elementToClick)
         if (elementToClick) {
           elementToClick.click();
         }
@@ -205,7 +199,7 @@ const CameraAi = () => {
       }
       canvasRef.current.style.visibility = "visible";
     }
-    
+
     if (!results.multiHandLandmarks[0]) {
       canvasRef.current.style.visibility = "hidden";
     }

@@ -39,10 +39,10 @@ export default function RoomStream(props) {
       <audio ref={micRef} autoPlay playsInline muted={isLocal} />
       {screenShareOn && !isLocal && (
         <Rnd
-          className="z-[100]"
+          className="z-2147483645"
           style={{ display: screenShareOn ? "initial" : "none" }}
           default={{
-            x: 100,
+            x: 0,
             y: 0,
             width: 300,
             height: 300,
@@ -59,7 +59,7 @@ export default function RoomStream(props) {
             playsinline // extremely crucial prop
             pip={false}
             light={false}
-            controls={false}
+            controls={true}
             muted={true}
             playing={true}
             //

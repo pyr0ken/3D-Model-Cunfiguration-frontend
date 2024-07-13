@@ -25,7 +25,7 @@ const useRoomStore = create((set) => ({
   setCloseModel: (data) => set((state) => ({ closeModel: data })),
   setIsRoomModalOpen: (status) => set((state) => ({ isRoomModalOpen: status })),
   setAiRotation: ({ x, y }) => set((state) => ({ aiRotation: { x, y } })),
-  changeAiCameraStatus: () => set((state) => ({ aiCameraIsOn: !state.aiCameraIsOn })),
+  setAiCameraIsOn: (data) => set((state) => ({ aiCameraIsOn: data })),
   changeReloadModelKey: () =>
     set((state) => ({ reloadModelKey: state.reloadModelKey + 1 })),
 }));

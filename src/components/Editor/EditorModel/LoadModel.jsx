@@ -32,15 +32,14 @@ export default function LoadModel({
   const { mutate: addPoint } = useAddPoint();
 
   // Ref
-  const { camera, gl } = useThree();
+  const { gl } = useThree();
   const modelRef = useRef();
 
   // Controllers
-  const { scale, positionY } = useControls("Model", {
-    scale: {
-      min: 0,
-      max: 10,
-      value: 2,
+  const { rotationX, positionY } = useControls("Model", {
+    rotationX: {
+      options: [0, Math.PI / 2, Math.PI, (2 * Math.PI) / 3, 2 * Math.PI],
+      value: Math.PI / 2,
     },
     positionY: {
       min: -10,
@@ -48,9 +47,6 @@ export default function LoadModel({
       value: 0,
       step: 0.01,
     },
-    "Reset Camera": button(() => {
-      camera.position.set(0, 0, 5);
-    }),
     "Take ScreenShot": button(() => {
       const link = document.createElement("a");
       link.setAttribute("download", "canvas.png");
@@ -134,9 +130,9 @@ export default function LoadModel({
     <>
       <group ref={modelRef} dispose={null}>
         <group
-          rotation={[Math.PI / 2, 0, 0]}
+          rotation={[rotationX, 0, 0]}
           position={[0, positionY, 0]}
-          scale={scale}
+          scale={2}
         >
           {meshes.map((mesh) => (
             <mesh

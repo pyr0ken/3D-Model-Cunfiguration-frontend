@@ -68,7 +68,7 @@ export default function Points({ isOpen, setSelectedTab }) {
       </div>
       <ScrollShadow hideScrollBar>
         <div className="no-scrollbar mb-2 flex flex-col gap-y-5 overflow-y-auto text-white">
-          {!isLoading && !isError ? (
+          {points && points.length > 0 ? (
             points.map((point, index) => (
               <div
                 key={index}
@@ -103,7 +103,7 @@ export default function Points({ isOpen, setSelectedTab }) {
               </div>
             ))
           ) : (
-            <p className="text-center">:-: There Is no points :-:</p>
+            <p className="text-center">هنوز هیچ نقطه ای اضافه نشده است. همین الان میتوانید با نگه داشتن کنترل(ctrl) و کلیک چپ روی مدل یه نقظه به آن اضافه کنید.</p>
           )}
         </div>
       </ScrollShadow>

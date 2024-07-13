@@ -5,15 +5,15 @@ import { variants } from "./utils";
 import useRoomStore from "../../../store/roomStore";
 
 export default function Ai({ isOpen, setSelectedTab }) {
-  const { aiCameraIsOn, changeAiCameraStatus, changeReloadModelKey } =
+  const { aiCameraIsOn, setAiCameraIsOn, changeReloadModelKey } =
     useRoomStore();
 
   const handleHandTracker = () => {
     if (aiCameraIsOn) {
-      changeAiCameraStatus();
+      setAiCameraIsOn(false);
       changeReloadModelKey();
     } else {
-      changeAiCameraStatus();
+      setAiCameraIsOn(true);
     }
   };
 
@@ -59,10 +59,11 @@ export default function Ai({ isOpen, setSelectedTab }) {
             میتوانید با حرکت به سمت راست یا چپ مدل سه بعدی را بچرخانید.
           </p>
           <p className="mt-8 text-xl">توجه:</p>
-          <p className="mt-۲">
-            اگر موقعیت چرخشی مدل خراب شد میتوانید با گزینه Reload Model در پنل
-            سمت چپ مدل را دوباره بارگزاری کنید. و تمامی چرخش ها به حالت اولیه
-            خود باز میگردد
+
+          <p className="mt-2">
+            اگر موقعیت چرخشی مدل جابجا شد میتوانید روی گزینه خاموش که در بالا
+            آمده است کلیک کنید و مدل را دوباره بارگزاری کنید. و تمامی چرخش ها به
+            حالت اولیه خود باز میگردد
           </p>
         </div>
       </div>

@@ -16,13 +16,14 @@ export default function ViewModelModal({
       isOpen={isViewModalOpen}
       size="3xl"
       onClose={() => setIsViewModalOpen(false)}
+      isDismissable={false}
       placement="top-center"
       className="h-[70vh] dark"
     >
       <ModalContent>
         <ModalBody>
           <div className="relative h-screen w-full">
-            <Canvas>
+            <Canvas gl={{preserveDrawingBuffer: true}}>
               <OrbitControls autoRotate enablePan />
 
               <ambientLight intensity={3} />

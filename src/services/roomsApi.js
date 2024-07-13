@@ -21,13 +21,6 @@ export const getRoomDetail = async (roomId) => {
     .then((response) => response.data);
 };
 
-export const getRoomMembers = async (roomId) => {
-  return await apiAuth
-    .get(`/rooms/${roomId}/members/`)
-    .then((response) => response.data);
-};
-
-
 // room video sdk api
 export const enterRoom = async (data) => {
   return await apiAuth.post("/rooms/enter/", data);

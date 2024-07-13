@@ -270,7 +270,7 @@ export default function RoomsList() {
                         )}
                       </p>
                       <p className="pl-3">
-                        {relativeTimeFromNow(userRoom.last_join)}
+                        {userRoom.last_join ? relativeTimeFromNow(userRoom.last_join) : '-'}
                       </p>
                       <div className="flex pl-4 justify-center gap-x-2">
                         <button

@@ -7,7 +7,7 @@ import {
   ScrollShadow,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoClose } from "react-icons/io5";
 import useEditorStore from "../../../store/editorStore";
 import ModelsPopupList from "../OpenEditorModel/ModelsPopupList";
 import { variants } from "./utils";
@@ -83,7 +83,7 @@ const Settings = ({ isOpen, setSelectedTab }) => {
                         onClick={() => handleDeleteEditModel(editModel.id)}
                         className="flex items-center rounded-l-xl bg-red-500 p-2 transition-colors hover:bg-red-600"
                       >
-                        <RiDeleteBin6Line className="size-5" />
+                        <IoClose className="size-5" />
                       </span>
                     </div>
                   );

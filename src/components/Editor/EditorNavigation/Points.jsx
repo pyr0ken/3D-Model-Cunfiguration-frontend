@@ -94,7 +94,7 @@ const Points = ({ isOpen, setSelectedTab }) => {
               </div>
             ))
           ) : (
-            <p className="text-center">:-: There Is no points :-:</p>
+            <p className="text-center">هنوز هیچ نقطه ای اضافه نشده است. همین الان میتوانید با نگه داشتن کنترل(ctrl) و کلیک چپ روی مدل یه نقظه به آن اضافه کنید.</p>
           )}
         </div>
       </ScrollShadow>

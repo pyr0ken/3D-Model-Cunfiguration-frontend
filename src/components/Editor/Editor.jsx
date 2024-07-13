@@ -11,8 +11,6 @@ export default function Editor() {
     aiCameraIsOn,
   } = useEditorStore();
 
-  console.log("selectedModel :", selectedModel);
-
   return (
     <div className="bg-grid relative flex h-screen w-full overflow-hidden">
       <EditorNavigation />

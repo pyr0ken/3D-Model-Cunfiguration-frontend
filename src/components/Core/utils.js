@@ -33,8 +33,8 @@ export const fileSizeInMegabytes = (bytes) => {
 };
 
 export const isValidFileTypeByExtension = (fileExtension) => {
-  // List of allowed file extensions for GLB, GLTF, and OBJ
-  const allowedExtensions = ["glb", "gltf", "obj"];
+  // List of allowed file extensions for GLB, GLTF
+  const allowedExtensions = ["glb", "gltf"];
 
   // Check if the file extension is in the allowed list
   return allowedExtensions.includes(fileExtension);

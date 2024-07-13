@@ -53,6 +53,10 @@
   direction: rtl;
 }
 
+.ltr {
+  direction: ltr !important;
+}
+
 .leva-c-kWgxhW-bCBHqk-fill-false {
   top: 10px !important;
   right: 0px !important;

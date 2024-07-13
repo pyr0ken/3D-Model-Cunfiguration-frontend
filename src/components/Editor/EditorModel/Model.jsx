@@ -21,9 +21,7 @@ export default function Model() {
   const {
     selectedModel,
     reloadModelKey,
-    aiCameraIsOn,
     changeReloadModelKey,
-    changeAiCameraStatus,
   } = useEditorStore();
 
   // note state
@@ -40,12 +38,7 @@ export default function Model() {
       AutoRotate: false,
       Pan: false,
       "Reload Model": button(() => {
-        if (aiCameraIsOn) {
-          changeAiCameraStatus();
-          changeReloadModelKey();
-        } else {
-          changeReloadModelKey();
-        }
+        changeReloadModelKey();
       }),
     },
   );

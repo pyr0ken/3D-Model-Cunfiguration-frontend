@@ -17,12 +17,9 @@ const queryClient = new QueryClient({
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  // React.StrictMode have some bugs in google chrome
-  // <React.StrictMode>
   <QueryClientProvider client={queryClient}>
     <NextUIProvider>
       <App />
     </NextUIProvider>
   </QueryClientProvider>,
-  // </React.StrictMode>
 );

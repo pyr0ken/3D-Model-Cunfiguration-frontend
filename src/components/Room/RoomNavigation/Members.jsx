@@ -57,7 +57,7 @@ export default function Members({ isOpen, setSelectedTab }) {
       } border-r border-neutral-800 p-5`}
     >
       <div className="flex w-full flex-row place-items-center justify-between">
-        <h1 className="text-lg tracking-wide">اعضای جلسه</h1>
+        <h1 className="text-lg tracking-wide">اعضای آنلاین جلسه</h1>
         <button onClick={() => setSelectedTab(null)}>
           <XMarkIcon className="w-8 rounded-lg stroke-neutral-400 text-neutral-400 transition-colors duration-100" />
         </button>

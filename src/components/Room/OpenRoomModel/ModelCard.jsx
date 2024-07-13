@@ -74,8 +74,8 @@ export default function ModelCard({
         },
         onError: (err) => console.log(err),
       });
-      refetch();
     }
+    refetch();
     setIsRoomModalOpen(false);
   };
 

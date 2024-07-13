@@ -70,7 +70,7 @@ export default function Help({ isOpen, setSelectedTab }) {
                 بخش Model برای تنظیمات مدل مانند:
               </p>
               <p className="text-right">
-                اندازه مدل (scale)،‌ موقعیت مدل در محور Y (positionY)،‌ بارگزاری مجدد موقعیت مدل (Reset Model View)، گرفتن اسکرین شات از مدل به همراه پوینت ها (Take ScreenShot)
+              ‌ موقعیت مدل در محور Y (positionY)، گرفتن اسکرین شات از مدل به همراه پوینت ها (Take ScreenShot)،‌ تغییر دادن محور چرخشی مدل(rotationX)
               </p>
             </div>
             <div className="flex flex-col rounded-md bg-leva-3/30 p-4">

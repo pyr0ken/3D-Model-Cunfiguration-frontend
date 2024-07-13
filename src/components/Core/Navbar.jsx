@@ -24,7 +24,7 @@ export default function Navbar() {
   return (
     <div className="absolute z-10 w-full">
       <nav className="flex items-center justify-between px-4 py-4">
-        <Link className="text-3xl font-bold leading-none" to="/">
+        <Link className="leading-none" to="/">
           <Logo className="h-16" />
         </Link>
         <ul className="mr-32 flex flex-wrap items-center gap-x-6 text-xl">

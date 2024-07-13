@@ -11,6 +11,8 @@ import OpenModel from "./OpenRoomModel/OpenModel";
 import Model from "./RoomModel/Model";
 import RoomNavigation from "./RoomNavigation";
 import RoomStream from "./RoomStream";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 export default function Meeting() {
   // Room Store
@@ -105,38 +107,40 @@ export default function Meeting() {
 
   return (
     <div className="bg-grid relative flex h-screen w-full overflow-hidden">
-      <RoomNavigation />
+      <DndProvider backend={HTML5Backend}>
+        <RoomNavigation />
 
-      {joined ? (
-        <div>
-          {[...participants.keys()].map((participantId) => (
-            <RoomStream participantId={participantId} key={participantId} />
-          ))}
-        </div>
-      ) : (
-        <JoinLoading />
-      )}
-
-      {aiCameraIsOn && <CameraAi />}
-
-      {selectedModel && joined ? (
-        <Model />
-      ) : isOwner && joined ? (
-        <div className="mr-[5.5rem] flex w-full justify-center">
-          <OpenModel />
-        </div>
-      ) : (
-        joined && (
-          <div className="mr-[5.5rem] flex w-full justify-center text-white">
-            <div className="flex flex-col items-center justify-center gap-y-5">
-              <HiOutlineStatusOnline className="size-48 text-gray-400" />
-              <p className="text-2xl text-gray-400">
-                شما در جلسه <strong>{roomTitle}</strong> هستید
-              </p>
-            </div>
+        {joined ? (
+          <div>
+            {[...participants.keys()].map((participantId) => (
+              <RoomStream participantId={participantId} key={participantId} />
+            ))}
           </div>
-        )
-      )}
+        ) : (
+          <JoinLoading />
+        )}
+
+        {aiCameraIsOn && <CameraAi />}
+
+        {selectedModel && joined ? (
+          <Model />
+        ) : isOwner && joined ? (
+          <div className="mr-[5.5rem] flex w-full justify-center">
+            <OpenModel />
+          </div>
+        ) : (
+          joined && (
+            <div className="mr-[5.5rem] flex w-full justify-center text-white">
+              <div className="flex flex-col items-center justify-center gap-y-5">
+                <HiOutlineStatusOnline className="size-48 text-gray-400" />
+                <p className="text-2xl text-gray-400">
+                  شما در جلسه <strong>{roomTitle}</strong> هستید
+                </p>
+              </div>
+            </div>
+          )
+        )}
+      </DndProvider>
 
       <ToastContainer rtl />
     </div>

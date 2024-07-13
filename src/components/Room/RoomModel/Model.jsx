@@ -20,9 +20,7 @@ export default function Model() {
   // Room Model state
   const {
     selectedModel,
-    aiCameraIsOn,
     reloadModelKey,
-    changeAiCameraStatus,
     changeReloadModelKey,
   } = useRoomStore();
 
@@ -40,12 +38,7 @@ export default function Model() {
       AutoRotate: false,
       Pan: false,
       "Reload Model": button(() => {
-        if (aiCameraIsOn) {
-          changeAiCameraStatus();
-          changeReloadModelKey();
-        } else {
-          changeReloadModelKey();
-        }
+        changeReloadModelKey();
       }),
     },
   );
