@@ -71,6 +71,7 @@ export default function Chat({ isOpen, setSelectedTab }) {
         duration: 0.25,
         ease: "easeInOut",
       }}
+      style={{direction: "ltr"}}
       className={`absolute z-20 mr-0 flex h-full w-96 flex-col gap-8 rounded-[3rem] bg-gradient-to-b from-leva-1/70 to-leva-2/70 text-neutral-400 ${
         isOpen
           ? "transition-right right-[16.5rem]"

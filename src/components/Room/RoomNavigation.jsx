@@ -159,6 +159,7 @@ export default function RoomNavigation() {
             name="اعضای آنلاین"
             componentName="Members"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <FaUsers className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
@@ -166,6 +167,7 @@ export default function RoomNavigation() {
             name="تخته مجازی"
             componentName="Draw"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <FaPaintBrush className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
@@ -173,6 +175,7 @@ export default function RoomNavigation() {
             name="گفتگو"
             componentName="Chat"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <IoChatboxEllipsesOutline className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
@@ -180,6 +183,7 @@ export default function RoomNavigation() {
             name="نقطه ها"
             componentName="Points"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <IoList className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
@@ -187,6 +191,7 @@ export default function RoomNavigation() {
             name="هوش مصنوعی"
             componentName="Ai"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <BsCpu className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
@@ -194,6 +199,7 @@ export default function RoomNavigation() {
             name="راهنما"
             componentName="Help"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <IoHelpSharp className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>
@@ -201,6 +207,7 @@ export default function RoomNavigation() {
             name="تنظیمات مدل"
             componentName="Settings"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <IoSettingsOutline className="h-8 w-8 min-w-8" />
           </RoomToolBoxLink>

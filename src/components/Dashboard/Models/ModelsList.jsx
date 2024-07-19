@@ -38,7 +38,7 @@ export default function ModelsList() {
 
   const navigate = useNavigate();
 
-  const { addEditModel: addEdotModelStore, setSelectedModel } =
+  const { editModels, addEditModel: addEdotModelStore, setSelectedModel } =
     useEditorStore();
 
   const handleViewModel = (modelFile) => {
@@ -47,7 +47,9 @@ export default function ModelsList() {
   };
 
   const handleEditModel = (editModel) => {
-    addEdotModelStore(editModel);
+    if (!existsEditModel(editModel.id)) {
+      addEdotModelStore(editModel);
+    }
     setSelectedModel(editModel);
     navigate(`/editor/`);
   };
@@ -90,6 +92,10 @@ export default function ModelsList() {
         },
       },
     );
+  };
+  
+  const existsEditModel = (editModelId) => {
+    return editModels.some((editModel) => editModel.id === editModelId);
   };
 
   return (

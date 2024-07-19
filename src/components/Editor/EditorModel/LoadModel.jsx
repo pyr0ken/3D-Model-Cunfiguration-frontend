@@ -16,7 +16,7 @@ export default function LoadModel({
 }) {
   // state
   const [hoverPointId, setHoverPointId] = useState(null);
-  const { selectedModel, aiRotation, aiCameraIsOn } = useEditorStore();
+  const { selectedModel, aiRotation, aiCameraIsOn, isEditModalOpen } = useEditorStore();
 
   // Load Model with useGLTF
   const { nodes, materials } = useGLTF(BASE_URL + selectedModel.file);
@@ -36,16 +36,10 @@ export default function LoadModel({
   const modelRef = useRef();
 
   // Controllers
-  const { rotationX, positionY } = useControls("Model", {
+  const { rotationX } = useControls("Model", {
     rotationX: {
       options: [0, Math.PI / 2, Math.PI, (2 * Math.PI) / 3, 2 * Math.PI],
       value: Math.PI / 2,
-    },
-    positionY: {
-      min: -10,
-      max: 10,
-      value: 0,
-      step: 0.01,
     },
     "Take ScreenShot": button(() => {
       const link = document.createElement("a");
@@ -131,7 +125,7 @@ export default function LoadModel({
       <group ref={modelRef} dispose={null}>
         <group
           rotation={[rotationX, 0, 0]}
-          position={[0, positionY, 0]}
+          position={[0, 0, 0]}
           scale={2}
         >
           {meshes.map((mesh) => (
@@ -159,7 +153,7 @@ export default function LoadModel({
           >
             <sphereGeometry args={[point.radius]} />
             <meshBasicMaterial color={point.color} />
-            {pointIndex && !isNoteModalOpen && (
+            {pointIndex && !isNoteModalOpen && !isEditModalOpen && (
               <Html className="flex" distanceFactor={4}>
                 <span className="select-none font-extrabold text-gray-300">
                   {index + 1}

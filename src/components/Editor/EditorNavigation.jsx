@@ -116,6 +116,7 @@ export default function EditorNavigation() {
             name="تخته مجازی"
             componentName="Draw"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <FaPaintBrush className="h-8 w-8 min-w-8" />
           </EditorToolBoxLink>
@@ -123,6 +124,7 @@ export default function EditorNavigation() {
             name="نقطه ها"
             componentName="Points"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <IoList className="h-8 w-8 min-w-8" />
           </EditorToolBoxLink>
@@ -130,6 +132,7 @@ export default function EditorNavigation() {
             name="هوش مصنوعی"
             componentName="Ai"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <BsCpu className="h-8 w-8 min-w-8" />
           </EditorToolBoxLink>
@@ -137,6 +140,7 @@ export default function EditorNavigation() {
             name="راهنما"
             componentName="Help"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <IoHelpSharp className="h-8 w-8 min-w-8" />
           </EditorToolBoxLink>
@@ -144,6 +148,7 @@ export default function EditorNavigation() {
             name="تنظیمات مدل ها"
             componentName="Settings"
             setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
           >
             <IoSettingsOutline className="h-8 w-8 min-w-8" />
           </EditorToolBoxLink>

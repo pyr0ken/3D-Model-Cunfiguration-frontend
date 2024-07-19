@@ -1,6 +1,6 @@
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
-const RoomToolBoxLink = ({ children, name, componentName, setSelectedTab }) => {
+const RoomToolBoxLink = ({ children, name, componentName, setSelectedTab, selectedTab = null }) => {
   const handleClick = () => {
     // setSelectedProject(null);
     setTimeout(() => {
@@ -12,7 +12,7 @@ const RoomToolBoxLink = ({ children, name, componentName, setSelectedTab }) => {
     <div
       title={name}
       onClick={handleClick}
-      className="flex cursor-pointer place-items-center gap-3 rounded-lg stroke-neutral-400 p-2 text-neutral-400 transition-colors duration-100 hover:bg-leva-3/30 hover:stroke-neutral-100 hover:text-neutral-100"
+      className={`${selectedTab === componentName ? "bg-leva-3/80 text-white" : "hover:bg-leva-3/30 hover:stroke-neutral-100 hover:text-neutral-100" } flex cursor-pointer place-items-center gap-3 rounded-lg stroke-neutral-400 p-2 text-neutral-400 transition-colors duration-100`}
     >
       {children}
       <div className="flex w-full place-items-center justify-start overflow-auto">
