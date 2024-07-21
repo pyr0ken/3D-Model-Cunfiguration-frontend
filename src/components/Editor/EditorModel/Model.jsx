@@ -133,7 +133,7 @@ export default function Model() {
         </Suspense>
 
         {/* Show Performance */}
-        {Monitoring && <Perf position="bottom-right" />}
+        {Monitoring && <Perf position="bottom-left" />}
       </Canvas>
       <NoteModal
         selectedPoint={selectedPoint}
