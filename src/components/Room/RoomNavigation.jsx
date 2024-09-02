@@ -69,6 +69,7 @@ export default function RoomNavigation() {
   const {
     muteMic,
     unmuteMic,
+    toggleMic,
     enableScreenShare,
     disableScreenShare,
     localScreenShareOn,

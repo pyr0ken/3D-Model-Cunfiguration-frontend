@@ -26,12 +26,18 @@ export default function NavigationDash() {
           <NavigationLinkDash name="جلسات" link={"/dashboard/rooms/"}>
             <PiShareNetworkDuotone className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
-          <NavigationLinkDash name="مدل های سه بعدی" link={"/dashboard/models/"}>
+          <NavigationLinkDash
+            name="مدل های سه بعدی"
+            link={"/dashboard/models/"}
+          >
             <IoCubeOutline className="h-8 w-8 min-w-8" />
           </NavigationLinkDash>
-          <NavigationLinkDash name="ویدیو راهنما">
-            <FaVideo className="h-8 w-8 min-w-8" />
-          </NavigationLinkDash>
+          <a href="/help-video.mp4" target="_blank">
+            <div className="flex cursor-pointer place-items-center gap-3 rounded-lg stroke-neutral-400 p-2 text-neutral-400 transition-colors duration-100 hover:bg-leva-3/30 hover:stroke-neutral-100 hover:text-neutral-100">
+              <FaVideo className="h-8 w-8 min-w-8" />
+              <p> ویدیوی راهنما</p>
+            </div>
+          </a>
         </div>
       </nav>
     </>
