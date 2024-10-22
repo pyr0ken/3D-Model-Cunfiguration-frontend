@@ -107,9 +107,8 @@ export default function Meeting() {
 
   return (
     <div className="bg-grid relative flex h-screen w-full overflow-hidden">
-      <DndProvider backend={HTML5Backend}>
         <RoomNavigation />
-
+        
         {joined ? (
           <div>
             {[...participants.keys()].map((participantId) => (
@@ -140,8 +139,7 @@ export default function Meeting() {
             </div>
           )
         )}
-      </DndProvider>
-
+        
       <ToastContainer rtl />
     </div>
   );

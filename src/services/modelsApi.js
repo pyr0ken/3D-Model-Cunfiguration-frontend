@@ -1,4 +1,4 @@
-import { apiAuth } from ".";
+import { apiAuth, apiBase } from ".";
 
 // model crud api
 export const getModels = async () => {
@@ -49,8 +49,7 @@ export const deleteEditModel = async (data) => {
     .then((response) => response.data);
 };
 
-
-// points api 
+// points api
 export const getPoints = async (modelId) => {
   return await apiAuth
     .get(`/models/points/${modelId}/`)
@@ -69,7 +68,6 @@ export const deletePoint = async (data) => {
     .then((response) => response.data);
 };
 
-
 // note api
 export const addNote = async (data) => {
   return await apiAuth
@@ -80,5 +78,50 @@ export const addNote = async (data) => {
 export const deleteNote = async (data) => {
   return await apiAuth
     .delete("/models/notes/delete/", { data: data })
+    .then((response) => response.data);
+};
+
+export const deleteNoteTitle = async (data) => {
+  return await apiAuth
+    .delete("/models/notes/title/delete/", { data: data })
+    .then((response) => response.data);
+};
+
+// ai api
+export const aiNoteDetail = async (data) => {
+  return await apiAuth
+    .post("/models/ai/note/", data)
+    .then((response) => response.data);
+};
+
+export const imageTo3dModel = async (variables) => {
+  const { file, title } = variables;
+  return await apiAuth
+    .post(
+      `/models/ai/image-to-3d/`,
+      { file, title },
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    )
+    .then((response) => response.data);
+};
+
+
+export const getPointCloud = async (data) => {
+  return await apiBase
+    .post("/models/ai/segmentation/point-cloud/", data)
+    .then((response) => response.data);
+};
+
+export const clearPC = async () => {
+  return await apiBase
+    .post("/models/ai/segmentation/clear/")
+    .then((response) => response.data);
+};
+
+export const segmentPC = async (data) => {
+  return await apiBase
+    .post("/models/ai/segmentation/segment/", data)
     .then((response) => response.data);
 };

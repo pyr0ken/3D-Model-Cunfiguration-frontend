@@ -40,6 +40,14 @@ export const isValidFileTypeByExtension = (fileExtension) => {
   return allowedExtensions.includes(fileExtension);
 };
 
+export const isValidImageTypeByExtension = (fileExtension) => {
+  // List of allowed file extensions for GLB, GLTF
+  const allowedExtensions = ["png", "jpg"];
+
+  // Check if the file extension is in the allowed list
+  return allowedExtensions.includes(fileExtension);
+};
+
 export const copyText = async (text) => {
   return await navigator.clipboard.writeText(text);
 };

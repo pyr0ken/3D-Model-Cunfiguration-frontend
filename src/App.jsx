@@ -15,6 +15,8 @@ import Editor from "./components/Editor/Editor";
 import Home from "./components/Home/Home";
 import { useAuthStore } from "./store/authStore";
 import "react-toastify/dist/ReactToastify.css";
+import PointCloud from "./components/Editor/PointCloud";
+import NiiVue from "./components/Editor/NiiVue/NiiVue";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -39,6 +41,10 @@ export default function App() {
       <Routes>
         {/* Home Page */}
         <Route path="/" element={<Home />} />
+
+        {/* Testing Route */}
+        <Route path="/cloud" element={<PointCloud />} />
+        {/* <Route path="/niivue" element={<NiiVue />} /> */}
 
         {/* Authentication Links */}
         <Route path="/login" element={<Login />} />

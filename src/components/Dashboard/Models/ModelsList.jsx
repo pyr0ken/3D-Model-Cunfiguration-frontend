@@ -1,5 +1,4 @@
-import { Button } from "@nextui-org/react";
-import jMoment from "moment-jalaali";
+import { Button, ScrollShadow } from "@nextui-org/react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -16,10 +15,14 @@ import {
 } from "../../Core/utils";
 import UploadModelModal from "./UploadModelModal";
 import ViewModelModal from "./ViwsModelModal";
+import ImageTo3dModal from "./ImageTo3dModal";
+import ImageTo3dLoading from "./ImageTo3dLoading";
 
 export default function ModelsList() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [is2dto3dModalOpen, setIs2dto3dModalOpen] = useState(false);
+  const [isGenerating3dModel, setIsGenerating3dModel] = useState(false);
   const [modelFileURL, setModelFileURL] = useState(null);
 
   const {
@@ -38,8 +41,11 @@ export default function ModelsList() {
 
   const navigate = useNavigate();
 
-  const { editModels, addEditModel: addEdotModelStore, setSelectedModel } =
-    useEditorStore();
+  const {
+    editModels,
+    addEditModel: addEdotModelStore,
+    setSelectedModel,
+  } = useEditorStore();
 
   const handleViewModel = (modelFile) => {
     setModelFileURL(modelFile);
@@ -93,7 +99,7 @@ export default function ModelsList() {
       },
     );
   };
-  
+
   const existsEditModel = (editModelId) => {
     return editModels.some((editModel) => editModel.id === editModelId);
   };
@@ -102,146 +108,166 @@ export default function ModelsList() {
     <>
       <ToastContainer rtl />
       <div className="mx-5 mt-2 flex h-screen w-full flex-col gap-y-5 overflow-auto text-white">
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
-            <h1 className="text-2xl font-bold"> مدل های آپلود شده </h1>
-            <Button
-              className="text-lg"
-              variant="shadow"
-              size="lg"
-              color="primary"
-              onClick={() => setIsUploadModalOpen(true)}
-            >
-              آپلود مدل جدید
-            </Button>
-          </div>
-          <div className="mx-5 mt-1 overflow-y-auto rounded-lg text-gray-200">
-            <>
-              <div className="grid grid-cols-5 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
-                <p className="pl-2">عنوان</p>
-                <p className="pl-3">فرمت</p>
-                <p className="pr-3">سایز</p>
-                <p className="pr-3">تاریخ آپلود</p>
-                <p className="text-center">گزینه ها</p>
+        <ScrollShadow hideScrollBar>
+          <div className="flex flex-col">
+            <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
+              <h1 className="text-2xl font-bold"> مدل های آپلود شده </h1>
+              <div className="flex gap-x-2">
+                <Button
+                  className="text-lg"
+                  variant="shadow"
+                  size="lg"
+                  color="primary"
+                  onClick={() => setIsUploadModalOpen(true)}
+                >
+                  آپلود مدل جدید
+                </Button>
+                <Button
+                  className="text-lg"
+                  variant="shadow"
+                  size="lg"
+                  color="danger"
+                  onClick={() => setIs2dto3dModalOpen(true)}
+                >
+                  تبدیل عکس به مدل ۳ بعدی !
+                </Button>
               </div>
-              {uploadedModelIsLoading ? (
-                <p className="bg-leva-2/50 p-4 text-center text-lg">
-                  در حال بارگیری اطلاعات...
-                </p>
-              ) : uploadedModels && uploadedModels.length > 0 ? (
-                uploadedModels.map((model, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-5 items-center bg-leva-3/90 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
-                  >
-                    <p className="pl-3">{model.title}</p>
-                    <p className="pl-3">{model.format}</p>
-                    <p className="space-x-1 pl-3">
-                      <span>{fileSizeInMegabytes(model.size).toFixed(2)}</span>
-                      <span>MB</span>
-                    </p>
-                    <p className="pl-2">
-                      {formatDateTime(model.created_at)}
-                    </p>
-                    <div className="flex justify-center gap-x-2">
-                      <button
-                        onClick={() => handleViewModel(model.file)}
-                        className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
-                      >
-                        نمایش
-                      </button>
-                      <button
-                        onClick={() => handleDeleteModel(model.id)}
-                        className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-red-500"
-                      >
-                        حذف
-                      </button>
+            </div>
+            <div className="mx-5 mt-1 overflow-y-auto rounded-lg text-gray-200">
+              <>
+                <div className="grid grid-cols-5 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
+                  <p className="pl-2">عنوان</p>
+                  <p className="pl-3">فرمت</p>
+                  <p className="pr-3">سایز</p>
+                  <p className="pr-3">تاریخ آپلود</p>
+                  <p className="text-center">گزینه ها</p>
+                </div>
+                {uploadedModelIsLoading ? (
+                  <p className="bg-leva-2/50 p-4 text-center text-lg">
+                    در حال بارگیری اطلاعات...
+                  </p>
+                ) : uploadedModels && uploadedModels.length > 0 ? (
+                  uploadedModels.map((model, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-5 items-center bg-leva-3/90 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
+                    >
+                      <p className="pl-3">{model.title}</p>
+                      <p className="pl-3">{model.format}</p>
+                      <p className="space-x-1 pl-3">
+                        <span>
+                          {fileSizeInMegabytes(model.size).toFixed(2)}
+                        </span>
+                        <span>MB</span>
+                      </p>
+                      <p className="pl-2">{formatDateTime(model.created_at)}</p>
+                      <div className="flex justify-center gap-x-2">
+                        <button
+                          onClick={() => handleViewModel(model.file)}
+                          className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
+                        >
+                          نمایش
+                        </button>
+                        <button
+                          onClick={() => handleDeleteModel(model.id)}
+                          className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-red-500"
+                        >
+                          حذف
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p className="bg-leva-2/50 p-4 text-center text-lg">
-                  هیچ مدلی در اینجا وجود ندارد. همین الان میتوانید یک مدل آپلود
-                  کنید!
-                </p>
-              )}
-            </>
+                  ))
+                ) : (
+                  <p className="bg-leva-2/50 p-4 text-center text-lg">
+                    هیچ مدلی در اینجا وجود ندارد. همین الان میتوانید یک مدل
+                    آپلود کنید!
+                  </p>
+                )}
+              </>
+            </div>
           </div>
-        </div>
-        <UploadModelModal
-          isUploadModalOpen={isUploadModalOpen}
-          setIsUploadModalOpen={setIsUploadModalOpen}
-          uploadedModelRefetch={uploadedModelRefetch}
-        />
-        <ViewModelModal
-          isViewModalOpen={isViewModalOpen}
-          setIsViewModalOpen={setIsViewModalOpen}
-          modelFileURL={modelFileURL}
-        />
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
-            <h1 className="text-2xl font-bold"> مدل های ویرایش شده </h1>
-            <Link to="/editor/">
-              <Button
-                className="px-8 text-lg"
-                variant="shadow"
-                size="lg"
-                color="warning"
-              >
-                برو به ادیتور
-              </Button>
-            </Link>
-          </div>
-          <div className="mx-5 mb-5 mt-1 overflow-y-auto rounded-lg text-gray-200">
-            <>
-              <div className="grid grid-cols-5 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
-                <p className="pl-1">عنوان</p>
-                <p className="pl-3">تعداد نقطه ها</p>
-                <p className="pl-3">تعداد یادداشت ها</p>
-                <p className="pl-3">آخرین تاریخ ویرایش</p>
-                <p className="text-center">گزینه ها</p>
-              </div>
-              {editedModelIsLoading ? (
-                <p className="bg-leva-2/50 p-4 text-center text-lg">
-                  در حال بارگیری اطلاعات...
-                </p>
-              ) : editedModels && editedModels.length > 0 ? (
-                editedModels.map((editModel, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-5 items-center bg-leva-3/90 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
-                  >
-                    <p className="pl-3">{editModel.display_name}</p>
-                    <p className="pr-3">{editModel.points_count}</p>
-                    <p className="pr-3">{editModel.notes_count}</p>
-                    <p className="pl-1">
-                      {relativeTimeFromNow(editModel.last_edit)}
-                    </p>
-                    <div className="flex justify-center gap-x-2">
-                      <button
-                        onClick={() => handleEditModel(editModel)}
-                        className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
-                      >
-                        شروع ویرایش
-                      </button>
-                      <button
-                        onClick={() => handleDeleteEditModel(editModel.id)}
-                        className="rounded-lg bg-blue-400 p-3  text-black transition-colors hover:bg-red-500"
-                      >
-                        حذف
-                      </button>
+          <UploadModelModal
+            isUploadModalOpen={isUploadModalOpen}
+            setIsUploadModalOpen={setIsUploadModalOpen}
+            uploadedModelRefetch={uploadedModelRefetch}
+          />
+          <ViewModelModal
+            isViewModalOpen={isViewModalOpen}
+            setIsViewModalOpen={setIsViewModalOpen}
+            modelFileURL={modelFileURL}
+          />
+          <ImageTo3dModal
+            is2dto3dModalOpen={is2dto3dModalOpen}
+            setIs2dto3dModalOpen={setIs2dto3dModalOpen}
+            isGenerating3dModel={isGenerating3dModel}
+            setIsGenerating3dModel={setIsGenerating3dModel}
+            uploadedModelRefetch={uploadedModelRefetch}
+          />
+          <div className="flex flex-col">
+            <div className="flex items-center justify-between rounded-md bg-gradient-to-l from-leva-2 to-leva-1 p-5">
+              <h1 className="text-2xl font-bold"> مدل های ویرایش شده </h1>
+              <Link to="/editor/">
+                <Button
+                  className="px-8 text-lg"
+                  variant="shadow"
+                  size="lg"
+                  color="warning"
+                >
+                  برو به ادیتور
+                </Button>
+              </Link>
+            </div>
+            <div className="mx-5 mb-5 mt-1 overflow-y-auto rounded-lg text-gray-200">
+              <>
+                <div className="grid grid-cols-5 rounded-tl-lg rounded-tr-lg bg-leva-2 p-4 text-lg font-semibold">
+                  <p className="pl-1">عنوان</p>
+                  <p className="pl-3">تعداد نقطه ها</p>
+                  <p className="pl-3">تعداد یادداشت ها</p>
+                  <p className="pl-3">آخرین تاریخ ویرایش</p>
+                  <p className="text-center">گزینه ها</p>
+                </div>
+                {editedModelIsLoading ? (
+                  <p className="bg-leva-2/50 p-4 text-center text-lg">
+                    در حال بارگیری اطلاعات...
+                  </p>
+                ) : editedModels && editedModels.length > 0 ? (
+                  editedModels.map((editModel, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-5 items-center bg-leva-3/90 p-2 font-medium last:rounded-bl-lg last:rounded-br-lg odd:border-y-2 odd:border-leva-1"
+                    >
+                      <p className="pl-3">{editModel.display_name}</p>
+                      <p className="pr-3">{editModel.points_count}</p>
+                      <p className="pr-3">{editModel.notes_count}</p>
+                      <p className="pl-1">
+                        {relativeTimeFromNow(editModel.last_edit)}
+                      </p>
+                      <div className="flex justify-center gap-x-2">
+                        <button
+                          onClick={() => handleEditModel(editModel)}
+                          className="rounded-lg bg-blue-400 p-3 text-black transition-colors hover:bg-green-500"
+                        >
+                          شروع ویرایش
+                        </button>
+                        <button
+                          onClick={() => handleDeleteEditModel(editModel.id)}
+                          className="rounded-lg bg-blue-400 p-3  text-black transition-colors hover:bg-red-500"
+                        >
+                          حذف
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p className="bg-leva-2/50 p-4 text-center text-lg">
-                  هیچ مدلی در اینجا وجود ندارد. همین الان میتوانید یک مدل را
-                  ویرایش کنید !
-                </p>
-              )}
-            </>
+                  ))
+                ) : (
+                  <p className="bg-leva-2/50 p-4 text-center text-lg">
+                    هیچ مدلی در اینجا وجود ندارد. همین الان میتوانید یک مدل را
+                    ویرایش کنید !
+                  </p>
+                )}
+              </>
+            </div>
           </div>
-        </div>
+        </ScrollShadow>
       </div>
     </>
   );

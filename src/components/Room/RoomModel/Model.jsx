@@ -53,7 +53,7 @@ export default function Model() {
     directionalLight: {
       min: 0,
       max: 10,
-      value: 6,
+      value: 1.56,
       step: 0.01,
     },
     pointLight: {
@@ -94,6 +94,9 @@ export default function Model() {
         key={reloadModelKey}
         gl={{ preserveDrawingBuffer: true }}
         onWheel={handleModelWheel}
+        onCreated={({ gl }) => {
+          gl.localClippingEnabled = true
+        }}
       >
         {/* Movement controll */}
         <OrbitControls
@@ -105,7 +108,10 @@ export default function Model() {
 
         {/* Lighting */}
         <ambientLight intensity={ambientLight} />
-        <directionalLight intensity={directionalLight} />
+        <directionalLight intensity={directionalLight} position={[0, 20, 0]} />
+        <directionalLight intensity={directionalLight} position={[0, -20, 0]} />
+        <directionalLight intensity={directionalLight} position={[0, 0, 20]} />
+        <directionalLight intensity={directionalLight} position={[20, 0, 0]} />
         <pointLight intensity={pointLight} />
 
         {/* <Environment preset="sunset" /> */}
